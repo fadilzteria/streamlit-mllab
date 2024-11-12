@@ -1,15 +1,38 @@
 import copy
+import random
 import os
 import json
 import pickle
 import shutil
 import numpy as np
 import pandas as pd
+from logging import getLogger, INFO, StreamHandler, FileHandler, Formatter
+
 from sklearn.model_selection import StratifiedKFold
 import streamlit as st
 from stqdm import stqdm
 
 from codes.utils import classification as classif, regression as regress, features
+
+def get_train_logger(dir):
+    logger = getLogger(__name__)
+    logger.setLevel(INFO)
+
+    handler1 = StreamHandler()
+    handler1.setFormatter(Formatter("%(message)s"))
+
+    handler2 = FileHandler(filename=os.path.join(dir, "train.log"))
+    handler2.setFormatter(Formatter("%(message)s"))
+
+    logger.addHandler(handler1)
+    logger.addHandler(handler2)
+
+    return logger
+
+def seed_everything():
+    random.seed(42)
+    np.random.seed(42)
+    os.environ['PYTHONHASHSEED'] = str(42)
 
 def cross_validation(train_df, folds, target_column):
     skf = StratifiedKFold(n_splits=folds, shuffle=True, random_state=42)
@@ -25,8 +48,11 @@ def cross_validation(train_df, folds, target_column):
     return train_df
 
 def training_loop(config, df, fe_sets, methods, metrics, fold):
-    print(f"========== Fold: {fold} Training ==========")
-    fold_path = os.path.join("experiments", config["exp_name"], f"fold_{fold}")
+    # ======== FOLD ==========
+    fold_dir_path = os.path.join("experiments", config["exp_name"])
+    logger = get_train_logger(fold_dir_path)
+    logger.info(f"========== Fold: {fold} Training ==========")
+    fold_path = os.path.join(fold_dir_path, f"fold_{fold}")
 
     # ======== SPLIT ==========
     train_folds = df[df['fold'] != fold].reset_index(drop=True)
@@ -41,15 +67,17 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
         valid_folds, config=config, fe_sets=fe_sets, split="Valid", pipeline=fe_pipeline, 
     )
 
-    print(f"Training Data Shape: {X_train.shape}")
-    print(f"Validation Data Shape: {X_valid.shape}")
+    logger.info(f"Training Data Shape: {X_train.shape}")
+    logger.info(f"Validation Data Shape: {X_valid.shape}")
 
     if(config["ml_task"]=="Classification"):
         class_names = list(train_folds[config["target"]].unique())
         class_names = [bool(c) if isinstance(c, np.bool_) else c for c in class_names]
         fe_pipeline["Class Names"] = class_names
         pred_mapping = dict(zip(range(len(class_names)), class_names))
-        print(f"Classes: {class_names}")
+        logger.info(f"Classes: {class_names}")
+
+    logger.info("")
 
     # Save Feature Engineering Sets and Pipeline
     fe_sets_filepath = os.path.join(fold_path, f"fe_sets_fold_{fold}.json")
@@ -68,7 +96,7 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
     os.mkdir(model_path)
 
     for i, (model_name, model) in stqdm(enumerate(methods.items()), desc="Models"):
-        print(model_name)
+        logger.info(model_name)
 
         # Training
         if(config["ml_task"]=="Classification"):
@@ -114,11 +142,11 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
 
         # Print Results
         for split in ["Train", "Valid"]:
-            print(f"{split} Metrics", end="")
+            message = f"{split} Metrics"
             for metric in metrics:
-                print(f", {metric}: {metric_df.loc[0, f'{split} {metric}']:.4f}", end="")
-            print("")
-        print(f"Training Runtime: {metric_df.loc[0, 'Training Runtime']}s, Prediction Runtime: {metric_df.loc[0, 'Prediction Runtime']}s\n")
+                message += f", {metric}: {metric_df.loc[0, f'{split} {metric}']:.4f}"
+            logger.info(message)
+        logger.info(f"Training Runtime: {metric_df.loc[0, 'Training Runtime']}s, Prediction Runtime: {metric_df.loc[0, 'Prediction Runtime']}s\n")
 
         # Compare with Temporary Target Metrics
         if(config["best_value"]=="Maximize"):
@@ -134,7 +162,13 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
         model_filepath = os.path.join(model_path, f"{model_name}_fold_{fold}.model")
         pickle.dump(model, open(model_filepath, 'wb'))
 
-    print(f"Best Model: {best_method} | ROC AUC: {best_metric}\n")
+        # Close Logger
+        handlers = logger.handlers
+        for handler in handlers:
+            logger.removeHandler(handler)
+            handler.close()
+
+    logger.info(f"Best Model: {best_method} | ROC AUC: {best_metric}\n")
 
     return oof_df, full_metric_df
 
@@ -144,6 +178,14 @@ def training_and_validation(config, train_df, fe_sets, methods, params, metrics)
     if(os.path.exists(exp_path)):
         shutil.rmtree(exp_path)
     os.mkdir(exp_path)
+
+    # Read Data Preprocessing Configuration
+    dp_path = os.path.join("datasets/cleaned_dataset", config["dp_name"])
+    config_filepath = os.path.join(dp_path, "df_config.json")
+    with open(config_filepath, "r") as file:
+        dp_sets = json.load(file)
+    config["id"] = copy.deepcopy(dp_sets["id"])
+    config["target"] = copy.deepcopy(dp_sets["target"]) 
 
     # Save Config
     config_filepath = os.path.join(exp_path, "config.json")
@@ -163,6 +205,7 @@ def training_and_validation(config, train_df, fe_sets, methods, params, metrics)
     all_metric_df = pd.DataFrame()
 
     folds = train_df["fold"].nunique()
+    seed_everything()
     for fold in stqdm(range(folds), desc="Folds"):
         fold_path = os.path.join(exp_path, f"fold_{fold}")
         os.mkdir(fold_path)

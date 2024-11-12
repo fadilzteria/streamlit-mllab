@@ -145,8 +145,6 @@ def run_training():
         "exp_name": st.session_state["exp_name"],
         "dp_name": st.session_state["dp_name"],
         "ml_task" : st.session_state["ml_task"],
-        "id": st.session_state["id"],
-        "target": st.session_state["target"],
         "folds": st.session_state["folds"],
         "methods": methods,
         "params": params,
