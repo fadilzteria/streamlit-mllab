@@ -1,0 +1,1 @@
+{"exp_name": "Regress Baseline", "dp_name": "Regress Baseline", "ml_task": "Regression", "folds": 5, "methods": ["Linear Regression", "Ridge Regression", "Lasso", "Elastic Net"], "params": {}, "metrics": ["MSE", "RMSE", "MAE", "MedAE", "R2", "Adj R2"], "best_metric": "RMSE", "best_value": "Minimize", "id": "id", "target": "price"}

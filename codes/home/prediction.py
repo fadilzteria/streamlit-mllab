@@ -136,10 +136,14 @@ def run_testing():
         "methods": methods,
     }
 
-    pred_df = test_utils.inference(test_config, test_df, methods)
+    config_filepath = os.path.join("experiments", test_config["exp_name"], "config.json")
+    with open(config_filepath, 'r') as file:
+        train_config = json.load(file)
+
+    pred_df = test_utils.inference(test_config, train_config, test_df, methods)
     st.session_state["pred_dataset"] = pred_df
 
-    ensembled_df = test_utils.ensembling(test_config, test_df, pred_df)
+    ensembled_df = test_utils.ensembling(test_config, train_config, test_df, pred_df)
     st.session_state["ensembled_dataset"] = ensembled_df
 
 # ==================================================================================================

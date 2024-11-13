@@ -19,7 +19,10 @@ def show_metrics(config, metric_df, fold="All"):
     else:
         df = metric_df[metric_df["Fold"]==fold].reset_index(drop=True)
     df = df.drop("Fold", axis=1)
-    df = df.sort_values(by=f"Valid {config['best_metric']}", ascending=False).reset_index(drop=True)
+    if(config["best_value"]=="Maximize"):
+        df = df.sort_values(by=f"Valid {config['best_metric']}", ascending=False).reset_index(drop=True)
+    else:
+        df = df.sort_values(by=f"Valid {config['best_metric']}", ascending=True).reset_index(drop=True)
 
     x_axis = np.arange(len(df))
     model_names = df["Model"].tolist()

@@ -75,7 +75,7 @@ def adjusted_r2_score(y_test, y_pred, n, p):
     score = r2_score(y_test, y_pred)
     return 1 - (1 - score) * (n - 1) / (n - p - 1)
 
-def get_results(y_true, y_pred, metric_df, split, metrics, n, p):
+def get_results(y_true, y_pred, metric_df, metrics, split, n, p):
     for metric in metrics:
         if(metric=="MSE"):
             score = mean_squared_error(y_true, y_pred) # MSE

@@ -8,17 +8,12 @@ from stqdm import stqdm
 
 from codes.utils import classification as classif, regression as regress, features
 
-def inference(test_config, test_df, methods):
-    # Config
-    exp_path = os.path.join("experiments", test_config["exp_name"])
-    config_filepath = os.path.join(exp_path, "config.json")
-    with open(config_filepath, 'r') as file:
-        train_config = json.load(file)
-
+def inference(test_config, train_config, test_df, methods):
     pred_df = pd.DataFrame()
     pred_df[train_config["id"]] = test_df[train_config["id"]]
 
     # Each Fold
+    exp_path = os.path.join("experiments", test_config["exp_name"])
     for fold in stqdm(test_config["folds"]):
         fold_path = os.path.join(exp_path, f"fold_{fold}")
 
@@ -66,27 +61,25 @@ def inference(test_config, test_df, methods):
     return pred_df
 
 # Ensembling
-def ensembling(test_config, test_df, pred_df):
-    # Config
-    exp_path = os.path.join("experiments", test_config["exp_name"])
-    config_filepath = os.path.join(exp_path, "config.json")
-    with open(config_filepath, 'r') as file:
-        train_config = json.load(file)
-
+def ensembling(test_config, train_config, test_df, pred_df):
     pred_columns = pred_df.columns[1:].tolist()
-    class_names = list(set([col.split("_")[-2] for col in pred_columns]))
 
     ensembled_df = pd.DataFrame()
     ensembled_df[train_config["id"]] = test_df[train_config["id"]]
 
-    # Soft Classes
-    for i, class_name in enumerate(class_names):
-        class_columns = [col for col in pred_df.columns if class_name in col]
-        ensembled_df[f"{train_config['target']}_{class_name}"] = np.mean(pred_df.loc[:, class_columns], axis=1)
+    if(train_config["ml_task"]=="Classification"): 
+        class_names = list(set([col.split("_")[-2] for col in pred_columns]))
+        # Soft Classes
+        for i, class_name in enumerate(class_names):
+            class_columns = [col for col in pred_df.columns if class_name in col]
+            ensembled_df[f"{train_config['target']}_{class_name}"] = np.mean(pred_df.loc[:, class_columns], axis=1)
 
-    # Hard Classes
-    ensembled_df[train_config['target']] = np.argmax(ensembled_df.iloc[:, 1:len(class_names)+1], axis=1)
-    ensembled_df[train_config['target']] = ensembled_df[train_config['target']].apply(lambda x: class_names[x])
+        # Hard Classes
+        ensembled_df[train_config['target']] = np.argmax(ensembled_df.iloc[:, 1:len(class_names)+1], axis=1)
+        ensembled_df[train_config['target']] = ensembled_df[train_config['target']].apply(lambda x: class_names[x])
+    
+    else:
+        ensembled_df[train_config['target']] = np.mean(pred_df.loc[:, pred_columns], axis=1)
 
     st.success(f"Your testing has been successfully processed")
 
