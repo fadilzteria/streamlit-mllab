@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
+import statsmodels.api as sm
 
 from sklearn.metrics import confusion_matrix
 
@@ -84,9 +85,14 @@ def get_class_metrics(config, metric_df, fold="All"):
     plt.suptitle(f"Class-wise Metrics for Fold {fold}", y=0.90)
     st.pyplot(fig)
 
-def show_confusion_matrix(config, df):
-    y_test = df[config["target"]]
-    class_names = df[config["target"]].unique().tolist()
+def show_confusion_matrix(config, oof_df, fold="All"):
+    # Filter Dataframe
+    if(fold!="All"): # Average All Folds
+        oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
+    
+    # Parameters
+    y_test = oof_df[config["target"]]
+    class_names = oof_df[config["target"]].unique().tolist()
 
     # Create Subplots
     ncols = 3
@@ -94,7 +100,7 @@ def show_confusion_matrix(config, df):
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*5))
 
     for i, model_name in enumerate(config["methods"]):
-        y_pred = df[f"{model_name}_{config['target']}_pred"]
+        y_pred = oof_df[f"{model_name}_{config['target']}_pred"]
         cn_matrix = confusion_matrix(y_test, y_pred, labels=class_names)
         cn_matrix = pd.DataFrame(cn_matrix)
         cn_matrix.index, cn_matrix.columns = class_names, class_names
@@ -113,7 +119,7 @@ def show_confusion_matrix(config, df):
             ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
             ax_temp.axis("off")
 
-    plt.suptitle("Confusion Matrix", y=0.92)
+    plt.suptitle(f"Confusion Matrix for Fold {fold}", y=0.92)
     st.pyplot(fig)
 
 def show_runtime(metric_df, fold="All"):
@@ -145,5 +151,103 @@ def show_runtime(metric_df, fold="All"):
     # Show
     plt.title(f"Runtime Results for Fold {fold}")
     plt.legend()
+    plt.tight_layout()
+    st.pyplot(fig)
+
+def show_reg_diagnostics(config, oof_df, fold="All"):
+    # Filter Dataframe
+    if(fold!="All"): # Average All Folds
+        oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
+
+    # Create Subplots
+    ncols = 3
+    nrows = len(config["methods"])
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(12, nrows*4))
+
+    for i, model_name in enumerate(config["methods"]):
+        actual = oof_df[config['target']] # Actual
+        pred = oof_df[f"{model_name}_{config['target']}_pred"] # Prediction
+        res = actual - pred # Residuals
+        std_res = (res - res.mean())/res.std() # Standardized Residuals
+
+        # Linearity
+        ax_temp = axs[0] if nrows==1 else axs[i, 0]
+        ax_temp.scatter(actual, pred, c=COLORS[0], s=8, alpha=0.8)
+        ax_temp.set_title(f"{model_name} Linearity", size=8)
+        ax_temp.set(xlabel="Actual", ylabel="Predicted")
+
+        # Residuals vs Predicted
+        ax_temp = axs[1] if nrows==1 else axs[i, 1]
+        ax_temp.scatter(pred, res, c=COLORS[1], s=8, alpha=0.8)
+        ax_temp.set_title(f"{model_name} Residuals vs Predicted", size=8)
+        ax_temp.set(xlabel="Predicted", ylabel="Residuals")
+
+        # Normal Q-Q Plot
+        ax_temp = axs[2] if nrows==1 else axs[i, 2]
+        qq = sm.qqplot(std_res, line='45', marker='o', markerfacecolor=COLORS[0], markeredgecolor=COLORS[2], alpha=0.8, ax=ax_temp)
+        ax_temp.set_title(f"{model_name} Normal Q-Q", size=8)
+
+    # Show
+    plt.suptitle(f"Regression Diagnostics for Fold {fold}", y=1.0)
+    plt.tight_layout()
+    st.pyplot(fig)
+
+def show_regress_predicted_distribution(config, oof_df, fold="All"):
+    # Filter Dataframe
+    if(fold!="All"): # Average All Folds
+        oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
+
+    # Create Subplots
+    ncols = 3
+    nrows = ((len(config["methods"])-1)//ncols)+1
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*5))
+
+    for i, model_name in enumerate(config["methods"]):
+        ax_temp = axs[i] if nrows==1 else axs[i//ncols, i%ncols]
+        pred_name = f"{model_name}_{config['target']}_pred"
+
+        sns.kdeplot(oof_df[config['target']], color=COLORS[0], fill=True, label="Actual", ax=ax_temp)
+        sns.kdeplot(oof_df[pred_name], color=COLORS[1], fill=True, label="Predicted", ax=ax_temp)
+
+        ax_temp.set_title(model_name, size=8)
+        ax_temp.set(xlabel=None, ylabel=None)
+    ax_temp = axs[i] if nrows==1 else axs[0, 2]
+    ax_temp.legend()
+
+    if(i < (nrows*ncols)):
+        for j in range(i+1, (nrows*ncols)):
+            ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
+            ax_temp.axis("off")
+
+    plt.suptitle(f"Predicted Distribution Plot for Fold {fold}", y=1.0)
+    plt.tight_layout()
+    st.pyplot(fig)
+
+def show_classif_predicted_distribution(config, oof_df, fold="All"):
+    # Filter Dataframe
+    if(fold!="All"): # Average All Folds
+        oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
+
+    # Parameters
+    model_names = config["methods"]
+    target_names = oof_df[config['target']].unique().tolist()
+
+    # Create Subplots
+    nrows = len(model_names)
+    ncols = len(target_names)
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*3, nrows*3))
+
+    for i, model_name in enumerate(model_names):
+        for j, target_name in enumerate(target_names):
+            ax_temp = axs[j] if nrows==1 else axs[i, j]
+            pred_name = f"{model_name}_{config['target']}_{target_name}_proba"
+            target_df = oof_df[oof_df[config['target']]==target_name].reset_index(drop=True)
+
+            sns.histplot(target_df[pred_name], color=COLORS[j], bins=20, ax=ax_temp)
+
+            ax_temp.set_title(f"{model_name} for {target_name}", size=8)
+            ax_temp.set(xlabel=None, ylabel=None)
+
+    plt.suptitle(f"Predicted Distribution Plot for Fold {fold}", y=1.0)
     plt.tight_layout()
     st.pyplot(fig)

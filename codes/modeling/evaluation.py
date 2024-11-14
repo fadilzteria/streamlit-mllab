@@ -24,11 +24,35 @@ def class_wise_metrics(config, metric_df):
     eval_utils.get_class_metrics(config, metric_df, fold=st.session_state["fold_cw_metrics"])
 
 @st.fragment()
+def confusion_matrix(config, oof_df):
+    folds = list(range(config["folds"]))
+    fold_options = ["All", *folds]
+    st.selectbox(label="Folds for Confusion Matrix", options=fold_options, key="fold_con_matrix", index=0)
+    eval_utils.show_confusion_matrix(config, oof_df, fold=st.session_state["fold_con_matrix"])
+
+@st.fragment()
 def training_runtime(config, metric_df):
     folds = list(range(config["folds"]))
     fold_options = ["All", *folds]
     st.selectbox(label="Folds for Training Runtime", options=fold_options, key="fold_runtime", index=0)
     eval_utils.show_runtime(metric_df, fold=st.session_state["fold_runtime"])
+
+@st.fragment()
+def reg_diagnostics(config, oof_df):
+    folds = list(range(config["folds"]))
+    fold_options = ["All", *folds]
+    st.selectbox(label="Folds for Regression Diagnostics", options=fold_options, key="fold_reg_diag", index=0)
+    eval_utils.show_reg_diagnostics(config, oof_df, fold=st.session_state["fold_reg_diag"])
+
+@st.fragment()
+def predicted_distribution(config, oof_df):
+    folds = list(range(config["folds"]))
+    fold_options = ["All", *folds]
+    st.selectbox(label="Folds for Predicted Distribution", options=fold_options, key="fold_dist", index=0)
+    if(config["ml_task"]=="Classification"):
+        eval_utils.show_classif_predicted_distribution(config, oof_df, fold=st.session_state["fold_dist"])
+    else:
+        eval_utils.show_regress_predicted_distribution(config, oof_df, fold=st.session_state["fold_dist"])
 
 def model_evaluation():
     exp_list = os.listdir("experiments")
@@ -60,7 +84,7 @@ def model_evaluation():
         # Confusion Matrix
         if(config["ml_task"]=="Classification"):
             st.header("Confusion Matrix", divider="orange")
-            eval_utils.show_confusion_matrix(config, oof_df)
+            confusion_matrix(config, oof_df)
 
         # Category-based Matrices
         # ...
@@ -70,10 +94,13 @@ def model_evaluation():
         training_runtime(config, metric_df)
 
         # Regression Diagnostics
-        # ...
+        if(config["ml_task"]=="Regression"):
+            st.header("Regression Diagnostics", divider="orange")
+            reg_diagnostics(config, oof_df)
 
         # Predicted Distributions
-        # ...
+        st.header("Predicted Distribution", divider="orange")
+        predicted_distribution(config, oof_df)
 
         # Easy and Hard Samples
         # ...
