@@ -59,13 +59,21 @@ def preprocess_data():
     with open(config_filepath, "r") as file:
         dp_sets = json.load(file)
 
-    # Drop Constant and Full Unique Features
-    if(dp_sets["dp_bool_unique"]):
-        persisted_features = [dp_sets["id"]]
-        cleaned_df = dq.drop_unique_features(cleaned_df, persisted_features)
+    # Filter Features
+    cleaned_columns = dp_sets["dp_df_columns"]
+    for col in ["id", "target"]:
+        if(dp_sets[col] not in cleaned_df.columns):
+            cleaned_columns.remove(dp_sets[col])
+    cleaned_df = cleaned_df[cleaned_columns]
 
     # Transform Value Types
-    cleaned_df = dq.transform_dtypes(cleaned_df)
+    dp_num2cat_cols = dp_sets["dp_num2cat_cols"]
+    if(dp_sets["target"] in dp_num2cat_cols):
+        dp_num2cat_cols.remove(dp_sets["target"])
+    cleaned_df, _ = dq.transform_dtypes(
+        cleaned_df, split="Test", 
+        num2bin_cols=dp_sets["dp_num2bin_cols"], num2cat_cols=dp_num2cat_cols
+    )
 
     # Handling Missing Values
     if("Impute" in dp_sets["dp_missed_opt"]):

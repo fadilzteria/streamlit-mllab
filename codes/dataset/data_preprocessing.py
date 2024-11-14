@@ -72,7 +72,7 @@ def submit_dataset_input():
 # ==================================================================================================
 # SHOW RAW DATASET
 # ==================================================================================================
-# @st.cache_data()
+@st.cache_data()
 def show_raw_dataset(raw_df):
     st.header("Raw Dataset", divider="orange")
 
@@ -108,13 +108,19 @@ def preprocess_data():
     if(st.session_state["dp_bool_unique"]):
         persisted_features = [st.session_state["id"], st.session_state["target"]]
         cleaned_df = dq.drop_unique_features(cleaned_df, persisted_features)
+    st.session_state["dp_df_columns"] = cleaned_df.columns.tolist()
 
     # Drop Duplicated Rows
     if(st.session_state["dp_bool_dup"]):
-        cleaned_df = dq.check_duplicated_rows(cleaned_df, drop_duplicated_rows=True, target_exist=st.session_state["target"], spec_features=[st.session_state["id"]])    
+        cleaned_df = dq.check_duplicated_rows(
+            cleaned_df, drop_duplicated_rows=True, 
+            target_exist=st.session_state["target"], spec_features=[st.session_state["id"]]
+        )    
 
     # Transform Value Types
-    cleaned_df = dq.transform_dtypes(cleaned_df)
+    cleaned_df, st.session_state["dp_num2bin_cols"] = dq.transform_dtypes(
+        cleaned_df, num2cat_cols=st.session_state["dp_num2cat_cols"]
+    )
 
     # Handling Missing Values
     if("Drop" in st.session_state["dp_missed_opt"]):
@@ -152,13 +158,23 @@ def preprocess_data():
     with open(config_filepath, "w") as f:
         json.dump(dp_sets, f)
 
-def data_preprocessing():
+def data_preprocessing(raw_df):
     st.header("Data Preprocessing", divider="orange")
 
     with st.form("data_preprocessing"):
         st.text_input(label="Data Preprocessing Name", value="Baseline", key="dp_name") # Data Preprocessing Name
         st.toggle("Drop Constant and Full Unique Features", value=True, key="dp_bool_unique")
         st.toggle("Drop Duplicated Rows", value=True, key="dp_bool_dup")
+
+        num_columns = []
+        for col in raw_df.columns:
+            if(raw_df[col].dtypes in ["int", "float"] and raw_df[col].nunique() > 2):
+                num_columns.append(col)
+        for col in ["id", "target"]:
+            if(col in num_columns):
+                num_columns.remove(col)
+        st.multiselect(label="Numerical to Categorical Columns", options=num_columns, default=[], key="dp_num2cat_cols")
+
         missed_options = [
             "Ignore",
             "Drop Missing Features",
@@ -199,7 +215,7 @@ submit_dataset_input()
 
 if("raw_train_dataset" in st.session_state): 
     show_raw_dataset(st.session_state["raw_train_dataset"]) # Show Raw Dataset
-    data_preprocessing() # Data Preprocessing
+    data_preprocessing(st.session_state["raw_train_dataset"]) # Data Preprocessing
 
 # Show Cleaned Ddataset
 if("cleaned_train_dataset" in st.session_state): 

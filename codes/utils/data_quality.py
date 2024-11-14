@@ -180,24 +180,37 @@ def check_duplicated_rows(df, drop_duplicated_rows=False, target_exist=None, spe
 
     return df
 
-def transform_dtypes(df, dis_to_nom_columns=[]):
+def transform_dtypes(df, split="Train", num2bin_cols=None, num2cat_cols=[]):
     # Numerical to Binary
-    num_columns = [col for col in df.columns if df[col].dtypes in ["int", "float"]]
-    for col in num_columns:
-        if(df[col].nunique()==2):
-            uniques = df[col].unique()
-            uniques = uniques[~np.isnan(uniques)]
-            if((np.sort(uniques) == [0, 1]).all()):
+    if(split=="Train"):
+        num_columns = [col for col in df.columns if df[col].dtypes in ["int", "float"]]
+        num2bin_cols = {}
+        for col in num_columns:
+            if(df[col].nunique()==2):
+                uniques = df[col].unique()
+                uniques = uniques[~np.isnan(uniques)]
+                if((np.sort(uniques) == [0, 1]).all()):
+                    num2bin_cols[col] = [0, 1]
+                    df[col] = df[col].astype(bool)
+                else:
+                    first_binary, second_binary = uniques
+                    num2bin_cols[col] = [first_binary, second_binary]
+                    df[col] = df[col].replace({first_binary: False, second_binary: True})
+                    df.rename(columns={col:f'{col}_{second_binary}'}, inplace=True)
+                    
+    else:
+        for col in num2bin_cols:
+            binaries = num2bin_cols[col]
+            if(binaries == [0, 1]):
                 df[col] = df[col].astype(bool)
             else:
-                first_binary = uniques[0]
-                second_binary = uniques[1]
+                first_binary, second_binary = uniques
                 df[col] = df[col].replace({first_binary: False, second_binary: True})
                 df.rename(columns={col:f'{col}_{second_binary}'}, inplace=True)
 
-    # Numerical to Nominal/Object
-    if(len(dis_to_nom_columns) > 0):
-        df[dis_to_nom_columns] = df[dis_to_nom_columns].apply(lambda x: x.astype(str), axis=0)
+    # Numerical to Categorical
+    if(len(num2cat_cols) > 0):
+        df[num2cat_cols] = df[num2cat_cols].apply(lambda x: x.astype(str), axis=0)
 
     # Object to Datetime
     object_columns = list(df.select_dtypes(include=['object']).columns.values)
@@ -206,7 +219,7 @@ def transform_dtypes(df, dis_to_nom_columns=[]):
         if(df[col].str.match(pattern).all()):
             df[col] = pd.to_datetime(df[col])
 
-    return df
+    return df, num2bin_cols
 
 def impute_missing_values(df, impute):
     missed_columns = df.columns[df.isna().any()].tolist()
