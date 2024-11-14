@@ -23,23 +23,24 @@ def fill_dataset_input():
     # ---------------------------------------------------
     # Select Dataset from the Project
     if(st.session_state["data_method"]==data_methods[0]):
-        raw_data_path = "datasets/raw_dataset"
-        dataset_files = os.listdir(raw_data_path)
+        raw_data_path = "datasets/raw_dataset/test_dataset"
+        exts = ["csv", "pkl", "parquet", "feather"]
+        dataset_files = [file for file in os.listdir(raw_data_path) if any(ext in file for ext in exts)]
         st.selectbox(
-            label="**Select a Dataset File**",
+            label="**Select a Dataset File** (*.csv, *.pkl, *.parquet, *.feather)",
             options=dataset_files,
             key="data_file", index=0
         )
         if(st.session_state["data_file"]):
             data_filepath = os.path.join(raw_data_path, st.session_state["data_file"])
-            raw_df = pd.read_csv(data_filepath)
+            raw_df = dq.load_dataframe(data_filepath)
             st.session_state["temp_raw_test_dataset"] = raw_df
 
     # Upload a Dataset File
     else:
         uploaded_file = st.file_uploader(label="**Upload a Dataset File**", key="data_file")
         if(st.session_state["data_file"]):
-            raw_df = pd.read_csv(uploaded_file)
+            raw_df = dq.load_dataframe(uploaded_file.name, uploaded_file=uploaded_file)
             st.session_state["temp_raw_test_dataset"] = raw_df
 
     # Data Preprocessing Name
@@ -83,8 +84,8 @@ def preprocess_data():
     st.session_state["cleaned_test_dataset"] = cleaned_df
 
     # Save Cleaned Testing Dataset
-    df_filepath = os.path.join(dp_path, "cleaned_test.csv")
-    cleaned_df.to_csv(df_filepath, index=False)
+    df_filepath = os.path.join(dp_path, "cleaned_test.parquet")
+    cleaned_df.to_parquet(df_filepath)
 
 # ==================================================================================================
 # DATASET

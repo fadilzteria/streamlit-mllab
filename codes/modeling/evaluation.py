@@ -42,11 +42,11 @@ def model_evaluation():
         with open(config_filepath, 'r') as file:
             config = json.load(file)
 
-        oof_filepath = os.path.join(exp_path, "oof_df.csv")
-        oof_df = pd.read_csv(oof_filepath)
+        oof_filepath = os.path.join(exp_path, "oof_df.parquet")
+        oof_df = pd.read_parquet(oof_filepath)
 
-        metric_filepath = os.path.join(exp_path, "metric_df.csv")
-        metric_df = pd.read_csv(metric_filepath)
+        metric_filepath = os.path.join(exp_path, "metric_df.parquet")
+        metric_df = pd.read_parquet(metric_filepath)
 
         # All Metrics
         st.header("All Metrics", divider="orange")

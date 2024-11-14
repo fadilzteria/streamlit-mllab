@@ -9,6 +9,23 @@ import streamlit as st
 COLORS = list(mcolors.XKCD_COLORS.keys())
 random.Random(1).shuffle(COLORS)
 
+def load_dataframe(filename, uploaded_file=None):
+    if(uploaded_file):
+        file = uploaded_file
+    else:
+        file = filename
+
+    if(filename[-3:]=="csv"):
+        df = pd.read_csv(file)
+    elif(filename[-3:]=="pkl"):
+        df = pd.read_pickle(file)
+    elif(filename[-7:]=="parquet"):
+        df = pd.read_parquet(file)
+    elif(filename[-7:]=="feather"):
+        df = pd.read_feather(file)
+    
+    return df
+
 def check_other_values(df, task, drop_features=[], max_unique=20):
     spec_col = f"{task} Counts"
 

@@ -218,11 +218,11 @@ def training_and_validation(config, train_df, fe_sets, methods, params, metrics)
         all_metric_df = pd.concat([all_metric_df, _metric_df])
 
     oof_df = oof_df.sort_values(by=config["id"]).reset_index(drop=True)
-    oof_filepath = os.path.join(exp_path, "oof_df.csv")
-    oof_df.to_csv(oof_filepath, index=False)
+    oof_filepath = os.path.join(exp_path, "oof_df.parquet")
+    oof_df.to_parquet(oof_filepath)
 
     all_metric_df = all_metric_df.reset_index(drop=True)
-    all_metric_filepath = os.path.join(exp_path, "metric_df.csv")
-    all_metric_df.to_csv(all_metric_filepath, index=False)
+    all_metric_filepath = os.path.join(exp_path, "metric_df.parquet")
+    all_metric_df.to_parquet(all_metric_filepath)
 
     st.success(f"Your training has been successfully processed and saved in the experiments folder as {config['exp_name']}")

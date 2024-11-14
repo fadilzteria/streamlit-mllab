@@ -18,8 +18,8 @@ def fill_training_configuration():
     dp_list = os.listdir("datasets/cleaned_dataset")
     st.selectbox(label="Data Preprocessing Name", options=dp_list, key="dp_name", index=0)
     dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
-    cleaned_df_path = os.path.join(dp_path, "cleaned_train.csv")
-    cleaned_df = pd.read_csv(cleaned_df_path)
+    cleaned_df_path = os.path.join(dp_path, "cleaned_train.parquet")
+    cleaned_df = pd.read_parquet(cleaned_df_path)
     st.session_state["cleaned_dataset"] = cleaned_df
     
     st.selectbox(label="ML Task", options=["Classification", "Regression"], key="ml_task", index=0) # ML Task
@@ -172,13 +172,13 @@ def model_training():
 def show_training_dataframe(exp_path):
     st.header("Training Results", divider="orange")
 
-    oof_df_filepath = os.path.join(exp_path, "oof_df.csv")
-    oof_df = pd.read_csv(oof_df_filepath)
+    oof_df_filepath = os.path.join(exp_path, "oof_df.parquet")
+    oof_df = pd.read_parquet(oof_df_filepath)
     st.subheader("Out of Fold Predictions")
     st.dataframe(oof_df)
 
-    metric_df_filepath = os.path.join(exp_path, "metric_df.csv")
-    metric_df = pd.read_csv(metric_df_filepath)
+    metric_df_filepath = os.path.join(exp_path, "metric_df.parquet")
+    metric_df = pd.read_parquet(metric_df_filepath)
     st.subheader("Metric Results")
     st.dataframe(metric_df)
 

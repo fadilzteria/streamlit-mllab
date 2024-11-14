@@ -15,8 +15,8 @@ def bivariate_analysis():
     dp_list = os.listdir("datasets/cleaned_dataset")
     st.selectbox(label="Data Preprocessing Name", options=dp_list, key="dp_name", index=0)
     dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
-    cleaned_df_path = os.path.join(dp_path, "cleaned_train.csv")
-    cleaned_df = pd.read_csv(cleaned_df_path)
+    cleaned_df_path = os.path.join(dp_path, "cleaned_train.parquet")
+    cleaned_df = pd.read_parquet(cleaned_df_path)
 
     # ---------------------------------------------------
     # Correlation Matrix
