@@ -21,12 +21,8 @@ def binary_cat_to_numeric(df):
     binary_cat_columns = [col for col in df.columns if df[col].nunique()==2]
 
     for col in binary_cat_columns:
-        first_binary = new_df[col].unique()[0]
-        second_binary = new_df[col].unique()[1]
-        new_df[col] = new_df[col].replace({
-            first_binary: 0,
-            second_binary: 1,
-        })
+        first_binary, second_binary = new_df[col].unique()
+        new_df[col] = new_df[col].replace({first_binary: 0, second_binary: 1})
         new_df.rename(columns={col:f'{col}_{second_binary}'}, inplace=True)
 
     return new_df
@@ -263,7 +259,7 @@ def show_correlation_scatter_plot(df, corr_dfs, corr_titles):
             plt.tight_layout()
             st.pyplot(fig)
 
-def test_numerical_categorical(df, sample_size=30, min_sample_mean=20, max_sample_mean=None, max_unique=5, feature=None):
+def test_numerical_categorical(df, sample_size=30, max_unique=5, min_sample_mean=20, max_sample_mean=None, feature=None):
     categorical_columns = list(df.select_dtypes(include=['object', 'bool']).columns.values)
     numerical_columns = list(df.select_dtypes(include=[np.number]).columns.values)
     if(feature):
@@ -534,7 +530,7 @@ def show_correlation_two_binary(df, df_result, num_two_binary=6):
             ax_temp = axs[j] if nrows==1 else axs[j//3, j%3]
             ax_temp.axis("off")
 
-    plt.suptitle("Correlation between Two Binary")
+    plt.suptitle("Correlations between Two Binary")
     plt.tight_layout()
     st.pyplot(fig)
 
@@ -576,6 +572,6 @@ def show_correlation_least_one_nominal(df, df_result, num_one_nominal=5):
         # Update Axes
         ax_temp.set_title(f"""Chi-squared p-Value: {row['Chi-squared p-value']:.4f}, Cramer's Value: {row["Cramer's Value"]:.4f}""", size=8)
 
-    plt.suptitle("Correlation between Two Categorical At Least One Nominal", y=1.00)
+    plt.suptitle("Correlations between Two Categorical At Least One Nominal", y=1.00)
     plt.tight_layout()
     st.pyplot(fig)
