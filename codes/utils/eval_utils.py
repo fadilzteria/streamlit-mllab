@@ -1,14 +1,15 @@
 import random
+import copy
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
 import statsmodels.api as sm
-
 from sklearn.metrics import confusion_matrix
-
 import streamlit as st
+
+from codes.utils import classification as classif, regression as regress
 
 COLORS = list(mcolors.XKCD_COLORS.keys())
 random.Random(1).shuffle(COLORS)
@@ -121,6 +122,80 @@ def show_confusion_matrix(config, oof_df, fold="All"):
 
     plt.suptitle(f"Confusion Matrix for Fold {fold}", y=0.92)
     st.pyplot(fig)
+
+def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, numeric=False):
+    # Filter Dataframe
+    if(fold!="All"): # Average All Folds
+        oof_df = oof_df[oof_df["fold"]==fold]
+        oof_df_idxs = oof_df.index.tolist()
+        cleaned_df = cleaned_df[cleaned_df.index.isin(oof_df_idxs)]
+
+    cat_df_dict = {}
+    for df_col in cleaned_df.columns:
+        print(df_col)
+        if(config["target"]==df_col):
+            continue
+
+        if(cleaned_df[df_col].dtypes in ["object", "bool"]):
+            if(cleaned_df[df_col].nunique() > max_unique or "pred" in df_col):
+                continue
+        else:
+            if(numeric and "pred" not in df_col):
+                cleaned_df[f"{df_col}_binned"] = pd.qcut(cleaned_df[df_col], q=max_unique, duplicates='drop').astype('str')
+                df_col = f"{df_col}_binned"
+            else:
+                continue
+        
+        cat_df_dict[df_col] = []
+        metric_list = config["metrics"]
+        print(metric_list)
+
+        oof_df["group"] = copy.deepcopy(cleaned_df[df_col])
+
+        # For Each Category in the Categorical Column
+        for i, category in enumerate(oof_df["group"].unique()):
+            cat_df = oof_df[oof_df["group"]==category].reset_index(drop=True)
+            cat_metric_df = pd.DataFrame()
+            # For Each Model
+            model_names = [col.split("_")[0] for col in cat_df.columns if "pred" in col]
+            for model_name in model_names:
+                # Metrics
+                y_true = cat_df[config["target"]]
+                y_pred = cat_df[f"{model_name}_{config['target']}_pred"]
+                model_metric_df = pd.DataFrame({"Model": model_name}, index=[0])
+
+                if(config["ml_task"]=="Classification"):
+                    model_proba_names = [col for col in cat_df.columns if model_name in col and "proba" in col]
+                    y_pred_proba = np.array(cat_df[model_proba_names])
+
+                    if(cat_df[config["target"]].nunique() == 2):
+                        model_metric_df = classif.get_binary_results(
+                            y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split=""
+                        )
+                    else:
+                        class_names = cat_df[config["target"]].unique().tolist()
+                        model_metric_df = classif.get_multi_results(
+                            y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split="", class_names=class_names
+                        )
+                else:
+                    n, p = cat_df.shape[0], cat_df.shape[1]
+                    model_metric_df = regress.get_results(
+                        y_true, y_pred, model_metric_df, metric_list, split="", n=n, p=p
+                    )
+
+                cat_metric_df = pd.concat([cat_metric_df, model_metric_df], ignore_index=True)
+
+            cat_df_dict[df_col].append({"category": category, "data": cat_metric_df})
+
+    return cat_df_dict
+
+def show_category_metrics(cat_df_dict, group_col):
+    group_cat_df_list = cat_df_dict[group_col]
+    for i in range(len(group_cat_df_list)):
+        category = group_cat_df_list[i]["category"]
+        cat_metric_df = group_cat_df_list[i]["data"]
+        st.write(category)
+        st.dataframe(cat_metric_df)
 
 def show_runtime(metric_df, fold="All"):
     # Filter Dataframe

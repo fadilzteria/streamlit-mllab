@@ -128,8 +128,8 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
                 metric_df = classif.get_binary_results(y_train, y_train_pred, y_train_proba, metric_df, metrics, split="Train")
                 metric_df = classif.get_binary_results(y_valid, y_valid_pred, y_valid_proba, metric_df, metrics, split="Valid")
             else: # Multi-class
-                metric_df = classif.get_multi_results(y_train, y_train_pred, y_train_proba, metric_df, metrics, class_names, split="Train")
-                metric_df = classif.get_multi_results(y_valid, y_valid_pred, y_valid_proba, metric_df, metrics, class_names, split="Valid")
+                metric_df = classif.get_multi_results(y_train, y_train_pred, y_train_proba, metric_df, metrics, split="Train", class_names=class_names)
+                metric_df = classif.get_multi_results(y_valid, y_valid_pred, y_valid_proba, metric_df, metrics, split="Valid", class_names=class_names)
         else:
             n, p = X_train.shape[0], X_train.shape[1]
             metric_df = regress.get_results(y_train, y_train_pred, metric_df, metrics, split="Train", n=n, p=p)

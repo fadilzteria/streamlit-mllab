@@ -31,6 +31,35 @@ def confusion_matrix(config, oof_df):
     eval_utils.show_confusion_matrix(config, oof_df, fold=st.session_state["fold_con_matrix"])
 
 @st.fragment()
+def category_based_metrics(config, cleaned_df, oof_df):
+    col_1, col_2, col_3 = st.columns(3)
+    with col_1:
+        folds = list(range(config["folds"]))
+        fold_options = ["All", *folds]
+        st.selectbox(label="Folds for Category-based Metrics", options=fold_options, key="fold_cb_matrix", index=0)
+    with col_2:
+        st.slider(
+            "Max Unique Values",
+            min_value=2, max_value=8, value=4, key="max_unique"
+        )
+    with col_3:
+        st.toggle("Use Numeric Groups", value=False, key="bool_num")
+
+    cat_df_dict = eval_utils.get_category_metrics(
+        config, cleaned_df=copy.deepcopy(cleaned_df), oof_df=copy.deepcopy(oof_df), 
+        fold=st.session_state["fold_cb_matrix"], max_unique=st.session_state["max_unique"], 
+        numeric=st.session_state["bool_num"]
+    )
+
+    return cat_df_dict
+
+@st.fragment()
+def show_category_metrics(cat_df_dict):
+    group_cols = cat_df_dict.keys()
+    st.selectbox(label="Group Column", options=group_cols, key="group_col", index=0)
+    eval_utils.show_category_metrics(cat_df_dict, st.session_state["group_col"])
+
+@st.fragment()
 def training_runtime(config, metric_df):
     folds = list(range(config["folds"]))
     fold_options = ["All", *folds]
@@ -72,6 +101,10 @@ def model_evaluation():
         metric_filepath = os.path.join(exp_path, "metric_df.parquet")
         metric_df = pd.read_parquet(metric_filepath)
 
+        dp_path = os.path.join("datasets/cleaned_dataset", config["dp_name"])
+        cleaned_df_path = os.path.join(dp_path, "cleaned_train.parquet")
+        cleaned_df = pd.read_parquet(cleaned_df_path)
+
         # All Metrics
         st.header("All Metrics", divider="orange")
         all_metrics(config, metric_df)
@@ -87,7 +120,9 @@ def model_evaluation():
             confusion_matrix(config, oof_df)
 
         # Category-based Matrices
-        # ...
+        st.header("Category-based Metrics", divider="orange")
+        cat_df_dict = category_based_metrics(config, cleaned_df, oof_df)
+        show_category_metrics(cat_df_dict)
 
         # Training Runtime
         st.header("Training Runtime", divider="orange")
@@ -116,11 +151,3 @@ st.title("Evaluation")
 
 # Evaluation
 model_evaluation()
-
-# # Training
-# if("cleaned_dataset" in st.session_state):
-#     model_training()
-
-# exp_path = os.path.join("experiments", st.session_state["exp_name"])
-# if(os.path.exists(exp_path)):
-#     show_training_dataframe(exp_path)

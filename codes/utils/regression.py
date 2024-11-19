@@ -51,6 +51,22 @@ def define_models(model_names, params):
         
     return methods
 
+def regress_metrics(metric, y_true, y_pred, n, p):
+    if(metric=="MSE"):
+        score = mean_squared_error(y_true, y_pred) # MSE
+    elif(metric=="RMSE"):
+        score = root_mean_squared_error(y_true, y_pred) # RMSE
+    elif(metric=="MAE"):
+        score = mean_absolute_error(y_true, y_pred) # MAE
+    elif(metric=="MedAE"):
+        score = median_absolute_error(y_true, y_pred) # MedAE
+    elif(metric=="R2"):
+        score = r2_score(y_true, y_pred) # R-squared
+    elif(metric=="Adj R2"):
+        score = adjusted_r2_score(y_true, y_pred, n, p) # Adjusted R-squared
+
+    return score
+
 def train_function(model, X_train, y_train):
     start = time.time()
         
@@ -77,18 +93,7 @@ def adjusted_r2_score(y_test, y_pred, n, p):
 
 def get_results(y_true, y_pred, metric_df, metrics, split, n, p):
     for metric in metrics:
-        if(metric=="MSE"):
-            score = mean_squared_error(y_true, y_pred) # MSE
-        elif(metric=="RMSE"):
-            score = root_mean_squared_error(y_true, y_pred) # RMSE
-        elif(metric=="MAE"):
-            score = mean_absolute_error(y_true, y_pred) # MAE
-        elif(metric=="MedAE"):
-            score = median_absolute_error(y_true, y_pred) # MedAE
-        elif(metric=="R2"):
-            score = r2_score(y_true, y_pred) # R-squared
-        elif(metric=="Adj R2"):
-            score = adjusted_r2_score(y_true, y_pred, n, p) # Adjusted R-squared
+        score = regress_metrics(metric, y_true, y_pred, n, p)
         metric_df.loc[0, f"{split} {metric}"] = score
 
     return metric_df

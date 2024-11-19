@@ -59,6 +59,46 @@ def define_models(model_names, params):
 
     return methods
 
+def classif_metrics(metric, y_true, y_pred, y_pred_proba, class_names=None):
+    class_scores = None
+    if(metric=="Accuracy"): # Accuracy
+        score = accuracy_score(y_true, y_pred) 
+    elif(metric=="Precision"): # Precision
+        if(class_names): 
+            score = precision_score(y_true, y_pred, average="macro") 
+            class_scores = precision_score(y_true, y_pred, average=None)
+        else:
+            score = precision_score(y_true, y_pred) 
+    elif(metric=="Recall"): # Recall
+        if(class_names): 
+            score = recall_score(y_true, y_pred, average="macro") 
+            class_scores = recall_score(y_true, y_pred, average=None)
+        else:
+            score = recall_score(y_true, y_pred) 
+    elif(metric=="F1 Score"): # F1 Score
+        if(class_names): 
+            score = f1_score(y_true, y_pred, average="macro") 
+            class_scores = f1_score(y_true, y_pred, average=None)
+        else:
+            score = f1_score(y_true, y_pred) 
+    elif(metric=="ROC AUC"): # ROC AUC
+        if(class_names): 
+            score = roc_auc_score(y_true, y_pred_proba, multi_class='ovr') 
+            class_scores = roc_auc_score(y_true, y_pred_proba, multi_class='ovr', average=None)
+        else:
+            score = roc_auc_score(y_true, y_pred_proba[:, 1]) 
+    elif(metric=="Avg Precision"): # Avg Precision
+        if(class_names): 
+            y_true_classes = np.unique(y_true)
+            y_true_onehot = label_binarize(y_true, classes=y_true_classes)
+
+            score = average_precision_score(y_true_onehot, y_pred_proba)
+            class_scores = average_precision_score(y_true_onehot, y_pred_proba, average=None)
+        else:
+            score = average_precision_score(y_true, y_pred_proba[:, 1]) 
+
+    return score, class_scores
+
 def train_function(model, X_train, y_train):
     start = time.time()
         
@@ -82,50 +122,17 @@ def predict_function(model, X):
 
 def get_binary_results(y_true, y_pred, y_pred_proba, metric_df, metrics, split):
     for metric in metrics:
-        if(metric=="Accuracy"):
-            score = accuracy_score(y_true, y_pred) # Accuracy
-        elif(metric=="Precision"):
-            score = precision_score(y_true, y_pred) # Precision
-        elif(metric=="Recall"):
-            score = recall_score(y_true, y_pred) # Recall
-        elif(metric=="F1 Score"):
-            score = f1_score(y_true, y_pred) # F1 Score
-        elif(metric=="ROC AUC"):
-            score = roc_auc_score(y_true, y_pred_proba[:, 1]) # ROC AUC
-        elif(metric=="Avg Precision"):
-            score = average_precision_score(y_true, y_pred_proba[:, 1]) # Avg Precision
+        score, _ = classif_metrics(metric, y_true, y_pred, y_pred_proba)
         metric_df.loc[0, f"{split} {metric}"] = score
 
     return metric_df
 
-def get_multi_results(y_true, y_pred, y_pred_proba, metric_df, metrics, class_names, split):
-    # Class
-    y_true_classes = np.unique(y_true)
-    y_true_onehot = label_binarize(y_true, classes=y_true_classes)
-
+def get_multi_results(y_true, y_pred, y_pred_proba, metric_df, metrics, split, class_names):
     for metric in metrics:
-        if(metric=="Accuracy"):
-            score = accuracy_score(y_true, y_pred) # Accuracy
-            metric_df.loc[0, f"{split} {metric}"] = score
-        else:
-            if(metric=="Precision"): # Precision
-                score = precision_score(y_true, y_pred, average="macro") 
-                class_scores = precision_score(y_true, y_pred, average=None)
-            elif(metric=="Recall"): # Recall
-                score = recall_score(y_true, y_pred, average="macro") 
-                class_scores = recall_score(y_true, y_pred, average=None)
-            elif(metric=="F1 Score"): # F1 Score
-                score = f1_score(y_true, y_pred, average="macro") 
-                class_scores = f1_score(y_true, y_pred, average=None)
-            elif(metric=="ROC AUC"): # ROC AUC
-                score = roc_auc_score(y_true, y_pred_proba, multi_class='ovr') 
-                class_scores = roc_auc_score(y_true, y_pred_proba, multi_class='ovr', average=None)
-            elif(metric=="Avg Precision"): # Avg Precision
-                score = average_precision_score(y_true_onehot, y_pred_proba)
-                class_scores = average_precision_score(y_true_onehot, y_pred_proba, average=None)
-
-            metric_df.loc[0, f"{split} {metric}"] = score # Overall
+        score, class_scores = classif_metrics(metric, y_true, y_pred, y_pred_proba, class_names)
+        metric_df.loc[0, f"{split} {metric}"] = score # Overall
+        if(class_scores is not None):
             for i, class_name in enumerate(class_names):
                 metric_df.loc[0, f"{split} {metric}-{class_name}"] = class_scores[i] # Each Class
-
+    
     return metric_df
