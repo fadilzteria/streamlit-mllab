@@ -68,12 +68,15 @@ def preprocess_data():
     cleaned_df = cleaned_df[cleaned_columns]
 
     # Transform Value Types
+    dp_num2bin_cols = dp_sets["dp_num2bin_cols"]
+    if(dp_sets["target"] in dp_num2bin_cols):
+        dp_num2bin_cols.pop(dp_sets["target"])
     dp_num2cat_cols = dp_sets["dp_num2cat_cols"]
     if(dp_sets["target"] in dp_num2cat_cols):
         dp_num2cat_cols.remove(dp_sets["target"])
     cleaned_df, _ = dq.transform_dtypes(
         cleaned_df, split="Test", 
-        num2bin_cols=dp_sets["dp_num2bin_cols"], num2cat_cols=dp_num2cat_cols
+        num2bin_cols=dp_num2bin_cols, num2cat_cols=dp_num2cat_cols
     )
 
     # Handling Missing Values
