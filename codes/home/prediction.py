@@ -3,8 +3,9 @@ import copy
 import json
 import pandas as pd
 import streamlit as st
+import shutil
 
-from codes.utils import data_quality as dq, test_utils
+from codes.utils import data_quality as dq, univariate_analysis as ua, test_utils
 
 # ==================================================================================================
 # DATASET INPUT
@@ -32,7 +33,8 @@ def fill_dataset_input():
             key="data_file", index=0
         )
         if(st.session_state["data_file"]):
-            data_filepath = os.path.join(raw_data_path, st.session_state["data_file"])
+            st.session_state["data_filename"] = copy.deepcopy(st.session_state["data_file"])
+            data_filepath = os.path.join(raw_data_path, st.session_state["data_filename"])
             raw_df = dq.load_dataframe(data_filepath)
             st.session_state["temp_raw_test_dataset"] = raw_df
 
@@ -40,7 +42,8 @@ def fill_dataset_input():
     else:
         uploaded_file = st.file_uploader(label="**Upload a Dataset File**", key="data_file")
         if(st.session_state["data_file"]):
-            raw_df = dq.load_dataframe(uploaded_file.name, uploaded_file=uploaded_file)
+            st.session_state["data_filename"] = copy.deepcopy(uploaded_file.name)
+            raw_df = dq.load_dataframe(st.session_state["data_filename"], uploaded_file=uploaded_file)
             st.session_state["temp_raw_test_dataset"] = raw_df
 
     # Data Preprocessing Name
@@ -70,7 +73,10 @@ def preprocess_data():
     # Transform Value Types
     dp_num2bin_cols = dp_sets["dp_num2bin_cols"]
     if(dp_sets["target"] not in cleaned_df):
-        dp_num2bin_cols.pop(dp_sets["target"])
+        try:
+            dp_num2bin_cols.pop(dp_sets["target"])
+        except:
+            pass
     dp_num2cat_cols = dp_sets["dp_num2cat_cols"]
     if(dp_sets["target"] in dp_num2cat_cols):
         dp_num2cat_cols.remove(dp_sets["target"])
@@ -113,10 +119,41 @@ def show_cleaned_dataset(cleaned_df):
     st.dataframe(cleaned_df)   
 
 # ==================================================================================================
+# DATA COMPARISON
+# ==================================================================================================
+def data_comparison(test_df):
+    if(len(test_df) > 1000):
+        st.header("Data Comparison", divider="orange")
+
+        # Cleaned Train Dataframe
+        dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
+        train_df_path = os.path.join(dp_path, "cleaned_train.parquet")
+        train_df = pd.read_parquet(train_df_path)
+        
+
+        # ---------------------------------------------------
+        # Value Counts
+        st.subheader("Value Counts")
+        all_value_df_list = [ua.calculate_value_counts(df) for df in [train_df, test_df]]
+        ua.show_value_counts(all_value_df_list, ["Train", "Test"])
+
+        # ---------------------------------------------------
+        # Box Plot
+        st.subheader("Box Plot")
+        ua.show_box_plot([train_df, test_df], ["Train", "Test"])
+
+        # ---------------------------------------------------
+        # Distribution
+        st.subheader("Distribution")
+        ua.show_kde_distribution([train_df, test_df], ["Train", "Test"])
+
+# ==================================================================================================
 # TESTING CONFIGURATION
 # ==================================================================================================
 @st.fragment()
 def fill_testing_configuration():
+    st.text_input(label="Test Name", value="Test 1", key="test_name") # Test Name
+
     # Exp Name for Testing
     exp_list = os.listdir("experiments")
     st.selectbox(label="Experiment Name", options=exp_list, key="exp_name", index=0) 
@@ -143,6 +180,9 @@ def run_testing():
     methods = st.session_state["model_names"]
 
     test_config = {
+        "test_name": st.session_state["test_name"],
+        "data_filename": st.session_state["data_filename"],
+        "dp_name": st.session_state["dp_name"],
         "exp_name": st.session_state["exp_name"],
         "folds": st.session_state["folds"],
         "methods": methods,
@@ -151,6 +191,19 @@ def run_testing():
     config_filepath = os.path.join("experiments", test_config["exp_name"], "config.json")
     with open(config_filepath, 'r') as file:
         train_config = json.load(file)
+
+    # Save Test Config
+    base_test_path = os.path.join("experiments", train_config["exp_name"], "tests")
+    if(os.path.exists(base_test_path) == False):
+        os.mkdir(base_test_path)
+    test_path = os.path.join(base_test_path, test_config["test_name"])
+    if(os.path.exists(test_path)):
+        shutil.rmtree(test_path)
+    os.mkdir(test_path)
+
+    config_filepath = os.path.join(test_path, "test_config.json")
+    with open(config_filepath, "w") as f:
+        json.dump(test_config, f)
 
     # Inference
     pred_df = test_utils.inference(test_config, train_config, test_df, methods)
@@ -205,6 +258,7 @@ def prediction():
         # Show Cleaned Dataset
         if("cleaned_test_dataset" in st.session_state): 
             show_cleaned_dataset(st.session_state["cleaned_test_dataset"])
+            data_comparison(st.session_state["cleaned_test_dataset"])
 
         # Testing Configuration
         if("cleaned_test_dataset" in st.session_state):

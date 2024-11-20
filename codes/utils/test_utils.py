@@ -2,6 +2,7 @@ import os
 import json
 import copy
 import pickle
+import shutil
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -107,6 +108,12 @@ def full_ensembling(test_config, train_config, test_df, pred_df):
 
     if(train_config["target"] in test_df.columns):
         full_ensembled_df[f"{train_config['target']}_actual"] = test_df[train_config["target"]]
+
+    base_test_path = os.path.join("experiments", train_config["exp_name"], "tests")
+    test_path = os.path.join(base_test_path, test_config["test_name"])
+
+    ensembled_filepath = os.path.join(test_path, "ensembled_df.parquet")
+    full_ensembled_df.to_parquet(ensembled_filepath)
     
     return full_ensembled_df
 
@@ -145,5 +152,11 @@ def eval_testing(test_config, train_config, ensembled_df):
             )
         
         full_metric_df = pd.concat([full_metric_df, model_metric_df], ignore_index=True)
+
+    base_test_path = os.path.join("experiments", train_config["exp_name"], "tests")
+    test_path = os.path.join(base_test_path, test_config["test_name"])
+
+    metric_filepath = os.path.join(test_path, "metric_df.parquet")
+    full_metric_df.to_parquet(metric_filepath)
     
     return full_metric_df

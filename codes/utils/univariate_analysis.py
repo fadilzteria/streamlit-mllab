@@ -11,6 +11,7 @@ import streamlit as st
 COLORS = list(mcolors.XKCD_COLORS.keys())
 random.Random(1).shuffle(COLORS)
 
+@st.cache_data()
 def calculate_value_counts(df, just_category=False, drop_features=[], max_numeric_uniques=20):
     # Categorical and Few Numerical Columns
     if(len(drop_features) > 0):
@@ -46,6 +47,7 @@ def calculate_value_counts(df, just_category=False, drop_features=[], max_numeri
 
     return value_df_list
 
+@st.cache_data()
 def show_value_counts(full_list, labels, max_cat_uniques=10):
     # Check List
     if(len(full_list[0])==0):
@@ -104,6 +106,7 @@ def show_value_counts(full_list, labels, max_cat_uniques=10):
         plt.tight_layout()
         st.pyplot(fig)
 
+@st.cache_data()
 def extract_statistics(df):
     numerical_columns = list(df.select_dtypes(include=[np.number]).columns.values)
 
@@ -130,6 +133,7 @@ def extract_statistics(df):
 
     return desc_stats_df, quan_stats_df
 
+@st.cache_data()
 def show_box_plot(dfs, labels):
     # Columns
     for i, df in enumerate(dfs):
@@ -167,6 +171,7 @@ def show_box_plot(dfs, labels):
     plt.tight_layout()
     st.pyplot(fig)
 
+@st.cache_data()
 def show_kde_distribution(dfs, labels):
     # Columns
     for i, df in enumerate(dfs):
