@@ -3,73 +3,73 @@ Training Data Shape: (61214, 32)
 Validation Data Shape: (15304, 32)
 Classes: ['Dropout', 'Enrolled', 'Graduate']
 
+Logistic Regression
+Train Metrics, Accuracy: 0.8140, Precision: 0.7816, Recall: 0.7615, F1 Score: 0.7694, ROC AUC: 0.9201, Avg Precision: 0.8095
+Valid Metrics, Accuracy: 0.8147, Precision: 0.7824, Recall: 0.7634, F1 Score: 0.7709, ROC AUC: 0.9197, Avg Precision: 0.8101
+Training Runtime: 0.52s, Prediction Runtime: 0.05s
+
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.8031, Precision: 0.7768, Recall: 0.7543, F1 Score: 0.7618, ROC AUC: 0.9122, Avg Precision: 0.7997
 Valid Metrics, Accuracy: 0.8004, Precision: 0.7745, Recall: 0.7510, F1 Score: 0.7585, ROC AUC: 0.9114, Avg Precision: 0.7982
-Training Runtime: 0.35s, Prediction Runtime: 0.07s
-
-Bernoulli Bayes
-Train Metrics, Accuracy: 0.7868, Precision: 0.7521, Recall: 0.7407, F1 Score: 0.7448, ROC AUC: 0.8965, Avg Precision: 0.7803
-Valid Metrics, Accuracy: 0.7853, Precision: 0.7501, Recall: 0.7397, F1 Score: 0.7433, ROC AUC: 0.8956, Avg Precision: 0.7775
-Training Runtime: 0.06s, Prediction Runtime: 0.16s
+Training Runtime: 0.2s, Prediction Runtime: 0.05s
 
 ========== Fold: 1 Training ==========
 Training Data Shape: (61214, 32)
 Validation Data Shape: (15304, 32)
 Classes: ['Dropout', 'Enrolled', 'Graduate']
 
+Logistic Regression
+Train Metrics, Accuracy: 0.8142, Precision: 0.7818, Recall: 0.7613, F1 Score: 0.7693, ROC AUC: 0.9199, Avg Precision: 0.8094
+Valid Metrics, Accuracy: 0.8170, Precision: 0.7856, Recall: 0.7659, F1 Score: 0.7737, ROC AUC: 0.9211, Avg Precision: 0.8103
+Training Runtime: 0.48s, Prediction Runtime: 0.05s
+
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.8021, Precision: 0.7755, Recall: 0.7527, F1 Score: 0.7603, ROC AUC: 0.9118, Avg Precision: 0.7990
 Valid Metrics, Accuracy: 0.8069, Precision: 0.7813, Recall: 0.7594, F1 Score: 0.7668, ROC AUC: 0.9134, Avg Precision: 0.8032
-Training Runtime: 0.23s, Prediction Runtime: 0.060000000000000005s
-
-Bernoulli Bayes
-Train Metrics, Accuracy: 0.7862, Precision: 0.7493, Recall: 0.7373, F1 Score: 0.7419, ROC AUC: 0.8957, Avg Precision: 0.7780
-Valid Metrics, Accuracy: 0.7865, Precision: 0.7498, Recall: 0.7388, F1 Score: 0.7430, ROC AUC: 0.8959, Avg Precision: 0.7792
-Training Runtime: 0.06s, Prediction Runtime: 0.11s
+Training Runtime: 0.2s, Prediction Runtime: 0.04s
 
 ========== Fold: 2 Training ==========
 Training Data Shape: (61214, 32)
 Validation Data Shape: (15304, 32)
 Classes: ['Dropout', 'Enrolled', 'Graduate']
 
+Logistic Regression
+Train Metrics, Accuracy: 0.8146, Precision: 0.7826, Recall: 0.7626, F1 Score: 0.7704, ROC AUC: 0.9206, Avg Precision: 0.8105
+Valid Metrics, Accuracy: 0.8112, Precision: 0.7782, Recall: 0.7586, F1 Score: 0.7663, ROC AUC: 0.9184, Avg Precision: 0.8061
+Training Runtime: 0.47s, Prediction Runtime: 0.04s
+
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.8029, Precision: 0.7769, Recall: 0.7540, F1 Score: 0.7615, ROC AUC: 0.9123, Avg Precision: 0.8000
 Valid Metrics, Accuracy: 0.8001, Precision: 0.7724, Recall: 0.7503, F1 Score: 0.7577, ROC AUC: 0.9110, Avg Precision: 0.7962
-Training Runtime: 0.29s, Prediction Runtime: 0.060000000000000005s
-
-Bernoulli Bayes
-Train Metrics, Accuracy: 0.7867, Precision: 0.7518, Recall: 0.7407, F1 Score: 0.7447, ROC AUC: 0.8969, Avg Precision: 0.7807
-Valid Metrics, Accuracy: 0.7875, Precision: 0.7530, Recall: 0.7402, F1 Score: 0.7449, ROC AUC: 0.8942, Avg Precision: 0.7770
-Training Runtime: 0.04s, Prediction Runtime: 0.12000000000000001s
+Training Runtime: 0.2s, Prediction Runtime: 0.05s
 
 ========== Fold: 3 Training ==========
 Training Data Shape: (61215, 32)
 Validation Data Shape: (15303, 32)
 Classes: ['Dropout', 'Enrolled', 'Graduate']
 
+Logistic Regression
+Train Metrics, Accuracy: 0.8151, Precision: 0.7835, Recall: 0.7632, F1 Score: 0.7711, ROC AUC: 0.9200, Avg Precision: 0.8100
+Valid Metrics, Accuracy: 0.8122, Precision: 0.7773, Recall: 0.7562, F1 Score: 0.7643, ROC AUC: 0.9202, Avg Precision: 0.8097
+Training Runtime: 0.48s, Prediction Runtime: 0.04s
+
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.8029, Precision: 0.7769, Recall: 0.7544, F1 Score: 0.7618, ROC AUC: 0.9121, Avg Precision: 0.7999
 Valid Metrics, Accuracy: 0.8018, Precision: 0.7741, Recall: 0.7518, F1 Score: 0.7593, ROC AUC: 0.9117, Avg Precision: 0.7989
-Training Runtime: 0.26s, Prediction Runtime: 0.04s
-
-Bernoulli Bayes
-Train Metrics, Accuracy: 0.7877, Precision: 0.7531, Recall: 0.7412, F1 Score: 0.7455, ROC AUC: 0.8965, Avg Precision: 0.7807
-Valid Metrics, Accuracy: 0.7858, Precision: 0.7500, Recall: 0.7378, F1 Score: 0.7423, ROC AUC: 0.8961, Avg Precision: 0.7778
-Training Runtime: 0.05s, Prediction Runtime: 0.11s
+Training Runtime: 0.19s, Prediction Runtime: 0.05s
 
 ========== Fold: 4 Training ==========
 Training Data Shape: (61215, 32)
 Validation Data Shape: (15303, 32)
 Classes: ['Dropout', 'Enrolled', 'Graduate']
 
+Logistic Regression
+Train Metrics, Accuracy: 0.8145, Precision: 0.7818, Recall: 0.7620, F1 Score: 0.7698, ROC AUC: 0.9201, Avg Precision: 0.8094
+Valid Metrics, Accuracy: 0.8152, Precision: 0.7853, Recall: 0.7638, F1 Score: 0.7721, ROC AUC: 0.9196, Avg Precision: 0.8098
+Training Runtime: 0.5s, Prediction Runtime: 0.04s
+
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.8022, Precision: 0.7757, Recall: 0.7532, F1 Score: 0.7606, ROC AUC: 0.9119, Avg Precision: 0.7989
 Valid Metrics, Accuracy: 0.8028, Precision: 0.7780, Recall: 0.7548, F1 Score: 0.7622, ROC AUC: 0.9116, Avg Precision: 0.7991
-Training Runtime: 0.3s, Prediction Runtime: 0.05s
-
-Bernoulli Bayes
-Train Metrics, Accuracy: 0.7872, Precision: 0.7521, Recall: 0.7402, F1 Score: 0.7445, ROC AUC: 0.8957, Avg Precision: 0.7785
-Valid Metrics, Accuracy: 0.7879, Precision: 0.7538, Recall: 0.7422, F1 Score: 0.7463, ROC AUC: 0.8990, Avg Precision: 0.7858
-Training Runtime: 0.06s, Prediction Runtime: 0.11s
+Training Runtime: 0.2s, Prediction Runtime: 0.04s
 

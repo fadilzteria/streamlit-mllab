@@ -1,1 +1,1 @@
-{"fe_cat_encoding": true, "fe_scaling": true, "fe_max_cat_unique": 10, "fe_cat_type": "One-hot", "fe_feat_extraction": false, "fe_drop_many_cat_unique": true, "fe_feat_creation": false}
+{"fe_cat_encoding": true, "fe_drop_many_cat_unique": true, "fe_feat_creation": false, "fe_cat_type": "One-hot", "fe_feat_extraction": false, "fe_max_cat_unique": 10, "fe_scaling": true}

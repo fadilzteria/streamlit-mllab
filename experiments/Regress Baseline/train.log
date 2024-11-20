@@ -5,12 +5,12 @@ Validation Data Shape: (38475, 23)
 Linear Regression
 Train Metrics, MSE: 913071.7071, RMSE: 955.5479, MAE: 628.4408, MedAE: 428.3345, R2: 0.9441, Adj R2: 0.9441
 Valid Metrics, MSE: 892854.5516, RMSE: 944.9098, MAE: 622.3470, MedAE: 429.5578, R2: 0.9453, Adj R2: 0.9453
-Training Runtime: 0.38s, Prediction Runtime: 0.03s
+Training Runtime: 0.12s, Prediction Runtime: 0.04s
 
 Ridge Regression
 Train Metrics, MSE: 913071.8914, RMSE: 955.5480, MAE: 628.4515, MedAE: 428.3627, R2: 0.9441, Adj R2: 0.9441
 Valid Metrics, MSE: 892912.8870, RMSE: 944.9407, MAE: 622.3566, MedAE: 429.5747, R2: 0.9453, Adj R2: 0.9452
-Training Runtime: 0.08s, Prediction Runtime: 0.03s
+Training Runtime: 0.05s, Prediction Runtime: 0.02s
 
 ========== Fold: 1 Training ==========
 Training Data Shape: (153898, 23)
@@ -19,12 +19,12 @@ Validation Data Shape: (38475, 23)
 Linear Regression
 Train Metrics, MSE: 905005.7073, RMSE: 951.3179, MAE: 626.9920, MedAE: 429.4844, R2: 0.9447, Adj R2: 0.9447
 Valid Metrics, MSE: 916058.3869, RMSE: 957.1094, MAE: 632.7445, MedAE: 433.6715, R2: 0.9433, Adj R2: 0.9433
-Training Runtime: 0.26s, Prediction Runtime: 0.03s
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
 Ridge Regression
 Train Metrics, MSE: 905005.9277, RMSE: 951.3180, MAE: 627.0011, MedAE: 429.4673, R2: 0.9447, Adj R2: 0.9447
 Valid Metrics, MSE: 916052.6993, RMSE: 957.1064, MAE: 632.7557, MedAE: 433.7488, R2: 0.9433, Adj R2: 0.9433
-Training Runtime: 0.07s, Prediction Runtime: 0.03s
+Training Runtime: 0.05s, Prediction Runtime: 0.03s
 
 ========== Fold: 2 Training ==========
 Training Data Shape: (153898, 23)
@@ -33,12 +33,12 @@ Validation Data Shape: (38475, 23)
 Linear Regression
 Train Metrics, MSE: 908017.4702, RMSE: 952.8995, MAE: 627.2790, MedAE: 429.0430, R2: 0.9444, Adj R2: 0.9444
 Valid Metrics, MSE: 903754.3784, RMSE: 950.6600, MAE: 627.2703, MedAE: 429.1377, R2: 0.9447, Adj R2: 0.9447
-Training Runtime: 0.25s, Prediction Runtime: 0.03s
+Training Runtime: 0.14s, Prediction Runtime: 0.02s
 
 Ridge Regression
 Train Metrics, MSE: 908017.6574, RMSE: 952.8996, MAE: 627.2903, MedAE: 429.0467, R2: 0.9444, Adj R2: 0.9444
 Valid Metrics, MSE: 903754.4387, RMSE: 950.6600, MAE: 627.2826, MedAE: 429.2438, R2: 0.9447, Adj R2: 0.9447
-Training Runtime: 0.07s, Prediction Runtime: 0.03s
+Training Runtime: 0.04s, Prediction Runtime: 0.03s
 
 ========== Fold: 3 Training ==========
 Training Data Shape: (153899, 23)
@@ -47,12 +47,12 @@ Validation Data Shape: (38474, 23)
 Linear Regression
 Train Metrics, MSE: 900577.4363, RMSE: 948.9876, MAE: 626.6524, MedAE: 428.9569, R2: 0.9448, Adj R2: 0.9448
 Valid Metrics, MSE: 933669.9775, RMSE: 966.2660, MAE: 629.3823, MedAE: 428.6128, R2: 0.9429, Adj R2: 0.9429
-Training Runtime: 0.27s, Prediction Runtime: 0.04s
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
 Ridge Regression
 Train Metrics, MSE: 900577.6241, RMSE: 948.9877, MAE: 626.6633, MedAE: 428.9779, R2: 0.9448, Adj R2: 0.9448
 Valid Metrics, MSE: 933658.4713, RMSE: 966.2600, MAE: 629.3912, MedAE: 428.5519, R2: 0.9429, Adj R2: 0.9429
-Training Runtime: 0.06s, Prediction Runtime: 0.03s
+Training Runtime: 0.05s, Prediction Runtime: 0.03s
 
 ========== Fold: 4 Training ==========
 Training Data Shape: (153899, 23)
@@ -61,10 +61,10 @@ Validation Data Shape: (38474, 23)
 Linear Regression
 Train Metrics, MSE: 908281.4458, RMSE: 953.0380, MAE: 627.8377, MedAE: 429.4560, R2: 0.9443, Adj R2: 0.9443
 Valid Metrics, MSE: 902767.0806, RMSE: 950.1406, MAE: 626.2956, MedAE: 426.1247, R2: 0.9451, Adj R2: 0.9451
-Training Runtime: 0.31s, Prediction Runtime: 0.03s
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
 Ridge Regression
 Train Metrics, MSE: 908281.6351, RMSE: 953.0381, MAE: 627.8494, MedAE: 429.4049, R2: 0.9443, Adj R2: 0.9443
 Valid Metrics, MSE: 902770.8633, RMSE: 950.1425, MAE: 626.3072, MedAE: 426.1763, R2: 0.9451, Adj R2: 0.9451
-Training Runtime: 0.07s, Prediction Runtime: 0.03s
+Training Runtime: 0.05s, Prediction Runtime: 0.03s
 

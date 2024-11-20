@@ -3,73 +3,73 @@ Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
 Classes: [False, True]
 
-Logistic Regression
-Train Metrics, Accuracy: 0.9128, Precision: 0.7811, Recall: 0.5389, F1 Score: 0.6378, ROC AUC: 0.9043, Avg Precision: 0.7165
-Valid Metrics, Accuracy: 0.9095, Precision: 0.7627, Recall: 0.5293, F1 Score: 0.6250, ROC AUC: 0.8930, Avg Precision: 0.7006
-Training Runtime: 0.21s, Prediction Runtime: 0.05s
+Decision Tree
+Train Metrics, Accuracy: 0.9079, Precision: 0.6452, Recall: 0.7847, F1 Score: 0.7082, ROC AUC: 0.9139, Avg Precision: 0.7651
+Valid Metrics, Accuracy: 0.9005, Precision: 0.6243, Recall: 0.7563, F1 Score: 0.6840, ROC AUC: 0.8997, Avg Precision: 0.7390
+Training Runtime: 0.1s, Prediction Runtime: 0.03s
 
-Linear Discriminant Analysis
-Train Metrics, Accuracy: 0.9041, Precision: 0.6901, Recall: 0.5933, F1 Score: 0.6380, ROC AUC: 0.8924, Avg Precision: 0.6683
-Valid Metrics, Accuracy: 0.8988, Precision: 0.6676, Recall: 0.5760, F1 Score: 0.6185, ROC AUC: 0.8812, Avg Precision: 0.6537
-Training Runtime: 0.28s, Prediction Runtime: 0.05s
+Extra Trees
+Train Metrics, Accuracy: 0.8678, Precision: 0.5239, Recall: 0.7891, F1 Score: 0.6297, ROC AUC: 0.8942, Avg Precision: 0.6664
+Valid Metrics, Accuracy: 0.8615, Precision: 0.5089, Recall: 0.7695, F1 Score: 0.6126, ROC AUC: 0.8836, Avg Precision: 0.6431
+Training Runtime: 1.14s, Prediction Runtime: 0.49s
 
 ========== Fold: 1 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
 Classes: [False, True]
 
-Logistic Regression
-Train Metrics, Accuracy: 0.9124, Precision: 0.7789, Recall: 0.5374, F1 Score: 0.6360, ROC AUC: 0.9021, Avg Precision: 0.7134
-Valid Metrics, Accuracy: 0.9139, Precision: 0.7850, Recall: 0.5443, F1 Score: 0.6429, ROC AUC: 0.9014, Avg Precision: 0.7128
-Training Runtime: 0.28s, Prediction Runtime: 0.09s
+Decision Tree
+Train Metrics, Accuracy: 0.8839, Precision: 0.5645, Recall: 0.8061, F1 Score: 0.6640, ROC AUC: 0.9058, Avg Precision: 0.7572
+Valid Metrics, Accuracy: 0.8867, Precision: 0.5720, Recall: 0.8108, F1 Score: 0.6708, ROC AUC: 0.9096, Avg Precision: 0.7665
+Training Runtime: 0.1s, Prediction Runtime: 0.03s
 
-Linear Discriminant Analysis
-Train Metrics, Accuracy: 0.9037, Precision: 0.6867, Recall: 0.5946, F1 Score: 0.6374, ROC AUC: 0.8902, Avg Precision: 0.6658
-Valid Metrics, Accuracy: 0.9041, Precision: 0.6899, Recall: 0.5928, F1 Score: 0.6377, ROC AUC: 0.8883, Avg Precision: 0.6639
-Training Runtime: 0.13s, Prediction Runtime: 0.03s
+Extra Trees
+Train Metrics, Accuracy: 0.8527, Precision: 0.4895, Recall: 0.8003, F1 Score: 0.6075, ROC AUC: 0.8924, Avg Precision: 0.6627
+Valid Metrics, Accuracy: 0.8534, Precision: 0.4908, Recall: 0.7976, F1 Score: 0.6077, ROC AUC: 0.8916, Avg Precision: 0.6605
+Training Runtime: 1.03s, Prediction Runtime: 0.5700000000000001s
 
 ========== Fold: 2 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
 Classes: [False, True]
 
-Logistic Regression
-Train Metrics, Accuracy: 0.9118, Precision: 0.7771, Recall: 0.5334, F1 Score: 0.6326, ROC AUC: 0.9026, Avg Precision: 0.7114
-Valid Metrics, Accuracy: 0.9123, Precision: 0.7880, Recall: 0.5251, F1 Score: 0.6303, ROC AUC: 0.9005, Avg Precision: 0.7208
-Training Runtime: 0.16s, Prediction Runtime: 0.03s
+Decision Tree
+Train Metrics, Accuracy: 0.8968, Precision: 0.6045, Recall: 0.7948, F1 Score: 0.6867, ROC AUC: 0.9134, Avg Precision: 0.7635
+Valid Metrics, Accuracy: 0.8940, Precision: 0.5995, Recall: 0.7701, F1 Score: 0.6742, ROC AUC: 0.9016, Avg Precision: 0.7469
+Training Runtime: 0.1s, Prediction Runtime: 0.03s
 
-Linear Discriminant Analysis
-Train Metrics, Accuracy: 0.9034, Precision: 0.6874, Recall: 0.5900, F1 Score: 0.6350, ROC AUC: 0.8911, Avg Precision: 0.6648
-Valid Metrics, Accuracy: 0.9049, Precision: 0.6947, Recall: 0.5928, F1 Score: 0.6397, ROC AUC: 0.8881, Avg Precision: 0.6749
-Training Runtime: 0.21s, Prediction Runtime: 0.04s
+Extra Trees
+Train Metrics, Accuracy: 0.8556, Precision: 0.4957, Recall: 0.8012, F1 Score: 0.6125, ROC AUC: 0.8934, Avg Precision: 0.6614
+Valid Metrics, Accuracy: 0.8563, Precision: 0.4970, Recall: 0.7898, F1 Score: 0.6101, ROC AUC: 0.8913, Avg Precision: 0.6729
+Training Runtime: 1.13s, Prediction Runtime: 0.63s
 
 ========== Fold: 3 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
 Classes: [False, True]
 
-Logistic Regression
-Train Metrics, Accuracy: 0.9112, Precision: 0.7757, Recall: 0.5292, F1 Score: 0.6292, ROC AUC: 0.9005, Avg Precision: 0.7087
-Valid Metrics, Accuracy: 0.9148, Precision: 0.7940, Recall: 0.5425, F1 Score: 0.6446, ROC AUC: 0.9103, Avg Precision: 0.7280
-Training Runtime: 0.19s, Prediction Runtime: 0.06s
+Decision Tree
+Train Metrics, Accuracy: 0.8844, Precision: 0.5663, Recall: 0.8042, F1 Score: 0.6646, ROC AUC: 0.9101, Avg Precision: 0.7587
+Valid Metrics, Accuracy: 0.8882, Precision: 0.5759, Recall: 0.8156, F1 Score: 0.6751, ROC AUC: 0.9152, Avg Precision: 0.7724
+Training Runtime: 0.1s, Prediction Runtime: 0.03s
 
-Linear Discriminant Analysis
-Train Metrics, Accuracy: 0.9017, Precision: 0.6806, Recall: 0.5840, F1 Score: 0.6286, ROC AUC: 0.8880, Avg Precision: 0.6617
-Valid Metrics, Accuracy: 0.9079, Precision: 0.7075, Recall: 0.6024, F1 Score: 0.6507, ROC AUC: 0.9004, Avg Precision: 0.6782
-Training Runtime: 0.12s, Prediction Runtime: 0.03s
+Extra Trees
+Train Metrics, Accuracy: 0.8612, Precision: 0.5080, Recall: 0.7904, F1 Score: 0.6185, ROC AUC: 0.8912, Avg Precision: 0.6562
+Valid Metrics, Accuracy: 0.8608, Precision: 0.5070, Recall: 0.8042, F1 Score: 0.6219, ROC AUC: 0.8966, Avg Precision: 0.6686
+Training Runtime: 1.1s, Prediction Runtime: 0.55s
 
 ========== Fold: 4 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
 Classes: [False, True]
 
-Logistic Regression
-Train Metrics, Accuracy: 0.9131, Precision: 0.7819, Recall: 0.5409, F1 Score: 0.6394, ROC AUC: 0.9019, Avg Precision: 0.7156
-Valid Metrics, Accuracy: 0.9103, Precision: 0.7614, Recall: 0.5389, F1 Score: 0.6311, ROC AUC: 0.9041, Avg Precision: 0.6993
-Training Runtime: 0.25s, Prediction Runtime: 0.04s
+Decision Tree
+Train Metrics, Accuracy: 0.9175, Precision: 0.6893, Recall: 0.7662, F1 Score: 0.7257, ROC AUC: 0.9104, Avg Precision: 0.7595
+Valid Metrics, Accuracy: 0.9131, Precision: 0.6696, Recall: 0.7695, F1 Score: 0.7161, ROC AUC: 0.9113, Avg Precision: 0.7530
+Training Runtime: 0.1s, Prediction Runtime: 0.03s
 
-Linear Discriminant Analysis
-Train Metrics, Accuracy: 0.9041, Precision: 0.6895, Recall: 0.5940, F1 Score: 0.6382, ROC AUC: 0.8898, Avg Precision: 0.6675
-Valid Metrics, Accuracy: 0.9002, Precision: 0.6705, Recall: 0.5874, F1 Score: 0.6262, ROC AUC: 0.8920, Avg Precision: 0.6554
-Training Runtime: 0.14s, Prediction Runtime: 0.02s
+Extra Trees
+Train Metrics, Accuracy: 0.8656, Precision: 0.5184, Recall: 0.7901, F1 Score: 0.6261, ROC AUC: 0.8950, Avg Precision: 0.6757
+Valid Metrics, Accuracy: 0.8636, Precision: 0.5136, Recall: 0.7928, F1 Score: 0.6234, ROC AUC: 0.8969, Avg Precision: 0.6614
+Training Runtime: 1.1s, Prediction Runtime: 0.55s
 

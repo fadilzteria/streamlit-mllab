@@ -1,0 +1,1 @@
+{"test_name": "Test with Labels", "data_filename": "classif_test_labels.csv", "dp_name": "Classif Baseline", "exp_name": "Classif Baseline", "folds": [0, 1, 2, 3, 4], "methods": ["Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting"]}
