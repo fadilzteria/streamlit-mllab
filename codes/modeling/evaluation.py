@@ -56,8 +56,9 @@ def category_based_metrics(config, cleaned_df, oof_df):
 @st.fragment()
 def show_category_metrics(cat_df_dict):
     group_cols = cat_df_dict.keys()
-    st.selectbox(label="Group Column", options=group_cols, key="group_col", index=0)
-    eval_utils.show_category_metrics(cat_df_dict, st.session_state["group_col"])
+    if(len(group_cols)>0):
+        st.selectbox(label="Group Column", options=group_cols, key="group_col", index=0)
+        eval_utils.show_category_metrics(cat_df_dict, st.session_state["group_col"])
 
 @st.fragment()
 def training_runtime(config, metric_df):

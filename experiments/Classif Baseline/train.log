@@ -6,12 +6,12 @@ Classes: [False, True]
 Logistic Regression
 Train Metrics, Accuracy: 0.9128, Precision: 0.7811, Recall: 0.5389, F1 Score: 0.6378, ROC AUC: 0.9043, Avg Precision: 0.7165
 Valid Metrics, Accuracy: 0.9095, Precision: 0.7627, Recall: 0.5293, F1 Score: 0.6250, ROC AUC: 0.8930, Avg Precision: 0.7006
-Training Runtime: 0.15s, Prediction Runtime: 0.02s
+Training Runtime: 0.21s, Prediction Runtime: 0.05s
 
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.9041, Precision: 0.6901, Recall: 0.5933, F1 Score: 0.6380, ROC AUC: 0.8924, Avg Precision: 0.6683
 Valid Metrics, Accuracy: 0.8988, Precision: 0.6676, Recall: 0.5760, F1 Score: 0.6185, ROC AUC: 0.8812, Avg Precision: 0.6537
-Training Runtime: 0.12s, Prediction Runtime: 0.03s
+Training Runtime: 0.28s, Prediction Runtime: 0.05s
 
 ========== Fold: 1 Training ==========
 Training Data Shape: (46916, 22)
@@ -21,12 +21,12 @@ Classes: [False, True]
 Logistic Regression
 Train Metrics, Accuracy: 0.9124, Precision: 0.7789, Recall: 0.5374, F1 Score: 0.6360, ROC AUC: 0.9021, Avg Precision: 0.7134
 Valid Metrics, Accuracy: 0.9139, Precision: 0.7850, Recall: 0.5443, F1 Score: 0.6429, ROC AUC: 0.9014, Avg Precision: 0.7128
-Training Runtime: 0.14s, Prediction Runtime: 0.03s
+Training Runtime: 0.28s, Prediction Runtime: 0.09s
 
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.9037, Precision: 0.6867, Recall: 0.5946, F1 Score: 0.6374, ROC AUC: 0.8902, Avg Precision: 0.6658
 Valid Metrics, Accuracy: 0.9041, Precision: 0.6899, Recall: 0.5928, F1 Score: 0.6377, ROC AUC: 0.8883, Avg Precision: 0.6639
-Training Runtime: 0.11s, Prediction Runtime: 0.03s
+Training Runtime: 0.13s, Prediction Runtime: 0.03s
 
 ========== Fold: 2 Training ==========
 Training Data Shape: (46916, 22)
@@ -36,12 +36,12 @@ Classes: [False, True]
 Logistic Regression
 Train Metrics, Accuracy: 0.9118, Precision: 0.7771, Recall: 0.5334, F1 Score: 0.6326, ROC AUC: 0.9026, Avg Precision: 0.7114
 Valid Metrics, Accuracy: 0.9123, Precision: 0.7880, Recall: 0.5251, F1 Score: 0.6303, ROC AUC: 0.9005, Avg Precision: 0.7208
-Training Runtime: 0.13s, Prediction Runtime: 0.03s
+Training Runtime: 0.16s, Prediction Runtime: 0.03s
 
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.9034, Precision: 0.6874, Recall: 0.5900, F1 Score: 0.6350, ROC AUC: 0.8911, Avg Precision: 0.6648
 Valid Metrics, Accuracy: 0.9049, Precision: 0.6947, Recall: 0.5928, F1 Score: 0.6397, ROC AUC: 0.8881, Avg Precision: 0.6749
-Training Runtime: 0.12s, Prediction Runtime: 0.03s
+Training Runtime: 0.21s, Prediction Runtime: 0.04s
 
 ========== Fold: 3 Training ==========
 Training Data Shape: (46916, 22)
@@ -51,12 +51,12 @@ Classes: [False, True]
 Logistic Regression
 Train Metrics, Accuracy: 0.9112, Precision: 0.7757, Recall: 0.5292, F1 Score: 0.6292, ROC AUC: 0.9005, Avg Precision: 0.7087
 Valid Metrics, Accuracy: 0.9148, Precision: 0.7940, Recall: 0.5425, F1 Score: 0.6446, ROC AUC: 0.9103, Avg Precision: 0.7280
-Training Runtime: 0.14s, Prediction Runtime: 0.03s
+Training Runtime: 0.19s, Prediction Runtime: 0.06s
 
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.9017, Precision: 0.6806, Recall: 0.5840, F1 Score: 0.6286, ROC AUC: 0.8880, Avg Precision: 0.6617
 Valid Metrics, Accuracy: 0.9079, Precision: 0.7075, Recall: 0.6024, F1 Score: 0.6507, ROC AUC: 0.9004, Avg Precision: 0.6782
-Training Runtime: 0.11s, Prediction Runtime: 0.02s
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
 ========== Fold: 4 Training ==========
 Training Data Shape: (46916, 22)
@@ -66,10 +66,10 @@ Classes: [False, True]
 Logistic Regression
 Train Metrics, Accuracy: 0.9131, Precision: 0.7819, Recall: 0.5409, F1 Score: 0.6394, ROC AUC: 0.9019, Avg Precision: 0.7156
 Valid Metrics, Accuracy: 0.9103, Precision: 0.7614, Recall: 0.5389, F1 Score: 0.6311, ROC AUC: 0.9041, Avg Precision: 0.6993
-Training Runtime: 0.16s, Prediction Runtime: 0.03s
+Training Runtime: 0.25s, Prediction Runtime: 0.04s
 
 Linear Discriminant Analysis
 Train Metrics, Accuracy: 0.9041, Precision: 0.6895, Recall: 0.5940, F1 Score: 0.6382, ROC AUC: 0.8898, Avg Precision: 0.6675
 Valid Metrics, Accuracy: 0.9002, Precision: 0.6705, Recall: 0.5874, F1 Score: 0.6262, ROC AUC: 0.8920, Avg Precision: 0.6554
-Training Runtime: 0.12s, Prediction Runtime: 0.03s
+Training Runtime: 0.14s, Prediction Runtime: 0.02s
 

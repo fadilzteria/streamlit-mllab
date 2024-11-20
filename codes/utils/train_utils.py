@@ -71,8 +71,13 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
     logger.info(f"Validation Data Shape: {X_valid.shape}")
 
     if(config["ml_task"]=="Classification"):
-        class_names = list(train_folds[config["target"]].unique())
-        class_names = [bool(c) if isinstance(c, np.bool_) else c for c in class_names]
+        uniques = list(train_folds[config["target"]].unique())
+        if(len(uniques)==2):
+            class_names = list(uniques)
+            class_names = [bool(c) if isinstance(c, np.bool_) else c for c in class_names]
+        else:
+            class_names = fe_pipeline["Class Encoder"].classes_.tolist()
+
         fe_pipeline["Class Names"] = class_names
         pred_mapping = dict(zip(range(len(class_names)), class_names))
         logger.info(f"Classes: {class_names}")

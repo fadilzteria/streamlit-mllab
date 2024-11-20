@@ -1,5 +1,6 @@
 import os
 import json
+import copy
 import pickle
 import numpy as np
 import pandas as pd
@@ -60,27 +61,89 @@ def inference(test_config, train_config, test_df, methods):
 
     return pred_df
 
-# Ensembling
-def ensembling(test_config, train_config, test_df, pred_df):
-    pred_columns = pred_df.columns[1:].tolist()
-
+def ensembling(test_config, train_config, test_df, pred_df, model_name=""):
     ensembled_df = pd.DataFrame()
     ensembled_df[train_config["id"]] = test_df[train_config["id"]]
 
+    if(model_name=="Ensembled"):
+        pred_columns = pred_df.columns[1:].tolist()
+    else:
+        pred_columns = [col for col in pred_df.columns if model_name in col]
+    
+    target_name = f"{model_name}_{train_config['target']}"
+    hard_target_name = target_name + "_pred"
+
     if(train_config["ml_task"]=="Classification"): 
+        # Class Names
         class_names = list(set([col.split("_")[-2] for col in pred_columns]))
+
         # Soft Classes
         for i, class_name in enumerate(class_names):
-            class_columns = [col for col in pred_df.columns if class_name in col]
-            ensembled_df[f"{train_config['target']}_{class_name}"] = np.mean(pred_df.loc[:, class_columns], axis=1)
+            class_columns = [col for col in pred_columns if class_name in col]
+            class_target_name = target_name + "_" + class_name
+            ensembled_df[class_target_name] = np.mean(pred_df.loc[:, class_columns], axis=1)
 
         # Hard Classes
-        ensembled_df[train_config['target']] = np.argmax(ensembled_df.iloc[:, 1:len(class_names)+1], axis=1)
-        ensembled_df[train_config['target']] = ensembled_df[train_config['target']].apply(lambda x: class_names[x])
+        ensembled_df[hard_target_name] = np.argmax(ensembled_df.iloc[:, 1:len(class_names)+1], axis=1)
+        ensembled_df[hard_target_name] = ensembled_df[hard_target_name].apply(lambda x: class_names[x])
+        uniques = ensembled_df[hard_target_name].unique()
+        if(len(uniques)==2 and (np.sort(uniques) == ['False', 'True']).all()):
+            ensembled_df[hard_target_name] = (ensembled_df[hard_target_name]=='True')
     
     else:
-        ensembled_df[train_config['target']] = np.mean(pred_df.loc[:, pred_columns], axis=1)
-
-    st.success(f"Your testing has been successfully processed")
-
+        ensembled_df[hard_target_name] = np.mean(pred_df.loc[:, pred_columns], axis=1)
+    
     return ensembled_df
+
+def full_ensembling(test_config, train_config, test_df, pred_df):
+    full_ensembled_df = pd.DataFrame()
+    full_ensembled_df[train_config["id"]] = test_df[train_config["id"]]
+
+    methods = copy.deepcopy(test_config["methods"])
+    methods.append("Ensembled")
+    for model_name in methods:
+        ensembled_df = ensembling(test_config, train_config, test_df, pred_df, model_name=model_name)
+        full_ensembled_df = full_ensembled_df.merge(ensembled_df, on=train_config["id"])
+
+    if(train_config["target"] in test_df.columns):
+        full_ensembled_df[f"{train_config['target']}_actual"] = test_df[train_config["target"]]
+    
+    return full_ensembled_df
+
+def eval_testing(test_config, train_config, ensembled_df):
+    metric_list = train_config["metrics"]
+    full_metric_df = pd.DataFrame()
+    actual_target_name = f"{train_config['target']}_actual"
+
+    methods = copy.deepcopy(test_config["methods"])
+    methods.append("Ensembled")
+
+    for model_name in methods:
+        model_target_name = f"{model_name}_{train_config['target']}_pred"
+        model_metric_df = pd.DataFrame({"Model": model_name}, index=[0])
+
+        y_true = ensembled_df[actual_target_name]        
+        y_pred = ensembled_df[model_target_name]
+        
+        if(train_config["ml_task"]=="Classification"):
+            model_proba_names = [col for col in ensembled_df.columns if model_name in col and "pred" not in col]
+            y_pred_proba = np.array(ensembled_df[model_proba_names])
+
+            if(ensembled_df[actual_target_name].nunique() == 2):
+                model_metric_df = classif.get_binary_results(
+                    y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split=""
+                )
+            else:
+                class_names = ensembled_df[actual_target_name].unique().tolist()
+                model_metric_df = classif.get_multi_results(
+                    y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split="", class_names=class_names
+                )
+        else:
+            n, p = ensembled_df.shape[0], ensembled_df.shape[1]
+            model_metric_df = regress.get_results(
+                y_true, y_pred, model_metric_df, metric_list, split="", n=n, p=p
+            )
+        
+        full_metric_df = pd.concat([full_metric_df, model_metric_df], ignore_index=True)
+    
+    return full_metric_df

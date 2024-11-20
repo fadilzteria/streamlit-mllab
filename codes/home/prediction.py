@@ -69,14 +69,14 @@ def preprocess_data():
 
     # Transform Value Types
     dp_num2bin_cols = dp_sets["dp_num2bin_cols"]
-    if(dp_sets["target"] in dp_num2bin_cols):
+    if(dp_sets["target"] not in cleaned_df):
         dp_num2bin_cols.pop(dp_sets["target"])
     dp_num2cat_cols = dp_sets["dp_num2cat_cols"]
     if(dp_sets["target"] in dp_num2cat_cols):
         dp_num2cat_cols.remove(dp_sets["target"])
     cleaned_df, _ = dq.transform_dtypes(
         cleaned_df, split="Test", 
-        num2bin_cols=dp_num2bin_cols, num2cat_cols=dp_num2cat_cols
+        num2bin_cols=dp_sets["dp_num2bin_cols"], num2cat_cols=dp_num2cat_cols
     )
 
     # Handling Missing Values
@@ -152,11 +152,20 @@ def run_testing():
     with open(config_filepath, 'r') as file:
         train_config = json.load(file)
 
+    # Inference
     pred_df = test_utils.inference(test_config, train_config, test_df, methods)
     st.session_state["pred_dataset"] = pred_df
 
-    ensembled_df = test_utils.ensembling(test_config, train_config, test_df, pred_df)
+    # Ensembling
+    ensembled_df = test_utils.full_ensembling(test_config, train_config, test_df, pred_df)
     st.session_state["ensembled_dataset"] = ensembled_df
+
+    # Evaluation
+    if(f"{train_config['target']}_actual" in ensembled_df):
+        metric_df = test_utils.eval_testing(test_config, train_config, ensembled_df)
+        st.session_state["metric_dataset"] = metric_df
+    elif("metric_dataset" in st.session_state):
+        del st.session_state["metric_dataset"]
 
 # ==================================================================================================
 # MODEL TESTING
@@ -175,13 +184,14 @@ def model_testing():
 def show_testing_results():
     st.header("Results", divider="orange")
 
-    pred_df = st.session_state["pred_dataset"]
-    st.subheader("Prediction Results")
-    st.dataframe(pred_df)
-
     ensembled_df = st.session_state["ensembled_dataset"]
-    st.subheader("Ensembling Results")
+    st.subheader("Prediction Results")
     st.dataframe(ensembled_df)
+
+    if("metric_dataset" in st.session_state):
+        full_metric_df = st.session_state["metric_dataset"]
+        st.subheader("Metric Results")
+        st.dataframe(full_metric_df)
 
 # ==================================================================================================
 # PREDICTION
