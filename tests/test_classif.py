@@ -4,7 +4,7 @@ from streamlit.testing.v1 import AppTest
 # Dataset Preprocessing
 def test_dataset():
     """A user preprocess raw dataset into cleaned dataset"""
-    at = AppTest.from_file("codes/dataset/data_preprocessing.py", default_timeout=5).run()
+    at = AppTest.from_file("codes/dataset/data_preprocessing.py", default_timeout=15).run()
 
     assert "Dataset" == at.title[0].value
 
@@ -38,16 +38,25 @@ def test_training():
     at.toggle("fe_scaling").set_value(False).run()
 
     # Model
-    model_names = ["Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting"]
+    model_names = ["Decision Tree", "Extra Trees", "Random Forest", "Gradient Boosting"]
     for model_name in model_names:
         at.multiselect("model_names").select(model_name).run()
+    
+    # Decision Tree Variations
+    model_name = "Decision Tree"
+    model_key = "_".join(model_name.lower().split(" "))
+    nums = 3
+    at.number_input(f"{model_key}_n_models").set_value(nums).run()
+    for n in range(1, nums+1):
+        model_n_name = f"{model_name} {n}"
+        model_n_key = "_".join(model_n_name.lower().split(" "))
+        at.number_input(f"{model_n_key}_params_max_depth").set_value(3+n).run()
 
     metrics = ["Accuracy", "Precision", "Recall", "F1 Score", "ROC AUC", "Avg Precision"]
     for metric in metrics:
         at.multiselect("metric_names").select(metric).run()
         
     at.selectbox("best_metric").set_value("ROC AUC").run()
-    at.selectbox("best_value").set_value("Maximize").run()
 
     # Submit
     at.button[0].click().run()

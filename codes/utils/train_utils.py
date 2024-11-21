@@ -167,17 +167,17 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
         model_filepath = os.path.join(model_path, f"{model_name}_fold_{fold}.model")
         pickle.dump(model, open(model_filepath, 'wb'))
 
-        # Close Logger
-        handlers = logger.handlers
-        for handler in handlers:
-            logger.removeHandler(handler)
-            handler.close()
-
     logger.info(f"Best Model: {best_method} | ROC AUC: {best_metric}\n")
+
+    # Close Logger
+    handlers = logger.handlers
+    for handler in handlers:
+        logger.removeHandler(handler)
+        handler.close()
 
     return oof_df, full_metric_df
 
-def training_and_validation(config, train_df, fe_sets, methods, params, metrics):
+def training_and_validation(config, train_df, fe_sets):
     # Experiment Folder
     exp_path = os.path.join("experiments", config["exp_name"])
     if(os.path.exists(exp_path)):
@@ -199,11 +199,17 @@ def training_and_validation(config, train_df, fe_sets, methods, params, metrics)
 
     train_df = cross_validation(train_df, config["folds"], config["target"]) # Cross Validation
 
+    # Parameters
+    methods = config["methods"]
+    n_models = config["n_models"]
+    params = config["params"]
+    metrics = config["metrics"]
+
     # Define Methods with Its Params
     if(config["ml_task"]=="Classification"): 
-        methods = classif.define_models(methods, params)
+        methods = classif.define_models(methods, n_models, params)
     else:
-        methods = regress.define_models(methods, params)
+        methods = regress.define_models(methods, n_models, params)
 
     # Variables
     oof_df = pd.DataFrame()

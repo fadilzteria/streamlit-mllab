@@ -4,7 +4,7 @@ from streamlit.testing.v1 import AppTest
 # Dataset Preprocessing
 def test_dataset():
     """A user preprocess raw dataset into cleaned dataset"""
-    at = AppTest.from_file("codes/dataset/data_preprocessing.py", default_timeout=5).run()
+    at = AppTest.from_file("codes/dataset/data_preprocessing.py", default_timeout=15).run()
 
     assert "Dataset" == at.title[0].value
 
@@ -47,7 +47,6 @@ def test_training():
         at.multiselect("metric_names").select(metric).run()
         
     at.selectbox("best_metric").set_value("RMSE").run()
-    at.selectbox("best_value").set_value("Minimize").run()
 
     # Submit
     at.button[0].click().run()

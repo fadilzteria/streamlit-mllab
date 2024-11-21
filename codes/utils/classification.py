@@ -12,50 +12,54 @@ from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier, AdaBo
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, average_precision_score
 
-def define_models(model_names, params):
+def define_models(model_names, n_models, params):
     methods = {}
     for model_name in model_names:
         model_key = "_".join(model_name.lower().split(" "))
+        nums = n_models[f"{model_key}_n_models"]
+        for n in range(1, nums+1):
+            model_n_name = f"{model_name} {n}"
+            model_n_key = "_".join(model_n_name.lower().split(" "))
 
-        # Linear Model
-        if(model_name=="Logistic Regression"):
-            methods[model_name] = LogisticRegression(random_state=42)
-        
-        # Discriminant Analysis
-        elif(model_name=="Linear Discriminant Analysis"):
-            methods[model_name] = LinearDiscriminantAnalysis()
+            # Linear Model
+            if(model_name=="Logistic Regression"):
+                methods[model_n_name] = LogisticRegression(random_state=42)
+            
+            # Discriminant Analysis
+            elif(model_name=="Linear Discriminant Analysis"):
+                methods[model_n_name] = LinearDiscriminantAnalysis()
 
-        # Naive Bayes
-        elif(model_name=="Bernoulli Bayes"):
-            methods[model_name] = BernoulliNB()
-        elif(model_name=="Gaussian Bayes"):
-            methods[model_name] = GaussianNB()
+            # Naive Bayes
+            elif(model_name=="Bernoulli Bayes"):
+                methods[model_n_name] = BernoulliNB()
+            elif(model_name=="Gaussian Bayes"):
+                methods[model_n_name] = GaussianNB()
 
-        # SVM
-        elif(model_name=="SVC"):
-            methods[model_name] = SVC(probability=True)
-        elif(model_name=="Linear SVC"):
-            methods[model_name] = LinearSVC(random_state=42)
+            # SVM
+            elif(model_name=="SVC"):
+                methods[model_n_name] = SVC(probability=True)
+            elif(model_name=="Linear SVC"):
+                methods[model_n_name] = LinearSVC(random_state=42)
 
-        # Neighbors
-        elif(model_name=="KNN"):
-            methods[model_name] = KNeighborsClassifier()
+            # Neighbors
+            elif(model_name=="KNN"):
+                methods[model_n_name] = KNeighborsClassifier()
 
-        # Tree
-        elif(model_name=="Decision Tree"):
-            max_depth = params[f"{model_key}_params_max_depth"]
-            methods[model_name] = DecisionTreeClassifier(max_depth=max_depth, random_state=42, class_weight='balanced')
-        elif(model_name=="Extra Trees"):
-            max_depth = params[f"{model_key}_params_max_depth"]
-            methods[model_name] = ExtraTreesClassifier(max_depth=max_depth, random_state=42, class_weight='balanced')
-        elif(model_name=="Random Forest"):
-            max_depth = params[f"{model_key}_params_max_depth"]            
-            methods[model_name] = RandomForestClassifier(max_depth=max_depth, random_state=42, class_weight='balanced')
-        elif(model_name=="AdaBoost"):
-            methods[model_name] = AdaBoostClassifier(random_state=42)
-        elif(model_name=="Gradient Boosting"):
-            max_depth = params[f"{model_key}_params_max_depth"]            
-            methods[model_name] = GradientBoostingClassifier(max_depth=max_depth, random_state=42)
+            # Tree
+            elif(model_name=="Decision Tree"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]
+                methods[model_n_name] = DecisionTreeClassifier(max_depth=max_depth, random_state=42, class_weight='balanced')
+            elif(model_name=="Extra Trees"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]
+                methods[model_n_name] = ExtraTreesClassifier(max_depth=max_depth, random_state=42, class_weight='balanced')
+            elif(model_name=="Random Forest"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]            
+                methods[model_n_name] = RandomForestClassifier(max_depth=max_depth, random_state=42, class_weight='balanced')
+            elif(model_name=="AdaBoost"):
+                methods[model_n_name] = AdaBoostClassifier(random_state=42)
+            elif(model_name=="Gradient Boosting"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]            
+                methods[model_n_name] = GradientBoostingClassifier(max_depth=max_depth, random_state=42)
 
     return methods
 

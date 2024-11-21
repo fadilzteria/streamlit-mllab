@@ -1,1 +1,1 @@
-{"test_name": "Test No Labels", "data_filename": "regress_test_no_labels.csv", "dp_name": "Regress Baseline", "exp_name": "Regress Baseline", "folds": [0, 1, 2, 3, 4], "methods": ["Linear Regression", "Ridge Regression", "Lasso", "Elastic Net"]}
+{"test_name": "Test No Labels", "data_filename": "regress_test_no_labels.csv", "dp_name": "Regress Baseline", "exp_name": "Regress Baseline", "folds": [0, 1, 2, 3, 4], "methods": ["Linear Regression 1", "Ridge Regression 1", "Lasso 1", "Elastic Net 1"]}

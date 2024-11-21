@@ -100,36 +100,43 @@ def fill_training_configuration():
         model_options = copy.deepcopy(regress_model_options)
     st.multiselect(label="Model Options", options=model_options, key="model_names")
     
-    # Parameters
+    # Number of Models and Parameters
     for model_name in st.session_state["model_names"]:
-        model_key = "_".join(model_name.lower().split(" "))
-        if(model_name=="KNN"):
-            col_1, col_2 = st.columns(2)
-            with col_1:
-                st.write(model_name)
-            with col_2:
-                st.number_input(label="Number of Neighbors", value=5, key=f"{model_key}_n_neighbors")
-        
-        if(model_name in ["Decision Tree", "Extra Trees", "Random Forest", "Gradient Boosting"]):
-            col_1, col_2 = st.columns(2)
-            with col_1:
-                st.write(model_name)
-            with col_2:
-                st.number_input(label="Max Depth", value=5, key=f"{model_key}_params_max_depth")
+        with st.expander(model_name):
+            model_key = "_".join(model_name.lower().split(" "))
+            st.number_input(
+                label="Number of Models", min_value=1, max_value=10, value=1, key=f"{model_key}_n_models"
+            )
+
+            for n in range(1, st.session_state[f"{model_key}_n_models"]+1):
+                model_n_name = f"{model_name} {n}"
+                model_n_key = "_".join(model_n_name.lower().split(" "))
+                st.write(model_n_name)
+
+                if(model_name=="KNN"):
+                    st.number_input(label="Number of Neighbors", value=5, key=f"{model_n_key}_n_neighbors")
+            
+                if(model_name in ["Decision Tree", "Extra Trees", "Random Forest", "Gradient Boosting"]):
+                    st.number_input(label="Max Depth", value=5, key=f"{model_n_key}_params_max_depth")
 
     # Metrics
     classif_metrics = ["Accuracy", "Precision", "Recall", "F1 Score", "ROC AUC", "Avg Precision"]
     regress_metrics = ["MSE", "RMSE", "MAE", "MedAE", "R2", "Adj R2"]
-    if(st.session_state["ml_task"]=="Classification"): # Classification
-        st.multiselect(label="Metric Options", options=classif_metrics, key="metric_names")
-    else: # Regression
-        st.multiselect(label="Metric Options", options=regress_metrics, key="metric_names")
-    # Best Metrics
+
     col_1, col_2 = st.columns(2)
-    with col_1:
+    with col_1: # Metric Selection
+        if(st.session_state["ml_task"]=="Classification"): # Classification
+            st.multiselect(label="Metric Options", options=classif_metrics, key="metric_names")
+        else: # Regression
+            st.multiselect(label="Metric Options", options=regress_metrics, key="metric_names")
+    with col_2: # Best Metrics
         st.selectbox(label="Best Metric", options=st.session_state["metric_names"], key="best_metric", index=0)
-    with col_2:
-        st.selectbox(label="Best Value", options=["Maximize", "Minimize"], key="best_value", index=0)
+
+    max_metrics = ["Accuracy", "Precision", "Recall", "F1 Score", "ROC AUC", "Avg Precision", "R2", "Adj R2"]
+    if(st.session_state["best_metric"] in max_metrics):
+        st.session_state["best_value"] = "Maximize"
+    else:
+        st.session_state["best_value"] = "Minimize"
 
 # ==================================================================================================
 # RUN TRAINING
@@ -138,6 +145,7 @@ def run_training():
     train_df = copy.deepcopy(st.session_state["cleaned_dataset"])
     fe_sets = {key: st.session_state[key] for key in st.session_state.keys() if "fe" in key}
     methods = st.session_state["model_names"]
+    n_models = {key: st.session_state[key] for key in st.session_state.keys() if "n_models" in key}
     params = {key: st.session_state[key] for key in st.session_state.keys() if "params" in key}
     metrics = st.session_state["metric_names"]
 
@@ -147,13 +155,14 @@ def run_training():
         "ml_task" : st.session_state["ml_task"],
         "folds": st.session_state["folds"],
         "methods": methods,
+        "n_models": n_models,
         "params": params,
         "metrics": metrics,
         "best_metric": st.session_state["best_metric"],
         "best_value": st.session_state["best_value"],
     }  
 
-    train_utils.training_and_validation(config, train_df, fe_sets, methods, params, metrics)
+    train_utils.training_and_validation(config, train_df, fe_sets)
 
 # ==================================================================================================
 # MODEL TRAINING

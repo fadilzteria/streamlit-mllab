@@ -8,46 +8,50 @@ from sklearn.ensemble import ExtraTreesRegressor, RandomForestRegressor, AdaBoos
 
 from sklearn.metrics import mean_squared_error, root_mean_squared_error, mean_absolute_error, median_absolute_error, r2_score
 
-def define_models(model_names, params):
+def define_models(model_names, n_models, params):
     methods = {}
     for model_name in model_names:
         model_key = "_".join(model_name.lower().split(" "))
+        nums = n_models[f"{model_key}_n_models"]
+        for n in range(1, nums+1):
+            model_n_name = f"{model_name} {n}"
+            model_n_key = "_".join(model_n_name.lower().split(" "))
 
-        # Linear Model
-        if(model_name=="Linear Regression"):
-            methods[model_name] = LinearRegression()
-        elif(model_name=="Ridge Regression"):
-            methods[model_name] = Ridge(random_state=42)
-        elif(model_name=="Lasso"):
-            methods[model_name] = Lasso(random_state=42)
-        elif(model_name=="Elastic Net"):
-            methods[model_name] = ElasticNet(random_state=42)
-        
-        # SVM
-        elif(model_name=="SVR"):
-            methods[model_name] = SVR()
-        elif(model_name=="Linear SVR"):
-            methods[model_name] = LinearSVR(random_state=42)
-        
-        # Neighbors
-        elif(model_name=="KNN"):
-            methods[model_name] = KNeighborsRegressor()
+            # Linear Model
+            if(model_name=="Linear Regression"):
+                methods[model_n_name] = LinearRegression()
+            elif(model_name=="Ridge Regression"):
+                methods[model_n_name] = Ridge(random_state=42)
+            elif(model_name=="Lasso"):
+                methods[model_n_name] = Lasso(random_state=42)
+            elif(model_name=="Elastic Net"):
+                methods[model_n_name] = ElasticNet(random_state=42)
+            
+            # SVM
+            elif(model_name=="SVR"):
+                methods[model_n_name] = SVR()
+            elif(model_name=="Linear SVR"):
+                methods[model_n_name] = LinearSVR(random_state=42)
+            
+            # Neighbors
+            elif(model_name=="KNN"):
+                methods[model_n_name] = KNeighborsRegressor()
 
-        # Tree
-        elif(model_name=="Decision Tree"):
-            max_depth = params[f"{model_key}_params_max_depth"]
-            methods[model_name] = DecisionTreeRegressor(max_depth=max_depth, random_state=42)
-        elif(model_name=="Extra Trees"):
-            max_depth = params[f"{model_key}_params_max_depth"]
-            methods[model_name] = ExtraTreesRegressor(max_depth=max_depth, random_state=42)
-        elif(model_name=="Random Forest"):
-            max_depth = params[f"{model_key}_params_max_depth"]            
-            methods[model_name] = RandomForestRegressor(max_depth=max_depth, random_state=42)
-        elif(model_name=="AdaBoost"):
-            methods[model_name] = AdaBoostRegressor(random_state=42)
-        elif(model_name=="Gradient Boosting"):
-            max_depth = params[f"{model_key}_params_max_depth"]            
-            methods[model_name] = GradientBoostingRegressor(max_depth=max_depth, random_state=42)
+            # Tree
+            elif(model_name=="Decision Tree"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]
+                methods[model_n_name] = DecisionTreeRegressor(max_depth=max_depth, random_state=42)
+            elif(model_name=="Extra Trees"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]
+                methods[model_n_name] = ExtraTreesRegressor(max_depth=max_depth, random_state=42)
+            elif(model_name=="Random Forest"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]            
+                methods[model_n_name] = RandomForestRegressor(max_depth=max_depth, random_state=42)
+            elif(model_name=="AdaBoost"):
+                methods[model_n_name] = AdaBoostRegressor(random_state=42)
+            elif(model_name=="Gradient Boosting"):
+                max_depth = params[f"{model_n_key}_params_max_depth"]            
+                methods[model_n_name] = GradientBoostingRegressor(max_depth=max_depth, random_state=42)
         
     return methods
 

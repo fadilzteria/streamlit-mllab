@@ -169,8 +169,15 @@ def fill_testing_configuration():
     st.multiselect(label="Folds", options=fold_list, default=fold_list, key="folds")
 
     # Models
-    methods = config["methods"]
-    st.multiselect(label="Model Options", options=methods, default=methods, key="model_names")
+    methods = config["methods"] # ...
+    n_models = config["n_models"]
+    model_names = []
+    for model_name in methods:
+        model_key = "_".join(model_name.lower().split(" "))
+        for n in range(1, n_models[f"{model_key}_n_models"]+1):
+            model_n_name = f"{model_name} {n}"
+            model_names.append(model_n_name)
+    st.multiselect(label="Model Options", options=model_names, default=model_names, key="model_names")
 
 # ==================================================================================================
 # RUN TESTING
