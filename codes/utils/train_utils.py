@@ -85,10 +85,12 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
     logger.info("")
 
     # Save Feature Engineering Sets and Pipeline
+    fe_sets = dict(sorted(fe_sets.items()))
     fe_sets_filepath = os.path.join(fold_path, f"fe_sets_fold_{fold}.json")
     with open(fe_sets_filepath, "w") as f:
         json.dump(fe_sets, f)
 
+    fe_pipeline = dict(sorted(fe_pipeline.items()))
     fe_pipeline_filepath = os.path.join(fold_path, f"fe_pipeline_fold_{fold}.pkl")
     pickle.dump(fe_pipeline, open(fe_pipeline_filepath, 'wb'))
 
@@ -193,6 +195,7 @@ def training_and_validation(config, train_df, fe_sets):
     config["target"] = copy.deepcopy(dp_sets["target"]) 
 
     # Save Config
+    config = dict(sorted(config.items()))
     config_filepath = os.path.join(exp_path, "config.json")
     with open(config_filepath, "w") as f:
         json.dump(config, f)

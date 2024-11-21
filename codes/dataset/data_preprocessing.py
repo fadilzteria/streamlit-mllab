@@ -155,6 +155,7 @@ def preprocess_data():
     df_filepath = os.path.join(dp_path, "cleaned_train.parquet")
     cleaned_df.to_parquet(df_filepath, index=False)
     
+    dp_sets = dict(sorted(dp_sets.items()))
     config_filepath = os.path.join(dp_path, "df_config.json")
     with open(config_filepath, "w") as f:
         json.dump(dp_sets, f)

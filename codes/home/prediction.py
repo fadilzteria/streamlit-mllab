@@ -208,6 +208,7 @@ def run_testing():
         shutil.rmtree(test_path)
     os.mkdir(test_path)
 
+    test_config = dict(sorted(test_config.items()))
     config_filepath = os.path.join(test_path, "test_config.json")
     with open(config_filepath, "w") as f:
         json.dump(test_config, f)

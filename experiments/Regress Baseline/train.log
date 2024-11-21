@@ -5,22 +5,22 @@ Validation Data Shape: (38475, 23)
 Linear Regression 1
 Train Metrics, MSE: 913071.7071, RMSE: 955.5479, MAE: 628.4408, MedAE: 428.3345, R2: 0.9441, Adj R2: 0.9441
 Valid Metrics, MSE: 892854.5516, RMSE: 944.9098, MAE: 622.3470, MedAE: 429.5578, R2: 0.9453, Adj R2: 0.9453
-Training Runtime: 0.15s, Prediction Runtime: 0.03s
+Training Runtime: 0.2s, Prediction Runtime: 0.03s
 
 Ridge Regression 1
 Train Metrics, MSE: 913071.8914, RMSE: 955.5480, MAE: 628.4515, MedAE: 428.3627, R2: 0.9441, Adj R2: 0.9441
 Valid Metrics, MSE: 892912.8870, RMSE: 944.9407, MAE: 622.3566, MedAE: 429.5747, R2: 0.9453, Adj R2: 0.9452
-Training Runtime: 0.06s, Prediction Runtime: 0.03s
+Training Runtime: 0.05s, Prediction Runtime: 0.03s
 
 Lasso 1
 Train Metrics, MSE: 915398.0230, RMSE: 956.7644, MAE: 628.5375, MedAE: 427.4649, R2: 0.9439, Adj R2: 0.9439
 Valid Metrics, MSE: 890488.8278, RMSE: 943.6572, MAE: 622.0547, MedAE: 427.9302, R2: 0.9454, Adj R2: 0.9454
-Training Runtime: 5.13s, Prediction Runtime: 0.02s
+Training Runtime: 6.28s, Prediction Runtime: 0.02s
 
 Elastic Net 1
 Train Metrics, MSE: 2329739.5745, RMSE: 1526.3484, MAE: 1054.6054, MedAE: 796.4129, R2: 0.8573, Adj R2: 0.8573
 Valid Metrics, MSE: 2334082.6486, RMSE: 1527.7705, MAE: 1049.2561, MedAE: 792.0896, R2: 0.8569, Adj R2: 0.8569
-Training Runtime: 0.26s, Prediction Runtime: 0.03s
+Training Runtime: 0.28s, Prediction Runtime: 0.03s
 
 Best Model: Lasso 1 | ROC AUC: 943.6571558370241
 
@@ -31,7 +31,7 @@ Validation Data Shape: (38475, 23)
 Linear Regression 1
 Train Metrics, MSE: 905005.7073, RMSE: 951.3179, MAE: 626.9920, MedAE: 429.4844, R2: 0.9447, Adj R2: 0.9447
 Valid Metrics, MSE: 916058.3869, RMSE: 957.1094, MAE: 632.7445, MedAE: 433.6715, R2: 0.9433, Adj R2: 0.9433
-Training Runtime: 0.14s, Prediction Runtime: 0.03s
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
 Ridge Regression 1
 Train Metrics, MSE: 905005.9277, RMSE: 951.3180, MAE: 627.0011, MedAE: 429.4673, R2: 0.9447, Adj R2: 0.9447
@@ -41,12 +41,12 @@ Training Runtime: 0.05s, Prediction Runtime: 0.03s
 Lasso 1
 Train Metrics, MSE: 907377.0108, RMSE: 952.5634, MAE: 627.3082, MedAE: 428.9233, R2: 0.9446, Adj R2: 0.9446
 Valid Metrics, MSE: 920923.6558, RMSE: 959.6477, MAE: 633.5085, MedAE: 433.3329, R2: 0.9430, Adj R2: 0.9430
-Training Runtime: 9.67s, Prediction Runtime: 0.02s
+Training Runtime: 17.5s, Prediction Runtime: 0.03s
 
 Elastic Net 1
 Train Metrics, MSE: 2332496.7000, RMSE: 1527.2514, MAE: 1053.4456, MedAE: 795.6966, R2: 0.8575, Adj R2: 0.8575
 Valid Metrics, MSE: 2308698.4632, RMSE: 1519.4402, MAE: 1052.2755, MedAE: 798.7810, R2: 0.8572, Adj R2: 0.8572
-Training Runtime: 0.24s, Prediction Runtime: 0.03s
+Training Runtime: 0.21s, Prediction Runtime: 0.02s
 
 Best Model: Ridge Regression 1 | ROC AUC: 957.1064200536407
 
@@ -57,22 +57,22 @@ Validation Data Shape: (38475, 23)
 Linear Regression 1
 Train Metrics, MSE: 908017.4702, RMSE: 952.8995, MAE: 627.2790, MedAE: 429.0430, R2: 0.9444, Adj R2: 0.9444
 Valid Metrics, MSE: 903754.3784, RMSE: 950.6600, MAE: 627.2703, MedAE: 429.1377, R2: 0.9447, Adj R2: 0.9447
-Training Runtime: 0.16s, Prediction Runtime: 0.03s
+Training Runtime: 0.14s, Prediction Runtime: 0.03s
 
 Ridge Regression 1
 Train Metrics, MSE: 908017.6574, RMSE: 952.8996, MAE: 627.2903, MedAE: 429.0467, R2: 0.9444, Adj R2: 0.9444
 Valid Metrics, MSE: 903754.4387, RMSE: 950.6600, MAE: 627.2826, MedAE: 429.2438, R2: 0.9447, Adj R2: 0.9447
-Training Runtime: 0.05s, Prediction Runtime: 0.03s
+Training Runtime: 0.07s, Prediction Runtime: 0.03s
 
 Lasso 1
 Train Metrics, MSE: 910416.6450, RMSE: 954.1576, MAE: 627.4500, MedAE: 427.8549, R2: 0.9442, Adj R2: 0.9442
 Valid Metrics, MSE: 906435.2759, RMSE: 952.0689, MAE: 627.6852, MedAE: 429.2770, R2: 0.9446, Adj R2: 0.9445
-Training Runtime: 8.07s, Prediction Runtime: 0.03s
+Training Runtime: 9.85s, Prediction Runtime: 0.02s
 
 Elastic Net 1
 Train Metrics, MSE: 2330380.0846, RMSE: 1526.5582, MAE: 1052.4898, MedAE: 794.0789, R2: 0.8572, Adj R2: 0.8572
 Valid Metrics, MSE: 2331521.7856, RMSE: 1526.9321, MAE: 1058.3398, MedAE: 804.5642, R2: 0.8574, Adj R2: 0.8574
-Training Runtime: 0.22s, Prediction Runtime: 0.03s
+Training Runtime: 0.25s, Prediction Runtime: 0.03s
 
 Best Model: Linear Regression 1 | ROC AUC: 950.659969910755
 
@@ -83,7 +83,7 @@ Validation Data Shape: (38474, 23)
 Linear Regression 1
 Train Metrics, MSE: 900577.4363, RMSE: 948.9876, MAE: 626.6524, MedAE: 428.9569, R2: 0.9448, Adj R2: 0.9448
 Valid Metrics, MSE: 933669.9775, RMSE: 966.2660, MAE: 629.3823, MedAE: 428.6128, R2: 0.9429, Adj R2: 0.9429
-Training Runtime: 0.14s, Prediction Runtime: 0.03s
+Training Runtime: 0.35s, Prediction Runtime: 0.03s
 
 Ridge Regression 1
 Train Metrics, MSE: 900577.6241, RMSE: 948.9877, MAE: 626.6633, MedAE: 428.9779, R2: 0.9448, Adj R2: 0.9448
@@ -93,12 +93,12 @@ Training Runtime: 0.05s, Prediction Runtime: 0.03s
 Lasso 1
 Train Metrics, MSE: 902899.3959, RMSE: 950.2102, MAE: 626.8274, MedAE: 428.5965, R2: 0.9447, Adj R2: 0.9447
 Valid Metrics, MSE: 935880.3357, RMSE: 967.4091, MAE: 629.5642, MedAE: 428.0403, R2: 0.9428, Adj R2: 0.9428
-Training Runtime: 12.03s, Prediction Runtime: 0.03s
+Training Runtime: 8.6s, Prediction Runtime: 0.03s
 
 Elastic Net 1
 Train Metrics, MSE: 2329761.5350, RMSE: 1526.3556, MAE: 1053.6967, MedAE: 796.7876, R2: 0.8572, Adj R2: 0.8572
 Valid Metrics, MSE: 2323058.1537, RMSE: 1524.1582, MAE: 1049.1986, MedAE: 788.5204, R2: 0.8580, Adj R2: 0.8579
-Training Runtime: 0.38s, Prediction Runtime: 0.03s
+Training Runtime: 0.27s, Prediction Runtime: 0.03s
 
 Best Model: Ridge Regression 1 | ROC AUC: 966.2600433213363
 
@@ -109,22 +109,22 @@ Validation Data Shape: (38474, 23)
 Linear Regression 1
 Train Metrics, MSE: 908281.4458, RMSE: 953.0380, MAE: 627.8377, MedAE: 429.4560, R2: 0.9443, Adj R2: 0.9443
 Valid Metrics, MSE: 902767.0806, RMSE: 950.1406, MAE: 626.2956, MedAE: 426.1247, R2: 0.9451, Adj R2: 0.9451
-Training Runtime: 0.27s, Prediction Runtime: 0.03s
+Training Runtime: 0.15s, Prediction Runtime: 0.03s
 
 Ridge Regression 1
 Train Metrics, MSE: 908281.6351, RMSE: 953.0381, MAE: 627.8494, MedAE: 429.4049, R2: 0.9443, Adj R2: 0.9443
 Valid Metrics, MSE: 902770.8633, RMSE: 950.1425, MAE: 626.3072, MedAE: 426.1763, R2: 0.9451, Adj R2: 0.9451
-Training Runtime: 0.06s, Prediction Runtime: 0.03s
+Training Runtime: 0.1s, Prediction Runtime: 0.03s
 
 Lasso 1
 Train Metrics, MSE: 910622.8323, RMSE: 954.2656, MAE: 628.0389, MedAE: 428.8056, R2: 0.9441, Adj R2: 0.9441
 Valid Metrics, MSE: 904073.2999, RMSE: 950.8277, MAE: 626.1401, MedAE: 424.9123, R2: 0.9451, Adj R2: 0.9450
-Training Runtime: 9.68s, Prediction Runtime: 0.03s
+Training Runtime: 9.38s, Prediction Runtime: 0.03s
 
 Elastic Net 1
 Train Metrics, MSE: 2327860.1371, RMSE: 1525.7327, MAE: 1052.2247, MedAE: 794.9361, R2: 0.8571, Adj R2: 0.8571
 Valid Metrics, MSE: 2355671.7520, RMSE: 1534.8198, MAE: 1057.7695, MedAE: 794.6617, R2: 0.8568, Adj R2: 0.8568
-Training Runtime: 0.19s, Prediction Runtime: 0.03s
+Training Runtime: 0.27s, Prediction Runtime: 0.02s
 
 Best Model: Linear Regression 1 | ROC AUC: 950.1405583630575
 

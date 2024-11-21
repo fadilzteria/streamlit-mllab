@@ -146,7 +146,9 @@ def run_training():
     fe_sets = {key: st.session_state[key] for key in st.session_state.keys() if "fe" in key}
     methods = st.session_state["model_names"]
     n_models = {key: st.session_state[key] for key in st.session_state.keys() if "n_models" in key}
+    n_models = dict(sorted(n_models.items()))
     params = {key: st.session_state[key] for key in st.session_state.keys() if "params" in key}
+    params = dict(sorted(params.items()))
     metrics = st.session_state["metric_names"]
 
     config = {
