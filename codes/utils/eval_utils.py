@@ -9,7 +9,7 @@ import statsmodels.api as sm
 from sklearn.metrics import confusion_matrix
 import streamlit as st
 
-from codes.utils import classification as classif, regression as regress
+from codes.utils import classification as classif, regression as regress, test_utils
 
 COLORS = list(mcolors.XKCD_COLORS.keys())
 random.Random(1).shuffle(COLORS)
@@ -94,13 +94,14 @@ def show_confusion_matrix(config, oof_df, fold="All"):
     # Parameters
     y_test = oof_df[config["target"]]
     class_names = oof_df[config["target"]].unique().tolist()
+    model_names = test_utils.extract_model_names(config)
 
     # Create Subplots
     ncols = 3
-    nrows = ((len(config["methods"])-1)//ncols)+1
+    nrows = ((len(model_names)-1)//ncols)+1
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*5))
 
-    for i, model_name in enumerate(config["methods"]):
+    for i, model_name in enumerate(model_names):
         y_pred = oof_df[f"{model_name}_{config['target']}_pred"]
         cn_matrix = confusion_matrix(y_test, y_pred, labels=class_names)
         cn_matrix = pd.DataFrame(cn_matrix)
@@ -234,12 +235,15 @@ def show_reg_diagnostics(config, oof_df, fold="All"):
     if(fold!="All"): # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
 
+    # Parameters
+    model_names = test_utils.extract_model_names(config)
+
     # Create Subplots
     ncols = 3
-    nrows = len(config["methods"])
+    nrows = len(model_names)
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(12, nrows*4))
 
-    for i, model_name in enumerate(config["methods"]):
+    for i, model_name in enumerate(model_names):
         actual = oof_df[config['target']] # Actual
         pred = oof_df[f"{model_name}_{config['target']}_pred"] # Prediction
         res = actual - pred # Residuals
@@ -272,12 +276,15 @@ def show_regress_predicted_distribution(config, oof_df, fold="All"):
     if(fold!="All"): # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
 
+    # Parameters
+    model_names = test_utils.extract_model_names(config)
+
     # Create Subplots
     ncols = 3
-    nrows = ((len(config["methods"])-1)//ncols)+1
+    nrows = ((len(model_names)-1)//ncols)+1
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*5))
 
-    for i, model_name in enumerate(config["methods"]):
+    for i, model_name in enumerate(model_names):
         ax_temp = axs[i] if nrows==1 else axs[i//ncols, i%ncols]
         pred_name = f"{model_name}_{config['target']}_pred"
 
@@ -304,7 +311,7 @@ def show_classif_predicted_distribution(config, oof_df, fold="All"):
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
 
     # Parameters
-    model_names = config["methods"]
+    model_names = test_utils.extract_model_names(config)
     target_names = oof_df[config['target']].unique().tolist()
 
     # Create Subplots

@@ -8,7 +8,21 @@ import pandas as pd
 import streamlit as st
 from stqdm import stqdm
 
+from catboost import Pool
+
 from codes.utils import classification as classif, regression as regress, features
+
+def extract_model_names(config):
+    methods = config["methods"]
+    n_models = config["n_models"]
+    model_names = []
+    for model_name in methods:
+        model_key = "_".join(model_name.lower().split(" "))
+        for n in range(1, n_models[f"{model_key}_n_models"]+1):
+            model_n_name = f"{model_name} {n}"
+            model_names.append(model_n_name)
+    
+    return model_names
 
 def inference(test_config, train_config, test_df, methods):
     pred_df = pd.DataFrame()
@@ -46,9 +60,23 @@ def inference(test_config, train_config, test_df, methods):
             model_filepath = os.path.join(model_path, f"{model_name}_fold_{fold}.model")
             with open(model_filepath, 'rb') as file:
                 model = pickle.load(file)
+                
+            if("CatBoost" in model_name):
+                cat_cols = list(X_test.select_dtypes(include=['category']).columns.values)
+                for cat_feat in cat_cols:
+                    if(X_test[cat_feat].isnull().values.any()):
+                        X_test[cat_feat] = X_test[cat_feat].cat.add_categories("Missing").fillna("Missing")
+
+                cat_cols = list(X_test.select_dtypes(include=['category']).columns.values)
+                # cat_cols = X_test.columns.tolist()
+
+                X_test[cat_cols] = X_test[cat_cols].astype('str', copy=False)
+                test_data = Pool(data=X_test, cat_features=cat_cols)
 
             if(train_config["ml_task"]=="Classification"): 
-                if(model_name=="Linear SVC"):
+                if("CatBoost" in model_name):
+                    y_pred = model.predict_proba(test_data)
+                elif(model_name=="Linear SVC"):
                     y_pred = model.predict(X_test)
                 else:
                     y_pred = model.predict_proba(X_test)
@@ -57,7 +85,10 @@ def inference(test_config, train_config, test_df, methods):
                     pred_df[f"{model_name}_{fold}_{train_config['target']}_{class_name}_proba"] = y_pred[:, i]
             
             else:
-                y_pred = model.predict(X_test)
+                if("CatBoost" in model_name):
+                    y_pred = model.predict(test_data)
+                else:
+                    y_pred = model.predict(X_test)
                 pred_df[f"{model_name}_{fold}_{train_config['target']}_pred"] = y_pred
 
     return pred_df
@@ -88,8 +119,8 @@ def ensembling(test_config, train_config, test_df, pred_df, model_name=""):
         ensembled_df[hard_target_name] = np.argmax(ensembled_df.iloc[:, 1:len(class_names)+1], axis=1)
         ensembled_df[hard_target_name] = ensembled_df[hard_target_name].apply(lambda x: class_names[x])
         uniques = ensembled_df[hard_target_name].unique()
-        if(len(uniques)==2 and (np.sort(uniques) == ['False', 'True']).all()):
-            ensembled_df[hard_target_name] = (ensembled_df[hard_target_name]=='True')
+        if(len(uniques)==2 and (np.sort(uniques) == ['0', '1']).all()):
+            ensembled_df[hard_target_name] = (ensembled_df[hard_target_name]=='1')
     
     else:
         ensembled_df[hard_target_name] = np.mean(pred_df.loc[:, pred_columns], axis=1)

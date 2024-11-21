@@ -107,17 +107,17 @@ def training_loop(config, df, fe_sets, methods, metrics, fold):
 
         # Training
         if(config["ml_task"]=="Classification"):
-            model, train_runtime = classif.train_function(model, X_train, y_train)
+            model, train_runtime = classif.train_function(model, model_name, X_train, y_train)
         else:
-            model, train_runtime = regress.train_function(model, X_train, y_train)
+            model, train_runtime = regress.train_function(model, model_name, X_train, y_train)
 
         # Prediction
         if(config["ml_task"]=="Classification"):
-            y_train_pred, y_train_proba, pred_runtime_1 = classif.predict_function(model, X_train)
-            y_valid_pred, y_valid_proba, pred_runtime_2 = classif.predict_function(model, X_valid)
+            y_train_pred, y_train_proba, pred_runtime_1 = classif.predict_function(model, model_name, X_train)
+            y_valid_pred, y_valid_proba, pred_runtime_2 = classif.predict_function(model, model_name, X_valid)
         else:
-            y_train_pred, pred_runtime_1 = regress.predict_function(model, X_train)
-            y_valid_pred, pred_runtime_2 = regress.predict_function(model, X_valid)
+            y_train_pred, pred_runtime_1 = regress.predict_function(model, model_name, X_train)
+            y_valid_pred, pred_runtime_2 = regress.predict_function(model, model_name, X_valid)
         pred_runtime = pred_runtime_1 + pred_runtime_2
 
         # Assign Prediction to Valid Folds
@@ -210,7 +210,8 @@ def training_and_validation(config, train_df, fe_sets):
 
     # Define Methods with Its Params
     if(config["ml_task"]=="Classification"): 
-        methods = classif.define_models(methods, n_models, params)
+        nunique = train_df[config["target"]].nunique()
+        methods = classif.define_models(methods, n_models, params, nunique)
     else:
         methods = regress.define_models(methods, n_models, params)
 

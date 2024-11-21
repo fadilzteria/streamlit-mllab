@@ -86,12 +86,14 @@ def fill_training_configuration():
         "Logistic Regression", "Linear Discriminant Analysis", 
         "Bernoulli Bayes", "Gaussian Bayes",
         "KNN", "SVC", "Linear SVC", 
-        "Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting"
+        "Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting",
+        "XGBoost", "LightGBM", "CatBoost"
     ]
     regress_model_options = [
         "Linear Regression", "Ridge Regression", "Lasso", "Elastic Net",
         "KNN", "SVR", "Linear SVR", 
-        "Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting"
+        "Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting",
+        "XGBoost", "LightGBM", "CatBoost"
     ]
     
     if(st.session_state["ml_task"]=="Classification"): # Classification

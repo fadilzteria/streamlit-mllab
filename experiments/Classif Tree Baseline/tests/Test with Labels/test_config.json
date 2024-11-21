@@ -1,0 +1,1 @@
+{"data_filename": "classif_test_labels.csv", "dp_name": "Classif Baseline", "exp_name": "Classif Tree Baseline", "folds": [0, 1, 2, 3, 4], "methods": ["XGBoost 1", "LightGBM 1", "CatBoost 1"], "test_name": "Test with Labels"}
