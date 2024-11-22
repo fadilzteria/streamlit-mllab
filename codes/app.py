@@ -20,12 +20,12 @@ def run_app():
 
     train_page = st.Page("modeling/training.py", title="Training")
     eval_page = st.Page("modeling/evaluation.py", title="Evaluation")
-    # explained_page = st.Page("modeling/explainability.py", title="Explainability")
+    explained_page = st.Page("modeling/explainability.py", title="Explainability")
 
     pg = st.navigation({
         "Home": [pred_page],
         "Dataset": [data_pre_page, eda_ua_page, eda_ba_page],
-        "Modeling": [train_page, eval_page],   
+        "Modeling": [train_page, eval_page, explained_page],   
     })
 
     pg.run()
