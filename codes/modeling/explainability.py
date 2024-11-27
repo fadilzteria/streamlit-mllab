@@ -33,7 +33,7 @@ def fill_explainability_configuration():
         tree_model_names = []
         tree_names = [
             "Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting",
-            "XGBoost", "LGBM", "CatBoost"
+            "XGBoost", "LightGBM", "CatBoost"
         ]
         for tree_name in tree_names:
             temp_model_names = [model_name for model_name in model_names if tree_name in model_name]

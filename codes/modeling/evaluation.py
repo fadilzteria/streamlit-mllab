@@ -137,9 +137,6 @@ def model_evaluation():
         # Predicted Distributions
         st.header("Predicted Distribution", divider="orange")
         predicted_distribution(config, oof_df)
-
-        # Easy and Hard Samples
-        # ...
         
     else:
         st.warning("You need to train your models to explore model evaluation")

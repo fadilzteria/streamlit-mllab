@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 import shutil
 
-from codes.utils import data_quality as dq, univariate_analysis as ua, test_utils
+from codes.utils import data_quality as dq, univariate_analysis as ua, test_utils, explain_utils
 
 # ==================================================================================================
 # DATASET INPUT
@@ -99,7 +99,6 @@ def preprocess_data():
 # ==================================================================================================
 # DATASET
 # ==================================================================================================
-
 def submit_dataset_input():
     st.header("Dataset Input and Preprocessing", divider="orange")
     
@@ -124,28 +123,29 @@ def show_cleaned_dataset(cleaned_df):
 def data_comparison(test_df):
     if(len(test_df) > 1000):
         st.header("Data Comparison", divider="orange")
-
-        # Cleaned Train Dataframe
-        dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
-        train_df_path = os.path.join(dp_path, "cleaned_train.parquet")
-        train_df = pd.read_parquet(train_df_path)
+        st.toggle("Using Data Comparison", value=True, key="bool_data_comparison")
         
+        if(st.session_state["bool_data_comparison"]):
+            # Cleaned Train Dataframe
+            dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
+            train_df_path = os.path.join(dp_path, "cleaned_train.parquet")
+            train_df = pd.read_parquet(train_df_path)
 
-        # ---------------------------------------------------
-        # Value Counts
-        st.subheader("Value Counts")
-        all_value_df_list = [ua.calculate_value_counts(df) for df in [train_df, test_df]]
-        ua.show_value_counts(all_value_df_list, ["Train", "Test"])
+            # ---------------------------------------------------
+            # Value Counts
+            st.subheader("Value Counts")
+            all_value_df_list = [ua.calculate_value_counts(df) for df in [train_df, test_df]]
+            ua.show_value_counts(all_value_df_list, ["Train", "Test"])
 
-        # ---------------------------------------------------
-        # Box Plot
-        st.subheader("Box Plot")
-        ua.show_box_plot([train_df, test_df], ["Train", "Test"])
+            # ---------------------------------------------------
+            # Box Plot
+            st.subheader("Box Plot")
+            ua.show_box_plot([train_df, test_df], ["Train", "Test"])
 
-        # ---------------------------------------------------
-        # Distribution
-        st.subheader("Distribution")
-        ua.show_kde_distribution([train_df, test_df], ["Train", "Test"])
+            # ---------------------------------------------------
+            # Distribution
+            st.subheader("Distribution")
+            ua.show_kde_distribution([train_df, test_df], ["Train", "Test"])
 
 # ==================================================================================================
 # TESTING CONFIGURATION
@@ -223,6 +223,7 @@ def run_testing():
 
     # Evaluation
     if(f"{train_config['target']}_actual" in ensembled_df):
+        st.session_state["pred_dataset"][train_config['target']] = test_df[train_config['target']]
         metric_df = test_utils.eval_testing(test_config, train_config, ensembled_df)
         st.session_state["metric_dataset"] = metric_df
     elif("metric_dataset" in st.session_state):
@@ -255,6 +256,95 @@ def show_testing_results():
         st.dataframe(full_metric_df)
 
 # ==================================================================================================
+# EXPLAINABILITY
+# ==================================================================================================
+@st.fragment()
+def fill_explainability_configuration():
+    # Read Train Config
+    exp_path = os.path.join("experiments", st.session_state["exp_name"])
+    config_filepath = os.path.join(exp_path, "config.json")
+    with open(config_filepath, 'r') as file:
+        config = json.load(file)
+
+    col_1, col_2 = st.columns(2)
+    with col_1:
+        # Folds
+        fold_options = st.session_state["folds"]
+        st.selectbox(label="Folds for Model Explainability", options=fold_options, key="fold_modelx", index=0)
+    with col_2:
+        # Models
+        model_names = test_utils.extract_model_names(config)
+        tree_model_names = []
+        tree_names = [
+            "Decision Tree", "Extra Trees", "Random Forest", "AdaBoost", "Gradient Boosting",
+            "XGBoost", "LightGBM", "CatBoost"
+        ]
+        for tree_name in tree_names:
+            temp_model_names = [model_name for model_name in model_names if tree_name in model_name]
+            tree_model_names.extend(temp_model_names)
+        st.selectbox(label="Tree Models", options=tree_model_names, key="tree_model", index=0)
+
+    if(len(tree_model_names) == 0):
+        st.warning("You need to have ensemble tree models such as XGBoost, LightGBM, and CatBoost from your experiment to explore model explainability")
+
+def run_explainability():
+    if(st.session_state["tree_model"] is not None):
+        explain_config = {
+            "exp_name": st.session_state["exp_name"],
+            "tree_model": st.session_state["tree_model"],
+            "fold_modelx": st.session_state["fold_modelx"],
+        }
+
+        bool_label = any("actual" in col for col in st.session_state["ensembled_dataset"].columns)
+        if(bool_label):
+            results = explain_utils.explain_model(explain_config, split="Valid")
+        else:
+            results = explain_utils.explain_model(explain_config, split="Test")
+
+        st.session_state["ex_model"], st.session_state["explainer"] = results[0:2]
+        st.session_state["explanation"], st.session_state["shap_values"] = results[2:4]
+        st.session_state["X_data"], st.session_state["unique_targets"] = results[4:]
+    else:
+        st.error("You need to have ensemble tree models such as XGBoost, LightGBM, and CatBoost from your experiment to explore model explainability")
+
+def model_explainability():
+    st.subheader("Configuration")
+    with st.container(border=True):
+        fill_explainability_configuration()
+        st.button("Explain the Model", on_click=run_explainability)
+
+@st.fragment()
+def local_explainability():
+    max_idx = len(st.session_state["X_data"]) - 1
+    st.number_input("Index Dataframe", min_value=0, max_value=max_idx, value=0, key="idx")
+    explain_utils.show_local_explainability(
+        st.session_state["explainer"], st.session_state["explanation"], st.session_state["shap_values"], 
+        st.session_state["X_data"], st.session_state["unique_targets"], idx=st.session_state["idx"]
+    )
+
+def show_explainability():
+    # Read Train Config
+    exp_path = os.path.join("experiments", st.session_state["exp_name"])
+    config_filepath = os.path.join(exp_path, "config.json")
+    with open(config_filepath, 'r') as file:
+        config = json.load(file)
+
+    # Read Pred Dataset
+    pred_df = st.session_state["pred_dataset"]
+
+    # Easy-Difficult Samples
+    bool_label = any("actual" in col for col in st.session_state["ensembled_dataset"].columns)
+    if(bool_label):
+        st.subheader("Easy-Difficult Samples")
+        spec_model_name = f"{st.session_state['tree_model']}_{st.session_state['fold_modelx']}"
+        explain_utils.extract_easy_difficult_samples(config, pred_df, spec_model_name, st.session_state["fold_modelx"], split="Valid")
+
+    # Local
+    # ------------------------------------------------------
+    st.header("Local", divider="orange")
+    local_explainability()
+
+# ==================================================================================================
 # PREDICTION
 # ==================================================================================================
 def prediction():
@@ -272,9 +362,15 @@ def prediction():
         if("cleaned_test_dataset" in st.session_state):
             model_testing()
 
-        # Show Results
         if("pred_dataset" in st.session_state):
+            # Show Results
             show_testing_results()
+            
+            # Local Explainability
+            st.header("Local Explainability", divider="orange")
+            model_explainability()
+            if("explanation" in st.session_state): 
+                show_explainability()
             
     else:
         st.warning("You need to train your models to predict targets from your test dataset")

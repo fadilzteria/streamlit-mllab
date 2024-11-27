@@ -70,3 +70,6 @@ def test_prediction():
         at.text_input("test_name").set_value(test_name).run()
         at.selectbox("exp_name").set_value("Regress Baseline").run()
         at.button[1].click().run()
+
+        # Local Explainability
+        at.button[2].click().run()

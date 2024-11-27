@@ -53,6 +53,7 @@ def inference(test_config, train_config, test_df, methods):
 
         if(train_config["ml_task"]=="Classification"): 
             class_names = fe_pipeline["Class Names"]
+            pred_mapping = dict(zip(range(len(class_names)), class_names))
         
         # Each Model
         model_path = os.path.join(fold_path, "models")
@@ -74,6 +75,7 @@ def inference(test_config, train_config, test_df, methods):
                 test_data = Pool(data=X_test, cat_features=cat_cols)
 
             if(train_config["ml_task"]=="Classification"): 
+                target_name = f"{model_name}_{fold}_{train_config['target']}"
                 if("CatBoost" in model_name):
                     y_pred = model.predict_proba(test_data)
                 elif(model_name=="Linear SVC"):
@@ -82,7 +84,10 @@ def inference(test_config, train_config, test_df, methods):
                     y_pred = model.predict_proba(X_test)
 
                 for i, class_name in enumerate(class_names):
-                    pred_df[f"{model_name}_{fold}_{train_config['target']}_{class_name}_proba"] = y_pred[:, i]
+                    pred_df[f"{target_name}_{class_name}_proba"] = y_pred[:, i]
+                
+                pred_df[f"{target_name}_pred"] = np.argmax(y_pred, axis=1)
+                pred_df[f"{target_name}_pred"] = pred_df[f"{target_name}_pred"].map(pred_mapping)
             
             else:
                 if("CatBoost" in model_name):
@@ -107,7 +112,8 @@ def ensembling(test_config, train_config, test_df, pred_df, model_name=""):
 
     if(train_config["ml_task"]=="Classification"): 
         # Class Names
-        class_names = list(set([col.split("_")[-2] for col in pred_columns]))
+        class_names = [col.split("_")[-2] for col in pred_columns if "proba" in col]
+        class_names = sorted(set(class_names), key=class_names.index)
 
         # Soft Classes
         for i, class_name in enumerate(class_names):
@@ -119,8 +125,8 @@ def ensembling(test_config, train_config, test_df, pred_df, model_name=""):
         ensembled_df[hard_target_name] = np.argmax(ensembled_df.iloc[:, 1:len(class_names)+1], axis=1)
         ensembled_df[hard_target_name] = ensembled_df[hard_target_name].apply(lambda x: class_names[x])
         uniques = ensembled_df[hard_target_name].unique()
-        if(len(uniques)==2 and (np.sort(uniques) == ['0', '1']).all()):
-            ensembled_df[hard_target_name] = (ensembled_df[hard_target_name]=='1')
+        if(len(uniques)==2 and (np.sort(uniques) == ['False', 'True']).all()):
+            ensembled_df[hard_target_name] = (ensembled_df[hard_target_name]=='True')
     
     else:
         ensembled_df[hard_target_name] = np.mean(pred_df.loc[:, pred_columns], axis=1)

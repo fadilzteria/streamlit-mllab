@@ -1,1 +1,1 @@
-{"data_filename": "multi_classif_test_no_labels.csv", "dp_name": "Multi-classif Baseline", "exp_name": "Multi-classif Baseline", "folds": [0, 1, 2, 3, 4], "methods": ["Logistic Regression 1", "Linear Discriminant Analysis 1", "Bernoulli Bayes 1", "Gaussian Bayes 1"], "test_name": "Test No Labels"}
+{"data_filename": "multi_classif_test_no_labels.csv", "dp_name": "Multi-classif Baseline", "exp_name": "Multi-classif Baseline", "folds": [0, 1, 2, 3, 4], "methods": ["Decision Tree 1", "Decision Tree 2", "Decision Tree 3", "Random Forest 1"], "test_name": "Test No Labels"}

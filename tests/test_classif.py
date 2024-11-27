@@ -35,22 +35,12 @@ def test_training():
     at.toggle("fe_drop_many_cat_unique").set_value(False).run()
     at.toggle("fe_cat_encoding").set_value(True).run()
     at.selectbox("fe_cat_type").set_value("One-hot").run()
-    at.toggle("fe_scaling").set_value(False).run()
+    at.toggle("fe_scaling").set_value(True).run()
 
     # Model
-    model_names = ["Decision Tree", "Extra Trees", "Random Forest", "Gradient Boosting"]
+    model_names = ["Logistic Regression", "Linear Discriminant Analysis", "Bernoulli Bayes"]
     for model_name in model_names:
         at.multiselect("model_names").select(model_name).run()
-    
-    # Decision Tree Variations
-    model_name = "Decision Tree"
-    model_key = "_".join(model_name.lower().split(" "))
-    nums = 3
-    at.number_input(f"{model_key}_n_models").set_value(nums).run()
-    for n in range(1, nums+1):
-        model_n_name = f"{model_name} {n}"
-        model_n_key = "_".join(model_n_name.lower().split(" "))
-        at.number_input(f"{model_n_key}_params_max_depth").set_value(3+n).run()
 
     metrics = ["Accuracy", "Precision", "Recall", "F1 Score", "ROC AUC", "Avg Precision"]
     for metric in metrics:
@@ -80,3 +70,6 @@ def test_prediction():
         at.text_input("test_name").set_value(test_name).run()
         at.selectbox("exp_name").set_value("Classif Baseline").run()
         at.button[1].click().run()
+
+        # Local Explainability
+        at.button[2].click().run()

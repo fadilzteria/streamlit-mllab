@@ -185,12 +185,13 @@ def check_duplicated_rows(df, drop_duplicated_rows=False, target_exist=None, spe
 
                 if(df[target_exist].dtypes=="object"):
                     dup_group_no_feat_target = dup_no_feat_target.groupby(dup_columns, dropna=False)[target_exist].mode().reset_index()
-                elif(df[target_exist].dtypes in ["int", "float"]):
+                elif(df[target_exist].dtypes in ["int64", "float64"]):
                     dup_group_no_feat_target = dup_no_feat_target.groupby(dup_columns, dropna=False)[target_exist].mean().reset_index()
                 dup_group_no_feat_target[spec_features[0]] = dup_index
 
                 df = df[~df.index.isin(index_list)]
                 df = pd.concat([df, dup_group_no_feat_target], ignore_index=True)
+                df = df.sort_values(by=spec_features[0]).reset_index(drop=True)
             else:
                 st.write(f"Shape: ", dup_no_feat_target.shape)
                 st.dataframe(dup_no_feat_target)
@@ -200,7 +201,7 @@ def check_duplicated_rows(df, drop_duplicated_rows=False, target_exist=None, spe
 def transform_dtypes(df, split="Train", num2bin_cols=None, num2cat_cols=[]):
     # Numerical to Binary
     if(split=="Train"):
-        num_columns = [col for col in df.columns if df[col].dtypes in ["int", "float"]]
+        num_columns = [col for col in df.columns if df[col].dtypes in ["int64", "float64"]]
         num2bin_cols = {}
         for col in num_columns:
             if(df[col].nunique()==2):
@@ -244,7 +245,7 @@ def impute_missing_values(df, impute):
     for col in missed_columns:
         if(df[col].dtypes in ["object", "bool"]):
             value = df[col].mode()
-        elif(df[col].dtypes in ["int", "float"]):
+        elif(df[col].dtypes in ["int64", "float64"]):
             num_missed = impute.split("/")[0]
             if(num_missed=="Mean"):
                 value = df[col].mean()
@@ -259,7 +260,7 @@ def sampling_data(full_df, sample_size, id, group=None):
     sample_ratio = sample_size / full_df.shape[0]
     if(group):
         sample_df = pd.DataFrame()
-        if(full_df[group].dtypes in ["int", "float"]):
+        if(full_df[group].dtypes in ["int64", "float64"]):
             full_df["binned"] = pd.qcut(full_df[group], q=10)
             group = "binned"
 

@@ -1,110 +1,132 @@
 ========== Fold: 0 Training ==========
 Training Data Shape: (46916, 11)
 Validation Data Shape: (11729, 11)
-Classes: [0, 1]
+Classes: [False, True]
 
 XGBoost 1
 Train Metrics, Accuracy: 0.9678, Precision: 0.8426, Recall: 0.9515, F1 Score: 0.8938, ROC AUC: 0.9942, Avg Precision: 0.9721
 Valid Metrics, Accuracy: 0.9260, Precision: 0.7230, Recall: 0.7784, F1 Score: 0.7497, ROC AUC: 0.9391, Avg Precision: 0.8384
-Training Runtime: 1.01s, Prediction Runtime: 0.24s
+Training Runtime: 2.16s, Prediction Runtime: 0.42000000000000004s
 
 LightGBM 1
 Train Metrics, Accuracy: 0.9573, Precision: 0.9432, Recall: 0.7452, F1 Score: 0.8326, ROC AUC: 0.9774, Avg Precision: 0.9231
 Valid Metrics, Accuracy: 0.9496, Precision: 0.9231, Recall: 0.7048, F1 Score: 0.7993, ROC AUC: 0.9493, Avg Precision: 0.8598
-Training Runtime: 0.58s, Prediction Runtime: 0.65s
+Training Runtime: 1.68s, Prediction Runtime: 0.57s
 
 CatBoost 1
 Train Metrics, Accuracy: 0.9346, Precision: 0.7282, Recall: 0.8633, F1 Score: 0.7900, ROC AUC: 0.9690, Avg Precision: 0.8984
 Valid Metrics, Accuracy: 0.9217, Precision: 0.6944, Recall: 0.8042, F1 Score: 0.7453, ROC AUC: 0.9460, Avg Precision: 0.8584
-Training Runtime: 3.91s, Prediction Runtime: 0.31s
+Training Runtime: 3.52s, Prediction Runtime: 0.29000000000000004s
 
 Best Model: LightGBM 1 | ROC AUC: 0.949320654843013
 
 ========== Fold: 1 Training ==========
+========== Fold: 1 Training ==========
+Training Data Shape: (46916, 11)
 Training Data Shape: (46916, 11)
 Validation Data Shape: (11729, 11)
-Classes: [0, 1]
+Validation Data Shape: (11729, 11)
+Classes: [False, True]
+Classes: [False, True]
+
 
 XGBoost 1
+XGBoost 1
+Train Metrics, Accuracy: 0.9637, Precision: 0.8245, Recall: 0.9464, F1 Score: 0.8812, ROC AUC: 0.9929, Avg Precision: 0.9660
 Train Metrics, Accuracy: 0.9637, Precision: 0.8245, Recall: 0.9464, F1 Score: 0.8812, ROC AUC: 0.9929, Avg Precision: 0.9660
 Valid Metrics, Accuracy: 0.9320, Precision: 0.7362, Recall: 0.8138, F1 Score: 0.7730, ROC AUC: 0.9476, Avg Precision: 0.8631
-Training Runtime: 0.72s, Prediction Runtime: 0.42000000000000004s
+Valid Metrics, Accuracy: 0.9320, Precision: 0.7362, Recall: 0.8138, F1 Score: 0.7730, ROC AUC: 0.9476, Avg Precision: 0.8631
+Training Runtime: 0.46s, Prediction Runtime: 0.3s
+
+Training Runtime: 0.46s, Prediction Runtime: 0.3s
 
 LightGBM 1
+LightGBM 1
+Train Metrics, Accuracy: 0.9557, Precision: 0.9408, Recall: 0.7349, F1 Score: 0.8252, ROC AUC: 0.9748, Avg Precision: 0.9169
 Train Metrics, Accuracy: 0.9557, Precision: 0.9408, Recall: 0.7349, F1 Score: 0.8252, ROC AUC: 0.9748, Avg Precision: 0.9169
 Valid Metrics, Accuracy: 0.9552, Precision: 0.9393, Recall: 0.7323, F1 Score: 0.8230, ROC AUC: 0.9604, Avg Precision: 0.8879
-Training Runtime: 0.51s, Prediction Runtime: 0.7100000000000001s
+Valid Metrics, Accuracy: 0.9552, Precision: 0.9393, Recall: 0.7323, F1 Score: 0.8230, ROC AUC: 0.9604, Avg Precision: 0.8879
+Training Runtime: 0.36s, Prediction Runtime: 0.53s
+
+Training Runtime: 0.36s, Prediction Runtime: 0.53s
 
 CatBoost 1
+CatBoost 1
+Train Metrics, Accuracy: 0.9262, Precision: 0.6932, Recall: 0.8642, F1 Score: 0.7693, ROC AUC: 0.9669, Avg Precision: 0.8913
 Train Metrics, Accuracy: 0.9262, Precision: 0.6932, Recall: 0.8642, F1 Score: 0.7693, ROC AUC: 0.9669, Avg Precision: 0.8913
 Valid Metrics, Accuracy: 0.9243, Precision: 0.6876, Recall: 0.8581, F1 Score: 0.7635, ROC AUC: 0.9579, Avg Precision: 0.8809
-Training Runtime: 3.41s, Prediction Runtime: 0.28s
+Valid Metrics, Accuracy: 0.9243, Precision: 0.6876, Recall: 0.8581, F1 Score: 0.7635, ROC AUC: 0.9579, Avg Precision: 0.8809
+Training Runtime: 3.42s, Prediction Runtime: 0.26s
+
+Training Runtime: 3.42s, Prediction Runtime: 0.26s
+
+Best Model: LightGBM 1 | ROC AUC: 0.9604027554791996
 
 Best Model: LightGBM 1 | ROC AUC: 0.9604027554791996
 
 ========== Fold: 2 Training ==========
 Training Data Shape: (46916, 11)
 Validation Data Shape: (11729, 11)
-Classes: [0, 1]
+Classes: [False, True]
 
 XGBoost 1
 Train Metrics, Accuracy: 0.9669, Precision: 0.8398, Recall: 0.9485, F1 Score: 0.8908, ROC AUC: 0.9940, Avg Precision: 0.9709
 Valid Metrics, Accuracy: 0.9301, Precision: 0.7372, Recall: 0.7910, F1 Score: 0.7631, ROC AUC: 0.9429, Avg Precision: 0.8529
-Training Runtime: 0.4s, Prediction Runtime: 0.25s
+Training Runtime: 0.45s, Prediction Runtime: 0.30000000000000004s
 
 LightGBM 1
 Train Metrics, Accuracy: 0.9569, Precision: 0.9426, Recall: 0.7425, F1 Score: 0.8307, ROC AUC: 0.9756, Avg Precision: 0.9201
 Valid Metrics, Accuracy: 0.9495, Precision: 0.9224, Recall: 0.7048, F1 Score: 0.7990, ROC AUC: 0.9538, Avg Precision: 0.8669
-Training Runtime: 0.34s, Prediction Runtime: 0.59s
+Training Runtime: 0.36s, Prediction Runtime: 0.62s
 
 CatBoost 1
 Train Metrics, Accuracy: 0.9337, Precision: 0.7225, Recall: 0.8678, F1 Score: 0.7885, ROC AUC: 0.9694, Avg Precision: 0.8990
 Valid Metrics, Accuracy: 0.9258, Precision: 0.7079, Recall: 0.8156, F1 Score: 0.7579, ROC AUC: 0.9514, Avg Precision: 0.8652
-Training Runtime: 3.23s, Prediction Runtime: 0.32s
+Training Runtime: 4.11s, Prediction Runtime: 0.25s
 
 Best Model: LightGBM 1 | ROC AUC: 0.953791313882822
 
 ========== Fold: 3 Training ==========
 Training Data Shape: (46916, 11)
 Validation Data Shape: (11729, 11)
-Classes: [0, 1]
+Classes: [False, True]
 
 XGBoost 1
 Train Metrics, Accuracy: 0.9663, Precision: 0.8357, Recall: 0.9504, F1 Score: 0.8894, ROC AUC: 0.9937, Avg Precision: 0.9695
 Valid Metrics, Accuracy: 0.9307, Precision: 0.7340, Recall: 0.8048, F1 Score: 0.7678, ROC AUC: 0.9433, Avg Precision: 0.8608
-Training Runtime: 0.43s, Prediction Runtime: 0.29000000000000004s
+Training Runtime: 0.49s, Prediction Runtime: 0.24s
 
 LightGBM 1
 Train Metrics, Accuracy: 0.9560, Precision: 0.9391, Recall: 0.7388, F1 Score: 0.8270, ROC AUC: 0.9754, Avg Precision: 0.9181
 Valid Metrics, Accuracy: 0.9550, Precision: 0.9319, Recall: 0.7377, F1 Score: 0.8235, ROC AUC: 0.9600, Avg Precision: 0.8829
-Training Runtime: 0.42s, Prediction Runtime: 0.6s
+Training Runtime: 0.32s, Prediction Runtime: 0.49s
 
 CatBoost 1
 Train Metrics, Accuracy: 0.9310, Precision: 0.7128, Recall: 0.8636, F1 Score: 0.7810, ROC AUC: 0.9681, Avg Precision: 0.8948
 Valid Metrics, Accuracy: 0.9258, Precision: 0.6996, Recall: 0.8395, F1 Score: 0.7632, ROC AUC: 0.9548, Avg Precision: 0.8753
-Training Runtime: 3.6s, Prediction Runtime: 0.28s
+Training Runtime: 3.2s, Prediction Runtime: 0.28s
 
 Best Model: LightGBM 1 | ROC AUC: 0.9600455813693222
 
 ========== Fold: 4 Training ==========
 Training Data Shape: (46916, 11)
 Validation Data Shape: (11729, 11)
-Classes: [0, 1]
+Classes: [False, True]
 
 XGBoost 1
 Train Metrics, Accuracy: 0.9672, Precision: 0.8382, Recall: 0.9536, F1 Score: 0.8922, ROC AUC: 0.9944, Avg Precision: 0.9717
 Valid Metrics, Accuracy: 0.9273, Precision: 0.7172, Recall: 0.8078, F1 Score: 0.7598, ROC AUC: 0.9454, Avg Precision: 0.8594
-Training Runtime: 0.45s, Prediction Runtime: 0.29000000000000004s
+Training Runtime: 0.69s, Prediction Runtime: 0.35000000000000003s
 
 LightGBM 1
 Train Metrics, Accuracy: 0.9562, Precision: 0.9406, Recall: 0.7392, F1 Score: 0.8278, ROC AUC: 0.9759, Avg Precision: 0.9205
 Valid Metrics, Accuracy: 0.9524, Precision: 0.9193, Recall: 0.7299, F1 Score: 0.8138, ROC AUC: 0.9575, Avg Precision: 0.8727
-Training Runtime: 0.39s, Prediction Runtime: 0.54s
+Training Runtime: 0.38s, Prediction Runtime: 0.49s
 
 CatBoost 1
 Train Metrics, Accuracy: 0.9303, Precision: 0.7080, Recall: 0.8684, F1 Score: 0.7801, ROC AUC: 0.9688, Avg Precision: 0.8967
 Valid Metrics, Accuracy: 0.9170, Precision: 0.6629, Recall: 0.8491, F1 Score: 0.7446, ROC AUC: 0.9580, Avg Precision: 0.8745
-Training Runtime: 3.08s, Prediction Runtime: 0.25s
+Training Runtime: 3.88s, Prediction Runtime: 0.25s
 
 Best Model: CatBoost 1 | ROC AUC: 0.9580421322580012
 

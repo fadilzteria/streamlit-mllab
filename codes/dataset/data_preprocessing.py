@@ -170,7 +170,7 @@ def data_preprocessing(raw_df):
 
         num_columns = []
         for col in raw_df.columns:
-            if(raw_df[col].dtypes in ["int", "float"] and raw_df[col].nunique() > 2):
+            if(raw_df[col].dtypes in ["int64", "float64"] and raw_df[col].nunique() > 2):
                 num_columns.append(col)
         for col in ["id", "target"]:
             if(col in num_columns):

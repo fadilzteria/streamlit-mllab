@@ -192,7 +192,7 @@ def extract_correlation_series(df, feature, corr_type):
     num_binary_df = df[numerical_columns]
 
     # Correlation Coefficient with One Feature
-    if(df[feature].dtypes in ["int", "float"]):
+    if(df[feature].dtypes in ["int64", "float64"]):
         series = df[feature]
     else:
         series = pd.Series(df.index)

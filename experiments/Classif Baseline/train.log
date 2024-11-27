@@ -1,39 +1,24 @@
 ========== Fold: 0 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
-Classes: [0, 1]
+Classes: [False, True]
 
-Decision Tree 1
-Train Metrics, Accuracy: 0.9074, Precision: 0.6480, Recall: 0.7654, F1 Score: 0.7019, ROC AUC: 0.9014, Avg Precision: 0.7151
-Valid Metrics, Accuracy: 0.9007, Precision: 0.6288, Recall: 0.7383, F1 Score: 0.6792, ROC AUC: 0.8903, Avg Precision: 0.6929
-Training Runtime: 0.1s, Prediction Runtime: 0.02s
+Logistic Regression 1
+Train Metrics, Accuracy: 0.9128, Precision: 0.7811, Recall: 0.5389, F1 Score: 0.6378, ROC AUC: 0.9043, Avg Precision: 0.7165
+Valid Metrics, Accuracy: 0.9095, Precision: 0.7627, Recall: 0.5293, F1 Score: 0.6250, ROC AUC: 0.8930, Avg Precision: 0.7006
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
-Decision Tree 2
-Train Metrics, Accuracy: 0.9079, Precision: 0.6452, Recall: 0.7847, F1 Score: 0.7082, ROC AUC: 0.9139, Avg Precision: 0.7651
-Valid Metrics, Accuracy: 0.9005, Precision: 0.6243, Recall: 0.7563, F1 Score: 0.6840, ROC AUC: 0.8997, Avg Precision: 0.7390
-Training Runtime: 0.12s, Prediction Runtime: 0.05s
+Linear Discriminant Analysis 1
+Train Metrics, Accuracy: 0.9041, Precision: 0.6901, Recall: 0.5933, F1 Score: 0.6380, ROC AUC: 0.8924, Avg Precision: 0.6683
+Valid Metrics, Accuracy: 0.8988, Precision: 0.6676, Recall: 0.5760, F1 Score: 0.6185, ROC AUC: 0.8812, Avg Precision: 0.6537
+Training Runtime: 0.09s, Prediction Runtime: 0.02s
 
-Decision Tree 3
-Train Metrics, Accuracy: 0.9104, Precision: 0.6526, Recall: 0.7918, F1 Score: 0.7155, ROC AUC: 0.9227, Avg Precision: 0.7937
-Valid Metrics, Accuracy: 0.9044, Precision: 0.6379, Recall: 0.7605, F1 Score: 0.6938, ROC AUC: 0.9014, Avg Precision: 0.7633
-Training Runtime: 0.14s, Prediction Runtime: 0.03s
+Bernoulli Bayes 1
+Train Metrics, Accuracy: 0.8776, Precision: 0.5835, Recall: 0.4912, F1 Score: 0.5334, ROC AUC: 0.8655, Avg Precision: 0.5819
+Valid Metrics, Accuracy: 0.8723, Precision: 0.5601, Recall: 0.4802, F1 Score: 0.5171, ROC AUC: 0.8545, Avg Precision: 0.5668
+Training Runtime: 0.03s, Prediction Runtime: 0.060000000000000005s
 
-Extra Trees 1
-Train Metrics, Accuracy: 0.8678, Precision: 0.5239, Recall: 0.7891, F1 Score: 0.6297, ROC AUC: 0.8942, Avg Precision: 0.6664
-Valid Metrics, Accuracy: 0.8615, Precision: 0.5089, Recall: 0.7695, F1 Score: 0.6126, ROC AUC: 0.8836, Avg Precision: 0.6431
-Training Runtime: 1.34s, Prediction Runtime: 0.6699999999999999s
-
-Random Forest 1
-Train Metrics, Accuracy: 0.9078, Precision: 0.6471, Recall: 0.7746, F1 Score: 0.7051, ROC AUC: 0.9230, Avg Precision: 0.8003
-Valid Metrics, Accuracy: 0.9013, Precision: 0.6275, Recall: 0.7545, F1 Score: 0.6852, ROC AUC: 0.9109, Avg Precision: 0.7764
-Training Runtime: 2.1s, Prediction Runtime: 0.6s
-
-Gradient Boosting 1
-Train Metrics, Accuracy: 0.9569, Precision: 0.9399, Recall: 0.7451, F1 Score: 0.8312, ROC AUC: 0.9658, Avg Precision: 0.9020
-Valid Metrics, Accuracy: 0.9482, Precision: 0.9148, Recall: 0.7012, F1 Score: 0.7939, ROC AUC: 0.9438, Avg Precision: 0.8510
-Training Runtime: 11.46s, Prediction Runtime: 0.34s
-
-Best Model: Gradient Boosting 1 | ROC AUC: 0.9438470806671775
+Best Model: Logistic Regression 1 | ROC AUC: 0.8930321284064737
 
 ========== Fold: 1 Training ==========
 ========== Fold: 1 Training ==========
@@ -41,182 +26,107 @@ Training Data Shape: (46916, 22)
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
 Validation Data Shape: (11729, 22)
-Classes: [0, 1]
-Classes: [0, 1]
+Classes: [False, True]
+Classes: [False, True]
 
 
-Decision Tree 1
-Decision Tree 1
-Train Metrics, Accuracy: 0.9115, Precision: 0.6661, Recall: 0.7582, F1 Score: 0.7092, ROC AUC: 0.8854, Avg Precision: 0.7027
-Train Metrics, Accuracy: 0.9115, Precision: 0.6661, Recall: 0.7582, F1 Score: 0.7092, ROC AUC: 0.8854, Avg Precision: 0.7027
-Valid Metrics, Accuracy: 0.9157, Precision: 0.6816, Recall: 0.7653, F1 Score: 0.7210, ROC AUC: 0.8913, Avg Precision: 0.7155
-Valid Metrics, Accuracy: 0.9157, Precision: 0.6816, Recall: 0.7653, F1 Score: 0.7210, ROC AUC: 0.8913, Avg Precision: 0.7155
-Training Runtime: 0.1s, Prediction Runtime: 0.03s
+Logistic Regression 1
+Logistic Regression 1
+Train Metrics, Accuracy: 0.9124, Precision: 0.7789, Recall: 0.5374, F1 Score: 0.6360, ROC AUC: 0.9021, Avg Precision: 0.7134
+Train Metrics, Accuracy: 0.9124, Precision: 0.7789, Recall: 0.5374, F1 Score: 0.6360, ROC AUC: 0.9021, Avg Precision: 0.7134
+Valid Metrics, Accuracy: 0.9139, Precision: 0.7850, Recall: 0.5443, F1 Score: 0.6429, ROC AUC: 0.9014, Avg Precision: 0.7128
+Valid Metrics, Accuracy: 0.9139, Precision: 0.7850, Recall: 0.5443, F1 Score: 0.6429, ROC AUC: 0.9014, Avg Precision: 0.7128
+Training Runtime: 0.11s, Prediction Runtime: 0.03s
 
-Training Runtime: 0.1s, Prediction Runtime: 0.03s
+Training Runtime: 0.11s, Prediction Runtime: 0.03s
 
-Decision Tree 2
-Decision Tree 2
-Train Metrics, Accuracy: 0.8839, Precision: 0.5645, Recall: 0.8061, F1 Score: 0.6640, ROC AUC: 0.9058, Avg Precision: 0.7572
-Train Metrics, Accuracy: 0.8839, Precision: 0.5645, Recall: 0.8061, F1 Score: 0.6640, ROC AUC: 0.9058, Avg Precision: 0.7572
-Valid Metrics, Accuracy: 0.8867, Precision: 0.5720, Recall: 0.8108, F1 Score: 0.6708, ROC AUC: 0.9096, Avg Precision: 0.7665
-Valid Metrics, Accuracy: 0.8867, Precision: 0.5720, Recall: 0.8108, F1 Score: 0.6708, ROC AUC: 0.9096, Avg Precision: 0.7665
-Training Runtime: 0.13s, Prediction Runtime: 0.02s
+Linear Discriminant Analysis 1
+Linear Discriminant Analysis 1
+Train Metrics, Accuracy: 0.9037, Precision: 0.6867, Recall: 0.5946, F1 Score: 0.6374, ROC AUC: 0.8902, Avg Precision: 0.6658
+Train Metrics, Accuracy: 0.9037, Precision: 0.6867, Recall: 0.5946, F1 Score: 0.6374, ROC AUC: 0.8902, Avg Precision: 0.6658
+Valid Metrics, Accuracy: 0.9041, Precision: 0.6899, Recall: 0.5928, F1 Score: 0.6377, ROC AUC: 0.8883, Avg Precision: 0.6639
+Valid Metrics, Accuracy: 0.9041, Precision: 0.6899, Recall: 0.5928, F1 Score: 0.6377, ROC AUC: 0.8883, Avg Precision: 0.6639
+Training Runtime: 0.11s, Prediction Runtime: 0.03s
 
-Training Runtime: 0.13s, Prediction Runtime: 0.02s
+Training Runtime: 0.11s, Prediction Runtime: 0.03s
 
-Decision Tree 3
-Decision Tree 3
-Train Metrics, Accuracy: 0.9143, Precision: 0.6730, Recall: 0.7744, F1 Score: 0.7202, ROC AUC: 0.9180, Avg Precision: 0.7840
-Train Metrics, Accuracy: 0.9143, Precision: 0.6730, Recall: 0.7744, F1 Score: 0.7202, ROC AUC: 0.9180, Avg Precision: 0.7840
-Valid Metrics, Accuracy: 0.9164, Precision: 0.6806, Recall: 0.7784, F1 Score: 0.7263, ROC AUC: 0.9191, Avg Precision: 0.7866
-Valid Metrics, Accuracy: 0.9164, Precision: 0.6806, Recall: 0.7784, F1 Score: 0.7263, ROC AUC: 0.9191, Avg Precision: 0.7866
-Training Runtime: 0.15s, Prediction Runtime: 0.02s
+Bernoulli Bayes 1
+Bernoulli Bayes 1
+Train Metrics, Accuracy: 0.8764, Precision: 0.5782, Recall: 0.4882, F1 Score: 0.5294, ROC AUC: 0.8633, Avg Precision: 0.5789
+Train Metrics, Accuracy: 0.8764, Precision: 0.5782, Recall: 0.4882, F1 Score: 0.5294, ROC AUC: 0.8633, Avg Precision: 0.5789
+Valid Metrics, Accuracy: 0.8765, Precision: 0.5803, Recall: 0.4802, F1 Score: 0.5256, ROC AUC: 0.8622, Avg Precision: 0.5747
+Valid Metrics, Accuracy: 0.8765, Precision: 0.5803, Recall: 0.4802, F1 Score: 0.5256, ROC AUC: 0.8622, Avg Precision: 0.5747
+Training Runtime: 0.03s, Prediction Runtime: 0.08s
 
-Training Runtime: 0.15s, Prediction Runtime: 0.02s
+Training Runtime: 0.03s, Prediction Runtime: 0.08s
 
-Extra Trees 1
-Extra Trees 1
-Train Metrics, Accuracy: 0.8527, Precision: 0.4895, Recall: 0.8003, F1 Score: 0.6075, ROC AUC: 0.8924, Avg Precision: 0.6627
-Train Metrics, Accuracy: 0.8527, Precision: 0.4895, Recall: 0.8003, F1 Score: 0.6075, ROC AUC: 0.8924, Avg Precision: 0.6627
-Valid Metrics, Accuracy: 0.8534, Precision: 0.4908, Recall: 0.7976, F1 Score: 0.6077, ROC AUC: 0.8916, Avg Precision: 0.6605
-Valid Metrics, Accuracy: 0.8534, Precision: 0.4908, Recall: 0.7976, F1 Score: 0.6077, ROC AUC: 0.8916, Avg Precision: 0.6605
-Training Runtime: 1.56s, Prediction Runtime: 0.64s
+Best Model: Logistic Regression 1 | ROC AUC: 0.9013597618363036
 
-Training Runtime: 1.56s, Prediction Runtime: 0.64s
-
-Random Forest 1
-Random Forest 1
-Train Metrics, Accuracy: 0.9078, Precision: 0.6489, Recall: 0.7678, F1 Score: 0.7034, ROC AUC: 0.9193, Avg Precision: 0.7967
-Train Metrics, Accuracy: 0.9078, Precision: 0.6489, Recall: 0.7678, F1 Score: 0.7034, ROC AUC: 0.9193, Avg Precision: 0.7967
-Valid Metrics, Accuracy: 0.9110, Precision: 0.6589, Recall: 0.7772, F1 Score: 0.7132, ROC AUC: 0.9196, Avg Precision: 0.7982
-Valid Metrics, Accuracy: 0.9110, Precision: 0.6589, Recall: 0.7772, F1 Score: 0.7132, ROC AUC: 0.9196, Avg Precision: 0.7982
-Training Runtime: 2.06s, Prediction Runtime: 0.59s
-
-Training Runtime: 2.06s, Prediction Runtime: 0.59s
-
-Gradient Boosting 1
-Gradient Boosting 1
-Train Metrics, Accuracy: 0.9554, Precision: 0.9408, Recall: 0.7329, F1 Score: 0.8240, ROC AUC: 0.9631, Avg Precision: 0.8949
-Train Metrics, Accuracy: 0.9554, Precision: 0.9408, Recall: 0.7329, F1 Score: 0.8240, ROC AUC: 0.9631, Avg Precision: 0.8949
-Valid Metrics, Accuracy: 0.9535, Precision: 0.9344, Recall: 0.7246, F1 Score: 0.8162, ROC AUC: 0.9566, Avg Precision: 0.8762
-Valid Metrics, Accuracy: 0.9535, Precision: 0.9344, Recall: 0.7246, F1 Score: 0.8162, ROC AUC: 0.9566, Avg Precision: 0.8762
-Training Runtime: 11.88s, Prediction Runtime: 0.35000000000000003s
-
-Training Runtime: 11.88s, Prediction Runtime: 0.35000000000000003s
-
-Best Model: Gradient Boosting 1 | ROC AUC: 0.9566273060797582
-
-Best Model: Gradient Boosting 1 | ROC AUC: 0.9566273060797582
+Best Model: Logistic Regression 1 | ROC AUC: 0.9013597618363036
 
 ========== Fold: 2 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
-Classes: [0, 1]
+Classes: [False, True]
 
-Decision Tree 1
-Train Metrics, Accuracy: 0.9000, Precision: 0.6199, Recall: 0.7687, F1 Score: 0.6864, ROC AUC: 0.9012, Avg Precision: 0.7136
-Valid Metrics, Accuracy: 0.8982, Precision: 0.6174, Recall: 0.7497, F1 Score: 0.6771, ROC AUC: 0.8924, Avg Precision: 0.7043
-Training Runtime: 0.11s, Prediction Runtime: 0.02s
-
-Decision Tree 2
-Train Metrics, Accuracy: 0.8968, Precision: 0.6045, Recall: 0.7948, F1 Score: 0.6867, ROC AUC: 0.9134, Avg Precision: 0.7635
-Valid Metrics, Accuracy: 0.8940, Precision: 0.5995, Recall: 0.7701, F1 Score: 0.6742, ROC AUC: 0.9016, Avg Precision: 0.7469
+Logistic Regression 1
+Train Metrics, Accuracy: 0.9118, Precision: 0.7771, Recall: 0.5334, F1 Score: 0.6326, ROC AUC: 0.9026, Avg Precision: 0.7114
+Valid Metrics, Accuracy: 0.9123, Precision: 0.7880, Recall: 0.5251, F1 Score: 0.6303, ROC AUC: 0.9005, Avg Precision: 0.7208
 Training Runtime: 0.13s, Prediction Runtime: 0.03s
 
-Decision Tree 3
-Train Metrics, Accuracy: 0.9209, Precision: 0.7000, Recall: 0.7780, F1 Score: 0.7370, ROC AUC: 0.9216, Avg Precision: 0.7935
-Valid Metrics, Accuracy: 0.9178, Precision: 0.6929, Recall: 0.7593, F1 Score: 0.7246, ROC AUC: 0.9082, Avg Precision: 0.7743
-Training Runtime: 0.15s, Prediction Runtime: 0.04s
+Linear Discriminant Analysis 1
+Train Metrics, Accuracy: 0.9034, Precision: 0.6874, Recall: 0.5900, F1 Score: 0.6350, ROC AUC: 0.8911, Avg Precision: 0.6648
+Valid Metrics, Accuracy: 0.9049, Precision: 0.6947, Recall: 0.5928, F1 Score: 0.6397, ROC AUC: 0.8881, Avg Precision: 0.6749
+Training Runtime: 0.09s, Prediction Runtime: 0.03s
 
-Extra Trees 1
-Train Metrics, Accuracy: 0.8556, Precision: 0.4957, Recall: 0.8012, F1 Score: 0.6125, ROC AUC: 0.8934, Avg Precision: 0.6614
-Valid Metrics, Accuracy: 0.8563, Precision: 0.4970, Recall: 0.7898, F1 Score: 0.6101, ROC AUC: 0.8913, Avg Precision: 0.6729
-Training Runtime: 1.53s, Prediction Runtime: 0.5700000000000001s
+Bernoulli Bayes 1
+Train Metrics, Accuracy: 0.8750, Precision: 0.5708, Recall: 0.4918, F1 Score: 0.5283, ROC AUC: 0.8630, Avg Precision: 0.5755
+Valid Metrics, Accuracy: 0.8789, Precision: 0.5895, Recall: 0.4928, F1 Score: 0.5369, ROC AUC: 0.8641, Avg Precision: 0.5860
+Training Runtime: 0.03s, Prediction Runtime: 0.060000000000000005s
 
-Random Forest 1
-Train Metrics, Accuracy: 0.9053, Precision: 0.6379, Recall: 0.7754, F1 Score: 0.7000, ROC AUC: 0.9205, Avg Precision: 0.7923
-Valid Metrics, Accuracy: 0.9052, Precision: 0.6411, Recall: 0.7593, F1 Score: 0.6952, ROC AUC: 0.9144, Avg Precision: 0.7876
-Training Runtime: 2.05s, Prediction Runtime: 0.5700000000000001s
-
-Gradient Boosting 1
-Train Metrics, Accuracy: 0.9565, Precision: 0.9416, Recall: 0.7404, F1 Score: 0.8290, ROC AUC: 0.9640, Avg Precision: 0.8987
-Valid Metrics, Accuracy: 0.9502, Precision: 0.9269, Recall: 0.7060, F1 Score: 0.8015, ROC AUC: 0.9480, Avg Precision: 0.8559
-Training Runtime: 13.15s, Prediction Runtime: 0.38s
-
-Best Model: Gradient Boosting 1 | ROC AUC: 0.948020719670114
+Best Model: Logistic Regression 1 | ROC AUC: 0.9004905786399167
 
 ========== Fold: 3 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
-Classes: [0, 1]
+Classes: [False, True]
 
-Decision Tree 1
-Train Metrics, Accuracy: 0.9110, Precision: 0.6656, Recall: 0.7533, F1 Score: 0.7067, ROC AUC: 0.8979, Avg Precision: 0.7087
-Valid Metrics, Accuracy: 0.9120, Precision: 0.6674, Recall: 0.7617, F1 Score: 0.7114, ROC AUC: 0.9029, Avg Precision: 0.7182
-Training Runtime: 0.15s, Prediction Runtime: 0.02s
+Logistic Regression 1
+Train Metrics, Accuracy: 0.9112, Precision: 0.7757, Recall: 0.5292, F1 Score: 0.6292, ROC AUC: 0.9005, Avg Precision: 0.7087
+Valid Metrics, Accuracy: 0.9148, Precision: 0.7940, Recall: 0.5425, F1 Score: 0.6446, ROC AUC: 0.9103, Avg Precision: 0.7280
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
-Decision Tree 2
-Train Metrics, Accuracy: 0.8844, Precision: 0.5663, Recall: 0.8042, F1 Score: 0.6646, ROC AUC: 0.9101, Avg Precision: 0.7587
-Valid Metrics, Accuracy: 0.8882, Precision: 0.5759, Recall: 0.8156, F1 Score: 0.6751, ROC AUC: 0.9152, Avg Precision: 0.7724
-Training Runtime: 0.14s, Prediction Runtime: 0.05s
+Linear Discriminant Analysis 1
+Train Metrics, Accuracy: 0.9017, Precision: 0.6806, Recall: 0.5840, F1 Score: 0.6286, ROC AUC: 0.8880, Avg Precision: 0.6617
+Valid Metrics, Accuracy: 0.9079, Precision: 0.7075, Recall: 0.6024, F1 Score: 0.6507, ROC AUC: 0.9004, Avg Precision: 0.6782
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
-Decision Tree 3
-Train Metrics, Accuracy: 0.9172, Precision: 0.6877, Recall: 0.7663, F1 Score: 0.7249, ROC AUC: 0.9188, Avg Precision: 0.7875
-Valid Metrics, Accuracy: 0.9214, Precision: 0.7017, Recall: 0.7790, F1 Score: 0.7384, ROC AUC: 0.9198, Avg Precision: 0.7931
-Training Runtime: 0.17s, Prediction Runtime: 0.03s
+Bernoulli Bayes 1
+Train Metrics, Accuracy: 0.8746, Precision: 0.5691, Recall: 0.4913, F1 Score: 0.5274, ROC AUC: 0.8609, Avg Precision: 0.5731
+Valid Metrics, Accuracy: 0.8777, Precision: 0.5822, Recall: 0.5006, F1 Score: 0.5383, ROC AUC: 0.8667, Avg Precision: 0.5862
+Training Runtime: 0.03s, Prediction Runtime: 0.060000000000000005s
 
-Extra Trees 1
-Train Metrics, Accuracy: 0.8612, Precision: 0.5080, Recall: 0.7904, F1 Score: 0.6185, ROC AUC: 0.8912, Avg Precision: 0.6562
-Valid Metrics, Accuracy: 0.8608, Precision: 0.5070, Recall: 0.8042, F1 Score: 0.6219, ROC AUC: 0.8966, Avg Precision: 0.6686
-Training Runtime: 2.0s, Prediction Runtime: 0.66s
-
-Random Forest 1
-Train Metrics, Accuracy: 0.9056, Precision: 0.6403, Recall: 0.7684, F1 Score: 0.6986, ROC AUC: 0.9194, Avg Precision: 0.7908
-Valid Metrics, Accuracy: 0.9078, Precision: 0.6469, Recall: 0.7766, F1 Score: 0.7059, ROC AUC: 0.9222, Avg Precision: 0.7980
-Training Runtime: 2.29s, Prediction Runtime: 0.6s
-
-Gradient Boosting 1
-Train Metrics, Accuracy: 0.9553, Precision: 0.9386, Recall: 0.7340, F1 Score: 0.8238, ROC AUC: 0.9650, Avg Precision: 0.8988
-Valid Metrics, Accuracy: 0.9535, Precision: 0.9278, Recall: 0.7305, F1 Score: 0.8174, ROC AUC: 0.9551, Avg Precision: 0.8722
-Training Runtime: 12.69s, Prediction Runtime: 0.3s
-
-Best Model: Gradient Boosting 1 | ROC AUC: 0.9550635680622054
+Best Model: Logistic Regression 1 | ROC AUC: 0.9102765539603762
 
 ========== Fold: 4 Training ==========
 Training Data Shape: (46916, 22)
 Validation Data Shape: (11729, 22)
-Classes: [0, 1]
+Classes: [False, True]
 
-Decision Tree 1
-Train Metrics, Accuracy: 0.9181, Precision: 0.6988, Recall: 0.7466, F1 Score: 0.7219, ROC AUC: 0.8989, Avg Precision: 0.7110
-Valid Metrics, Accuracy: 0.9141, Precision: 0.6791, Recall: 0.7515, F1 Score: 0.7135, ROC AUC: 0.9005, Avg Precision: 0.7058
-Training Runtime: 0.08s, Prediction Runtime: 0.04s
+Logistic Regression 1
+Train Metrics, Accuracy: 0.9131, Precision: 0.7819, Recall: 0.5409, F1 Score: 0.6394, ROC AUC: 0.9019, Avg Precision: 0.7156
+Valid Metrics, Accuracy: 0.9103, Precision: 0.7614, Recall: 0.5389, F1 Score: 0.6311, ROC AUC: 0.9041, Avg Precision: 0.6993
+Training Runtime: 0.12s, Prediction Runtime: 0.03s
 
-Decision Tree 2
-Train Metrics, Accuracy: 0.9175, Precision: 0.6893, Recall: 0.7662, F1 Score: 0.7257, ROC AUC: 0.9104, Avg Precision: 0.7595
-Valid Metrics, Accuracy: 0.9131, Precision: 0.6696, Recall: 0.7695, F1 Score: 0.7161, ROC AUC: 0.9113, Avg Precision: 0.7530
-Training Runtime: 0.1s, Prediction Runtime: 0.04s
+Linear Discriminant Analysis 1
+Train Metrics, Accuracy: 0.9041, Precision: 0.6895, Recall: 0.5940, F1 Score: 0.6382, ROC AUC: 0.8898, Avg Precision: 0.6675
+Valid Metrics, Accuracy: 0.9002, Precision: 0.6705, Recall: 0.5874, F1 Score: 0.6262, ROC AUC: 0.8920, Avg Precision: 0.6554
+Training Runtime: 0.09s, Prediction Runtime: 0.03s
 
-Decision Tree 3
-Train Metrics, Accuracy: 0.9255, Precision: 0.7252, Recall: 0.7674, F1 Score: 0.7457, ROC AUC: 0.9190, Avg Precision: 0.7894
-Valid Metrics, Accuracy: 0.9205, Precision: 0.7030, Recall: 0.7653, F1 Score: 0.7328, ROC AUC: 0.9184, Avg Precision: 0.7821
-Training Runtime: 0.12s, Prediction Runtime: 0.02s
+Bernoulli Bayes 1
+Train Metrics, Accuracy: 0.8764, Precision: 0.5780, Recall: 0.4886, F1 Score: 0.5296, ROC AUC: 0.8623, Avg Precision: 0.5783
+Valid Metrics, Accuracy: 0.8742, Precision: 0.5663, Recall: 0.4958, F1 Score: 0.5287, ROC AUC: 0.8660, Avg Precision: 0.5735
+Training Runtime: 0.03s, Prediction Runtime: 0.060000000000000005s
 
-Extra Trees 1
-Train Metrics, Accuracy: 0.8656, Precision: 0.5184, Recall: 0.7901, F1 Score: 0.6261, ROC AUC: 0.8950, Avg Precision: 0.6757
-Valid Metrics, Accuracy: 0.8636, Precision: 0.5136, Recall: 0.7928, F1 Score: 0.6234, ROC AUC: 0.8969, Avg Precision: 0.6614
-Training Runtime: 1.15s, Prediction Runtime: 0.45s
-
-Random Forest 1
-Train Metrics, Accuracy: 0.9064, Precision: 0.6434, Recall: 0.7695, F1 Score: 0.7008, ROC AUC: 0.9202, Avg Precision: 0.8060
-Valid Metrics, Accuracy: 0.9040, Precision: 0.6331, Recall: 0.7749, F1 Score: 0.6968, ROC AUC: 0.9236, Avg Precision: 0.8029
-Training Runtime: 1.76s, Prediction Runtime: 0.5s
-
-Gradient Boosting 1
-Train Metrics, Accuracy: 0.9561, Precision: 0.9418, Recall: 0.7370, F1 Score: 0.8269, ROC AUC: 0.9637, Avg Precision: 0.8976
-Valid Metrics, Accuracy: 0.9525, Precision: 0.9200, Recall: 0.7299, F1 Score: 0.8140, ROC AUC: 0.9550, Avg Precision: 0.8692
-Training Runtime: 10.15s, Prediction Runtime: 0.3s
-
-Best Model: Gradient Boosting 1 | ROC AUC: 0.9549845730549041
+Best Model: Logistic Regression 1 | ROC AUC: 0.9041247061498833
 

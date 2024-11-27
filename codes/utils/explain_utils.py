@@ -12,8 +12,8 @@ import streamlit as st
 from codes.utils import train_utils, features
 
 # Explain the Model
-@st.cache_data()
-def explain_model(config):
+# @st.cache_data()
+def explain_model(config, split="Train"):
     # Read Train Config
     exp_path = os.path.join("experiments", config["exp_name"])
     config_filepath = os.path.join(exp_path, "config.json")
@@ -22,38 +22,35 @@ def explain_model(config):
 
     # Read Cleaned Train Dataset
     dp_path = os.path.join("datasets/cleaned_dataset", train_config["dp_name"])
-    train_df_path = os.path.join(dp_path, "cleaned_train.parquet")
-    train_df = pd.read_parquet(train_df_path)
+    filename = "cleaned_train.parquet" if(split=="Train") else "cleaned_test.parquet"
+    df_path = os.path.join(dp_path, filename)
+    df = pd.read_parquet(df_path)
 
-    # Cross Validation
-    target_col = train_config["target"] 
-    if(train_config["ml_task"]=="Classification"):
-        unique_targets = train_df[target_col].unique()
-    else:
-        unique_targets = [1]
-    train_df = train_utils.cross_validation(train_df, train_config["folds"], target_col)
-
+    # Read FE Sets and Pipeline
     fold = config["fold_modelx"]
     fold_path = os.path.join(exp_path, f"fold_{fold}")
-
-    train_folds = train_df[train_df['fold'] != fold].reset_index(drop=True)
-    valid_folds = train_df[train_df['fold'] == fold].reset_index(drop=True)
-
-    # Feature Engineering
     fe_sets_filepath = os.path.join(fold_path, f"fe_sets_fold_{fold}.json")
     with open(fe_sets_filepath, 'r') as file:
         fe_sets = json.load(file)
-    
+
     fe_pipeline_filepath = os.path.join(fold_path, f"fe_pipeline_fold_{fold}.pkl")
     with open(fe_pipeline_filepath, 'rb') as file:
         fe_pipeline = pickle.load(file)
 
-    _, _, _, _, fe_pipeline = features.feature_engineering(
-        train_folds, config=train_config, fe_sets=fe_sets, split="Train"
-    )
-    X_valid, _, valid_ids = features.feature_engineering(
-        valid_folds, config=train_config, fe_sets=fe_sets, split="Valid", pipeline=fe_pipeline, 
-    )
+    # Cross Validation and Feature Engineering 
+    if(split=="Train"):
+        target_col = train_config["target"]
+        df = train_utils.cross_validation(df, train_config["folds"], target_col)
+        df = df[df['fold'] == fold].reset_index(drop=True)
+    
+    if(split in ["Train", "Valid"]):
+        X_data, _, _ = features.feature_engineering(
+            df, config=train_config, fe_sets=fe_sets, split="Valid", pipeline=fe_pipeline, 
+        )
+    else:
+        X_data, _ = features.feature_engineering(
+            df, config=train_config, fe_sets=fe_sets, split="Test", pipeline=fe_pipeline, 
+        )
 
     # Model Choice
     model_path = os.path.join(fold_path, "models")
@@ -63,12 +60,18 @@ def explain_model(config):
 
     # SHAP Explainer
     explainer = shap.TreeExplainer(ex_model)
+    explanation = explainer(X_data)
+    shap_values = explanation.values
 
-    valid_explanation = explainer(X_valid)
-    valid_shap_values = valid_explanation.values
+    # Unique Targets
+    if(train_config["ml_task"]=="Classification"):
+        unique_targets = fe_pipeline["Class Names"]
+    else:
+        unique_targets = [1]
 
-    return ex_model, explainer, valid_explanation, valid_shap_values, X_valid, unique_targets
+    return ex_model, explainer, explanation, shap_values, X_data, unique_targets
 
+# region
 # Bar Plot
 def show_shap_bar_plot(explanation, targets, max_display=20):
     if(len(targets) > 2):
@@ -191,6 +194,7 @@ def show_pd_plots(ex_model, shap_values, X_data, targets, imp_thres, ice):
             show_sklearn_pd_ice_plots(ex_model, X_data, features, cat_features, ice)    
         else:
             st.warning("No Feature Importance")
+# endregion
 
 # Easy-Difficult Samples
 def show_easy_difficult_samples(df, model_names, target_column, str_pred, spec_model_name, target_name=""):
@@ -213,17 +217,16 @@ def show_easy_difficult_samples(df, model_names, target_column, str_pred, spec_m
 
     st.write("Easy Samples")
     df = df.sort_values(by=sorted_rank, ascending=True).reset_index(drop=True)
-    st.dataframe(df)
+    st.dataframe(df, height=220)
 
     st.write("Difficult Samples")
     df = df.sort_values(by=sorted_rank, ascending=False).reset_index(drop=True)
-    st.dataframe(df)
+    st.dataframe(df, height=220)
 
-def extract_easy_difficult_samples(train_config, oof_df, spec_model_name="", fold="All"):
+def extract_easy_difficult_samples(train_config, oof_df, spec_model_name="", fold=0, split="Train"):
     # Filter Dataframe
-    if(fold!="All"):
+    if(split=="Train"):
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
-
     oof_df["index"] = oof_df.index.values.tolist()    
 
     # Features
@@ -235,18 +238,23 @@ def extract_easy_difficult_samples(train_config, oof_df, spec_model_name="", fol
     features_with_pred.extend(pred_columns)
     filtered_df = copy.deepcopy(oof_df[features_with_pred])
 
-    # Parameters
+    # Model Names
     model_names = [col.split("_")[0] for col in oof_df.columns if "pred" in col]
+    if(split=="Valid"):
+        model_names = [model_name+f"_{fold}" for model_name in model_names]
+    
     if(train_config["ml_task"]=="Classification"):
         target_names = oof_df[target_column].unique().tolist()
         for target_name in target_names:
             target_df = filtered_df[filtered_df[target_column]==target_name].reset_index(drop=True)
             tpred_columns = [col for col in pred_columns if str(target_name) in col]
+            if(split=="Valid"):
+                tpred_columns = [col for col in tpred_columns if col.split("_")[1] == str(fold)]
             features_with_tpred = features.copy()
             features_with_tpred.extend(tpred_columns)
             target_df = target_df[features_with_tpred]
 
-            st.write(target_name)
+            st.write("Target:", target_name)
 
             show_easy_difficult_samples(
                 target_df, model_names, target_column, str_pred, spec_model_name=spec_model_name, target_name=f"_{target_name}"
