@@ -6,11 +6,9 @@ from codes.utils import univariate_analysis as ua
 # ==================================================================================================
 # UNIVARIATE ANALYSIS
 # ==================================================================================================
-# @st.cache_data()
 def univariate_analysis():
     # ---------------------------------------------------
     # Dataframe
-    dp_list = os.listdir("datasets/cleaned_dataset")
     st.selectbox(label="Data Preprocessing Name", options=dp_list, key="dp_name", index=0)
     dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
     cleaned_df_path = os.path.join(dp_path, "cleaned_train.parquet")
@@ -26,9 +24,9 @@ def univariate_analysis():
     # Statistics
     st.header("Statistics", divider="orange")
     desc_stats_df, quan_stats_df = ua.extract_statistics(cleaned_df)
-    st.subheader("Descriptive Statistics")    
+    st.subheader("Descriptive Statistics")
     st.dataframe(desc_stats_df)
-    st.subheader("Quantile Statistics")    
+    st.subheader("Quantile Statistics")
     st.dataframe(quan_stats_df)
 
     # ---------------------------------------------------
@@ -45,11 +43,11 @@ def univariate_analysis():
 # MAIN
 # ==================================================================================================
 # Title
-st.title("EDA - Univariate Analysis") 
+st.title("EDA - Univariate Analysis")
 
 # Univariate Analysis
 dp_list = os.listdir("datasets/cleaned_dataset")
-if(len(dp_list)>0):
+if len(dp_list)>0:
     univariate_analysis()
 else:
     st.warning("You need to preprocess your dataset before exploring more data insights")

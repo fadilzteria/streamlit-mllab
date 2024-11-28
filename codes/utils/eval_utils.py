@@ -14,17 +14,22 @@ from codes.utils import classification as classif, regression as regress, test_u
 COLORS = list(mcolors.XKCD_COLORS.keys())
 random.Random(1).shuffle(COLORS)
 
+@st.cache_data
 def show_metrics(config, metric_df, fold="All"):
     # Filter Dataframe
-    if(fold=="All"): # Average All Folds
+    if fold=="All": # Average All Folds
         df = metric_df.groupby("Model").mean().reset_index()
     else:
         df = metric_df[metric_df["Fold"]==fold].reset_index(drop=True)
     df = df.drop("Fold", axis=1)
-    if(config["best_value"]=="Maximize"):
-        df = df.sort_values(by=f"Valid {config['best_metric']}", ascending=False).reset_index(drop=True)
+    if config["best_value"]=="Maximize":
+        df = df.sort_values(
+            by=f"Valid {config['best_metric']}", ascending=False
+        ).reset_index(drop=True)
     else:
-        df = df.sort_values(by=f"Valid {config['best_metric']}", ascending=True).reset_index(drop=True)
+        df = df.sort_values(
+            by=f"Valid {config['best_metric']}", ascending=True
+        ).reset_index(drop=True)
 
     x_axis = np.arange(len(df))
     model_names = df["Model"].tolist()
@@ -52,22 +57,24 @@ def show_metrics(config, metric_df, fold="All"):
         plt.tight_layout()
         st.pyplot(fig)
 
+@st.cache_data
 def get_class_metrics(config, metric_df, fold="All"):
     # Filter Dataframe
-    if(fold=="All"): # Average All Folds
+    if fold=="All": # Average All Folds
         df = metric_df.groupby("Model").mean().reset_index()
     else:
         df = metric_df[metric_df["Fold"]==fold].reset_index(drop=True)
 
     fig, axs = plt.subplots(nrows=5, ncols=2, figsize=(15, 24))
     metric_list = config["metrics"]
-    if("Accuracy" in metric_list):
+    if "Accuracy" in metric_list:
         metric_list.remove("Accuracy")
 
     for j, split in enumerate(["Train", "Valid"]):
         for i, metric in enumerate(metric_list):
             # Class Metric Dataframe
-            class_metric_columns = ["Model"] + df.filter(regex=f"{split} {metric}-").columns.tolist()
+            class_metric_columns = ["Model"] + \
+                df.filter(regex=f"{split} {metric}-").columns.tolist()
             class_metric_df = df[class_metric_columns]
             class_metric_df = class_metric_df.set_index("Model")
             class_metric_df.index.name = None
@@ -75,9 +82,10 @@ def get_class_metrics(config, metric_df, fold="All"):
             class_metric_df = class_metric_df.transpose()
 
             # Heatmap
-            im = sns.heatmap(
-                class_metric_df, annot=class_metric_df, fmt=".3f", annot_kws={"fontsize": 8}, ax=axs[i, j],
-                cmap='RdYlGn', vmin=0.0, vmax=1.0, linewidths=0.5, linecolor='White', square=True, cbar=False
+            _ = sns.heatmap(
+                class_metric_df, annot=class_metric_df, fmt=".3f", annot_kws={"fontsize": 8},
+                ax=axs[i, j], cmap='RdYlGn', vmin=0.0, vmax=1.0, linewidths=0.5, linecolor='White',
+                square=True, cbar=False
             )
 
             # Update Axes
@@ -86,11 +94,12 @@ def get_class_metrics(config, metric_df, fold="All"):
     plt.suptitle(f"Class-wise Metrics for Fold {fold}", y=0.90)
     st.pyplot(fig)
 
+@st.cache_data
 def show_confusion_matrix(config, oof_df, fold="All"):
     # Filter Dataframe
-    if(fold!="All"): # Average All Folds
+    if fold!="All": # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
-    
+
     # Parameters
     y_test = oof_df[config["target"]]
     class_names = oof_df[config["target"]].unique().tolist()
@@ -109,24 +118,25 @@ def show_confusion_matrix(config, oof_df, fold="All"):
 
         # Heatmap
         ax_temp = axs[i] if nrows==1 else axs[i//ncols, i%ncols]
-        im = sns.heatmap(
+        _ = sns.heatmap(
             cn_matrix, annot=cn_matrix, fmt="", annot_kws={"fontsize": 8}, ax=ax_temp,
             cmap='Greens', linewidths=0.5, linecolor='White', square=True, cbar=False,
         )
         ax_temp.set_title(model_name, size=10)
         ax_temp.set(xlabel="Predicted", ylabel="Actual")
 
-    if(i < (nrows*ncols)):
-        for j in range(i+1, (nrows*ncols)):
+    if (len(model_names)-1) < (nrows*ncols):
+        for j in range(len(model_names), (nrows*ncols)):
             ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
             ax_temp.axis("off")
 
     plt.suptitle(f"Confusion Matrix for Fold {fold}", y=0.92)
     st.pyplot(fig)
 
+@st.cache_data
 def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, numeric=False):
     # Filter Dataframe
-    if(fold!="All"): # Average All Folds
+    if fold!="All": # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold]
         oof_df_idxs = oof_df.index.tolist()
         cleaned_df = cleaned_df[cleaned_df.index.isin(oof_df_idxs)]
@@ -134,19 +144,21 @@ def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, n
     cat_df_dict = {}
     for df_col in cleaned_df.columns:
         print(df_col)
-        if(config["target"]==df_col):
+        if config["target"]==df_col:
             continue
 
-        if(cleaned_df[df_col].dtypes in ["object", "bool"]):
-            if(cleaned_df[df_col].nunique() > max_unique or "pred" in df_col):
+        if cleaned_df[df_col].dtypes in ["object", "bool"]:
+            if cleaned_df[df_col].nunique() > max_unique or "pred" in df_col:
                 continue
         else:
-            if(numeric and "pred" not in df_col):
-                cleaned_df[f"{df_col}_binned"] = pd.qcut(cleaned_df[df_col], q=max_unique, duplicates='drop').astype('str')
+            if numeric and "pred" not in df_col:
+                cleaned_df[f"{df_col}_binned"] = pd.qcut(
+                    cleaned_df[df_col], q=max_unique, duplicates='drop'
+                ).astype('str')
                 df_col = f"{df_col}_binned"
             else:
                 continue
-        
+
         cat_df_dict[df_col] = []
         metric_list = config["metrics"]
         print(metric_list)
@@ -154,7 +166,7 @@ def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, n
         oof_df["group"] = copy.deepcopy(cleaned_df[df_col])
 
         # For Each Category in the Categorical Column
-        for i, category in enumerate(oof_df["group"].unique()):
+        for _, category in enumerate(oof_df["group"].unique()):
             cat_df = oof_df[oof_df["group"]==category].reset_index(drop=True)
             cat_metric_df = pd.DataFrame()
             # For Each Model
@@ -165,18 +177,21 @@ def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, n
                 y_pred = cat_df[f"{model_name}_{config['target']}_pred"]
                 model_metric_df = pd.DataFrame({"Model": model_name}, index=[0])
 
-                if(config["ml_task"]=="Classification"):
-                    model_proba_names = [col for col in cat_df.columns if model_name in col and "proba" in col]
+                if config["ml_task"]=="Classification":
+                    model_proba_names = [
+                        col for col in cat_df.columns if model_name in col and "proba" in col
+                    ]
                     y_pred_proba = np.array(cat_df[model_proba_names])
 
-                    if(cat_df[config["target"]].nunique() == 2):
+                    if cat_df[config["target"]].nunique() == 2:
                         model_metric_df = classif.get_binary_results(
                             y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split=""
                         )
                     else:
                         class_names = cat_df[config["target"]].unique().tolist()
                         model_metric_df = classif.get_multi_results(
-                            y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split="", class_names=class_names
+                            y_true, y_pred, y_pred_proba, model_metric_df, metric_list, split="",
+                            class_names=class_names
                         )
                 else:
                     n, p = cat_df.shape[0], cat_df.shape[1]
@@ -190,17 +205,19 @@ def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, n
 
     return cat_df_dict
 
+@st.cache_data
 def show_category_metrics(cat_df_dict, group_col):
     group_cat_df_list = cat_df_dict[group_col]
-    for i in range(len(group_cat_df_list)):
-        category = group_cat_df_list[i]["category"]
-        cat_metric_df = group_cat_df_list[i]["data"]
+    for group_cat_df in group_cat_df_list:
+        category = group_cat_df["category"]
+        cat_metric_df = group_cat_df["data"]
         st.write(category)
         st.dataframe(cat_metric_df)
 
+@st.cache_data
 def show_runtime(metric_df, fold="All"):
     # Filter Dataframe
-    if(fold=="All"): # Average All Folds
+    if fold=="All": # Average All Folds
         df = metric_df.groupby("Model").mean().reset_index()
     else:
         df = metric_df[metric_df["Fold"]==fold].reset_index(drop=True)
@@ -230,9 +247,10 @@ def show_runtime(metric_df, fold="All"):
     plt.tight_layout()
     st.pyplot(fig)
 
+@st.cache_data
 def show_reg_diagnostics(config, oof_df, fold="All"):
     # Filter Dataframe
-    if(fold!="All"): # Average All Folds
+    if fold!="All": # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
 
     # Parameters
@@ -263,7 +281,11 @@ def show_reg_diagnostics(config, oof_df, fold="All"):
 
         # Normal Q-Q Plot
         ax_temp = axs[2] if nrows==1 else axs[i, 2]
-        qq = sm.qqplot(std_res, line='45', marker='o', markerfacecolor=COLORS[0], markeredgecolor=COLORS[2], alpha=0.8, ax=ax_temp)
+        _ = sm.qqplot(
+            std_res, line='45',
+            marker='o', markerfacecolor=COLORS[0], markeredgecolor=COLORS[2],
+            alpha=0.8, ax=ax_temp
+        )
         ax_temp.set_title(f"{model_name} Normal Q-Q", size=8)
 
     # Show
@@ -271,9 +293,10 @@ def show_reg_diagnostics(config, oof_df, fold="All"):
     plt.tight_layout()
     st.pyplot(fig)
 
+@st.cache_data
 def show_regress_predicted_distribution(config, oof_df, fold="All"):
     # Filter Dataframe
-    if(fold!="All"): # Average All Folds
+    if fold!="All": # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
 
     # Parameters
@@ -288,16 +311,18 @@ def show_regress_predicted_distribution(config, oof_df, fold="All"):
         ax_temp = axs[i] if nrows==1 else axs[i//ncols, i%ncols]
         pred_name = f"{model_name}_{config['target']}_pred"
 
-        sns.kdeplot(oof_df[config['target']], color=COLORS[0], fill=True, label="Actual", ax=ax_temp)
+        sns.kdeplot(
+            oof_df[config['target']], color=COLORS[0], fill=True, label="Actual", ax=ax_temp
+        )
         sns.kdeplot(oof_df[pred_name], color=COLORS[1], fill=True, label="Predicted", ax=ax_temp)
 
         ax_temp.set_title(model_name, size=8)
         ax_temp.set(xlabel=None, ylabel=None)
-    ax_temp = axs[i] if nrows==1 else axs[0, 2]
+    ax_temp = axs[len(model_names)-1] if nrows==1 else axs[0, 2]
     ax_temp.legend()
 
-    if(i < (nrows*ncols)):
-        for j in range(i+1, (nrows*ncols)):
+    if (len(model_names)-1) < (nrows*ncols):
+        for j in range(len(model_names), (nrows*ncols)):
             ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
             ax_temp.axis("off")
 
@@ -305,9 +330,10 @@ def show_regress_predicted_distribution(config, oof_df, fold="All"):
     plt.tight_layout()
     st.pyplot(fig)
 
+@st.cache_data
 def show_classif_predicted_distribution(config, oof_df, fold="All"):
     # Filter Dataframe
-    if(fold!="All"): # Average All Folds
+    if fold!="All": # Average All Folds
         oof_df = oof_df[oof_df["fold"]==fold].reset_index(drop=True)
 
     # Parameters

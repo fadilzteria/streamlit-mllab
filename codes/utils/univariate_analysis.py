@@ -11,33 +11,33 @@ import streamlit as st
 COLORS = list(mcolors.XKCD_COLORS.keys())
 random.Random(1).shuffle(COLORS)
 
-@st.cache_data()
-def calculate_value_counts(df, just_category=False, drop_features=[], max_numeric_uniques=20):
+@st.cache_data
+def calculate_value_counts(df, just_category=False, drop_features=None, max_numeric_uniques=20):
     # Categorical and Few Numerical Columns
-    if(len(drop_features) > 0):
+    if drop_features is not None:
         for feat in drop_features:
-            if(feat in df.columns):
+            if feat in df.columns:
                 df = df.drop(feat, axis=1)
 
     categorical_columns = list(df.select_dtypes(include=['object', 'bool']).columns.values)
     numerical_columns = list(df.select_dtypes(include=[np.number]).columns.values)
     few_num_columns = [col for col in numerical_columns if df[col].nunique() <= max_numeric_uniques]
-    if(just_category):
+    if just_category:
         value_columns = categorical_columns
     else:
         value_columns = categorical_columns + few_num_columns
 
     # For Each Column
     value_df_list = []
-    for i, col in enumerate(value_columns):
+    for _, col in enumerate(value_columns):
         # Dataframe
         value_df = df[col].value_counts().reset_index()
         col_count = "count"
 
         # Sort Values
-        if(col in categorical_columns):
+        if col in categorical_columns:
             value_df = value_df.sort_values(by=col_count, ascending=False).reset_index(drop=True)
-        elif(col in few_num_columns):
+        elif col in few_num_columns:
             value_df = value_df.sort_values(by=col, ascending=True).reset_index(drop=True)
 
         # Calculate Percentage
@@ -47,11 +47,11 @@ def calculate_value_counts(df, just_category=False, drop_features=[], max_numeri
 
     return value_df_list
 
-@st.cache_data()
+@st.cache_data
 def show_value_counts(full_list, labels, max_cat_uniques=10):
     # Check List
-    if(len(full_list[0])==0):
-        print(f"No Value Counts")
+    if len(full_list[0])==0:
+        print("No Value Counts")
     else:
         # Create Subplots
         nrows, ncols = len(full_list[0]), len(full_list)
@@ -67,7 +67,7 @@ def show_value_counts(full_list, labels, max_cat_uniques=10):
                 col_perc = value_df.columns.tolist()[2]
                 var = value_df.iloc[0, 0]
 
-                if(isinstance(var, (int, np.integer, float))): # Numerical
+                if isinstance(var, (int, np.integer, float)): # Numerical
                     # Vertical Bar Plot
                     ax_temp.bar(
                         value_df[col_name].astype(str), value_df[col_perc],
@@ -78,7 +78,7 @@ def show_value_counts(full_list, labels, max_cat_uniques=10):
                 else: # Categorical
                     value_df = value_df.iloc[:max_cat_uniques, :]
 
-                    if(isinstance(var, object)): # Boolean
+                    if isinstance(var, object): # Boolean
                         col_name_list = [str(x) for x in value_df[col_name].values]
                     else:
                         col_name_list = value_df[col_name].values
@@ -106,7 +106,7 @@ def show_value_counts(full_list, labels, max_cat_uniques=10):
         plt.tight_layout()
         st.pyplot(fig)
 
-@st.cache_data()
+@st.cache_data
 def extract_statistics(df):
     numerical_columns = list(df.select_dtypes(include=[np.number]).columns.values)
 
@@ -133,12 +133,12 @@ def extract_statistics(df):
 
     return desc_stats_df, quan_stats_df
 
-@st.cache_data()
+@st.cache_data
 def show_box_plot(dfs, labels):
     # Columns
     for i, df in enumerate(dfs):
         numerical_columns = list(df.select_dtypes(include=[np.number]).columns.values)
-        if(i==0):
+        if i==0:
             inner_numerical_columns = set(numerical_columns)
         else:
             inner_numerical_columns = inner_numerical_columns.intersection(numerical_columns)
@@ -147,7 +147,9 @@ def show_box_plot(dfs, labels):
     # Create Subplots
     len_cols = len(inner_numerical_columns)
     nrows, ncols = ((len_cols-1)//3)+1, 3
-    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*int(math.ceil(len(dfs)*2))))
+    fig, axs = plt.subplots(
+        nrows=nrows, ncols=ncols, figsize=(15, nrows*int(math.ceil(len(dfs)*2)))
+    )
 
     # Box Plots
     for i, col in enumerate(inner_numerical_columns):
@@ -162,7 +164,7 @@ def show_box_plot(dfs, labels):
         ax_temp.tick_params(left=False)
         ax_temp.set(yticklabels=labels) if i%ncols==0 else ax_temp.set(yticklabels=[])
 
-    if(i < (nrows*ncols)):
+    if i < (nrows*ncols):
         for j in range(i+1, (nrows*ncols)):
             ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
             ax_temp.axis("off")
@@ -171,12 +173,12 @@ def show_box_plot(dfs, labels):
     plt.tight_layout()
     st.pyplot(fig)
 
-@st.cache_data()
+@st.cache_data
 def show_kde_distribution(dfs, labels):
     # Columns
     for i, df in enumerate(dfs):
         numerical_columns = list(df.select_dtypes(include=[np.number]).columns.values)
-        if(i==0):
+        if i==0:
             inner_numerical_columns = set(numerical_columns)
         else:
             inner_numerical_columns = inner_numerical_columns.intersection(numerical_columns)
@@ -196,10 +198,10 @@ def show_kde_distribution(dfs, labels):
         ax_temp.set_title(col, size=12)
         ax_temp.set(xlabel=None)
         ax_temp.set(ylabel=None)
-        if(i==3):
+        if i==3:
             ax_temp.legend(loc="upper right")
 
-    if(i < (nrows*ncols)):
+    if i < (nrows*ncols):
         for j in range(i+1, (nrows*ncols)):
             ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
             ax_temp.axis("off")

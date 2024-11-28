@@ -45,7 +45,7 @@ def test_training():
     metrics = ["MSE", "RMSE", "MAE", "MedAE", "R2", "Adj R2"]
     for metric in metrics:
         at.multiselect("metric_names").select(metric).run()
-        
+
     at.selectbox("best_metric").set_value("RMSE").run()
 
     # Submit

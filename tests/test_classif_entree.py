@@ -28,7 +28,7 @@ def test_training():
     metrics = ["Accuracy", "Precision", "Recall", "F1 Score", "ROC AUC", "Avg Precision"]
     for metric in metrics:
         at.multiselect("metric_names").select(metric).run()
-        
+
     at.selectbox("best_metric").set_value("ROC AUC").run()
 
     # Submit

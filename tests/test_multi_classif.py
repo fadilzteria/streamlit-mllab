@@ -41,7 +41,7 @@ def test_training():
     model_names = ["Decision Tree", "Random Forest"]
     for model_name in model_names:
         at.multiselect("model_names").select(model_name).run()
-    
+
     # Decision Tree Variations
     model_name = "Decision Tree"
     model_key = "_".join(model_name.lower().split(" "))
@@ -55,7 +55,7 @@ def test_training():
     metrics = ["Accuracy", "Precision", "Recall", "F1 Score", "ROC AUC", "Avg Precision"]
     for metric in metrics:
         at.multiselect("metric_names").select(metric).run()
-        
+
     at.selectbox("best_metric").set_value("ROC AUC").run()
 
     # Submit

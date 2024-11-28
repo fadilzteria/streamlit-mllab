@@ -1,5 +1,4 @@
 import os
-import copy
 import pandas as pd
 import streamlit as st
 
@@ -11,7 +10,9 @@ from codes.utils import bivariate_analysis as ba
 @st.fragment()
 def correlation_matrix(all_matrices):
     corr_types = ["Pearson", "Spearman", "Kendall"]
-    st.selectbox(label="Corr Type for Correlation_matrix", options=corr_types, key="corr_type_cm", index=0)
+    st.selectbox(
+        label="Corr Type for Correlation_matrix", options=corr_types, key="corr_type_cm", index=0
+    )
     ba.show_correlation_heatmap(all_matrices, st.session_state["corr_type_cm"])
 
 @st.fragment()
@@ -20,7 +21,10 @@ def nums_correlation(cleaned_df, corr_matrix_df, new_columns):
         col_1, col_2 = st.columns(2)
         with col_1:
             corr_types = ["Pearson", "Spearman", "Kendall"]
-            st.selectbox(label="Corr Type for Two Nums Correlation", options=corr_types, key="corr_type_nums", index=0)
+            st.selectbox(
+                label="Corr Type for Two Nums Correlation", options=corr_types,
+                key="corr_type_nums", index=0
+            )
         with col_2:
             st.slider(
                 "Max Correlation for each Correlation Strength",
@@ -38,7 +42,7 @@ def nums_correlation(cleaned_df, corr_matrix_df, new_columns):
                 "Min Strong Negative Correlation",
                 min_value=-1.00, max_value=-0.20, value=-0.60, step=0.01, key="neg_value"
             )
-        
+
         col_1, col_2 = st.columns(2)
         with col_1:
             st.slider(
@@ -52,10 +56,11 @@ def nums_correlation(cleaned_df, corr_matrix_df, new_columns):
             )
 
     strong_weak_dfs, titles = ba.extract_strong_weak_corr_matrix(
-        corr_matrix_df, new_columns, 
+        corr_matrix_df, new_columns,
         st.session_state["corr_type_nums"], max_corr=st.session_state["max_corr"],
-        pos_value=st.session_state["pos_value"], neg_value=st.session_state["neg_value"], 
-        min_zero_value=st.session_state["min_zero_value"], max_zero_value=st.session_state["max_zero_value"]
+        pos_value=st.session_state["pos_value"], neg_value=st.session_state["neg_value"],
+        min_zero_value=st.session_state["min_zero_value"],
+        max_zero_value=st.session_state["max_zero_value"]
     )
     ba.show_correlation_scatter_plot(cleaned_df, strong_weak_dfs, titles)
 
@@ -78,7 +83,7 @@ def num_cat_correlation(cleaned_df):
                 "Max Number Plots",
                 min_value=2, max_value=20, value=6, key="num_plots"
             )
-        
+
         col_1, col_2, col_3 = st.columns(3)
         with col_1:
             st.slider(
@@ -87,23 +92,25 @@ def num_cat_correlation(cleaned_df):
             )
         with col_2:
             st.toggle("Using Max Sample Mean", value=False, key="bool_max_sample_mean")
-        
-        if(st.session_state["bool_max_sample_mean"]):
+
+        if st.session_state["bool_max_sample_mean"]:
             with col_3:
                 st.slider(
                     "Max Samples from Sample Mean",
-                    min_value=st.session_state["min_sample_mean"], max_value=10000, 
+                    min_value=st.session_state["min_sample_mean"], max_value=10000,
                     value=2000, key="max_sample_mean"
                 )
         else:
-            st.session_state["max_sample_mean"] = None    
+            st.session_state["max_sample_mean"] = None
 
     anova_results, all_group_means = ba.test_numerical_categorical(
-        cleaned_df, sample_size=st.session_state["sample_size"], max_unique=st.session_state["max_unique"],
-        min_sample_mean=st.session_state["min_sample_mean"], max_sample_mean=st.session_state["max_sample_mean"]
+        cleaned_df, sample_size=st.session_state["sample_size"],
+        max_unique=st.session_state["max_unique"],
+        min_sample_mean=st.session_state["min_sample_mean"],
+        max_sample_mean=st.session_state["max_sample_mean"]
     )
     ba.show_correlation_num_cat(
-        anova_results, all_group_means, 
+        anova_results, all_group_means,
         num_groups=st.session_state["max_unique"], num_plots=st.session_state["num_plots"]
     )
 
@@ -125,7 +132,7 @@ def cats_correlation(cleaned_df):
             "Num Plots from At Least One Nominal",
             min_value=1, max_value=20, value=5, key="num_one_nominal"
         )
-    
+
     chi_results = ba.test_two_categorical(cleaned_df, max_unique=st.session_state["max_cat_unique"])
     ba.show_correlation_two_binary(
         cleaned_df, chi_results, num_two_binary=st.session_state["num_two_binary"]
@@ -137,7 +144,6 @@ def cats_correlation(cleaned_df):
 def bivariate_analysis():
     # ---------------------------------------------------
     # Dataframe
-    dp_list = os.listdir("datasets/cleaned_dataset")
     st.selectbox(label="Data Preprocessing Name", options=dp_list, key="dp_name", index=0)
     dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
     cleaned_df_path = os.path.join(dp_path, "cleaned_train.parquet")
@@ -168,11 +174,11 @@ def bivariate_analysis():
 # MAIN
 # ==================================================================================================
 # Title
-st.title("EDA - Bivariate Analysis") 
+st.title("EDA - Bivariate Analysis")
 
 # Bivariate Analysis
 dp_list = os.listdir("datasets/cleaned_dataset")
-if(len(dp_list)>0):
+if len(dp_list)>0:
     bivariate_analysis()
 else:
     st.warning("You need to preprocess your dataset before exploring more data insights")
