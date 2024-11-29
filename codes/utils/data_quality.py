@@ -70,10 +70,12 @@ def show_other_values(dfs, labels):
         max_height_plot = max(df.shape[0], max_height_plot)
 
     if available_values==0:
-        print(f"No {col}")
+        return f"No {col}"
     else:
         # Create Subplots
-        fig, axs = plt.subplots(nrows=1, ncols=available_values, figsize=(12, max_height_plot))
+        max_height_plot = max_height_plot*0.8
+        height = 0.5
+        fig, axs = plt.subplots(nrows=1, ncols=available_values, figsize=(12, max_height_plot+1.0))
 
         # Vertical Sorted Bar Plot
         df = dfs[-1]
@@ -92,36 +94,42 @@ def show_other_values(dfs, labels):
 
             ax_temp.barh(
                 df["Column"], df[col],
-                align='center', height=0.5, color=COLORS[k], label=label
+                align='center', height=height, color=COLORS[k], label=label
             )
 
+            max_ratio = 112
             if len(df.columns.tolist())>2: # No Unique
                 # Text
                 for j, v in enumerate(df[col]):
-                    ax_temp.text(v+0.8, j, str(v)+'%', va='center', size=10)
+                    ax_temp.text(v+1.0, j, str(v)+'%', va='center', size=12)
 
                 # Update Axes
-                ax_temp.set_xlim(0, 108)
+                ax_temp.set_xlim(0, max_ratio)
                 sns.despine(top=True, right=True)
             else: # Unique
                 # Text
+                max_unique = df[col].max()
                 for j, v in enumerate(df[col]):
-                    ax_temp.text(v+0.8, j, str(v), va='center', size=10)
+                    ax_temp.text(v+(max_unique//100), j, str(v), va='center', size=12)
 
                 # Update Axes
                 ax_temp.tick_params(left=False, bottom=False)
                 ax_temp.set_xticklabels([])
+                ax_temp.set_xlim(0, (max_unique*max_ratio//100))
                 sns.despine(top=True, right=True, left=True, bottom=True)
 
             ax_temp.invert_yaxis()  # Read Columns Top-to-Bottom
-            ax_temp.tick_params(axis='y', which='major', pad=10, labelsize=10)
-            ax_temp.set_title(f"{label}: {df.shape[0]} Features", size=10)
+            ax_temp.set_ylim(len(df["Column"])-height, -height)
+            ax_temp.tick_params(axis='y', which='major', pad=10, labelsize=12)
+            ax_temp.set_title(f"{label}: {df.shape[0]} Features", size=14)
 
             k += 1
 
-        plt.suptitle(col, y=1.00)
+        plt.suptitle(col, y=1.00, size=15)
         plt.tight_layout()
+
         st.pyplot(fig)
+        return None
 
 @st.cache_data
 def drop_unique_features(df, persisted_features=None):
@@ -134,9 +142,9 @@ def drop_unique_features(df, persisted_features=None):
                 full_unique_features.remove(feat)
 
     if len(full_unique_features)>0:
-        print("Drop Full Unique Features")
+        # print("Drop Full Unique Features")
         for feature in full_unique_features:
-            print(f"-> {feature}")
+            # print(f"-> {feature}")
             df = df.drop(feature, axis=1)
 
     # Drop Uniform Features
@@ -148,18 +156,21 @@ def drop_unique_features(df, persisted_features=None):
                 uniform_features.remove(feat)
 
     if len(uniform_features)>0:
-        print("Drop Uniform Features")
+        # print("Drop Uniform Features")
         for feature in uniform_features:
-            print(f"-> {feature}")
+            # print(f"-> {feature}")
             df = df.drop(feature, axis=1)
 
     return df
 
 @st.cache_data
 def check_duplicated_rows(df, drop_duplicated_rows=False, target_exist=None, spec_features=None):
+    infos = []
+
     # Dataframe All Columns
     dup_all = df[df.duplicated(keep=False)]
-    st.write("Duplicated Rows for Dataframe All Columns:", dup_all.shape[0])
+    info = f"Duplicated Rows for Dataframe All Columns: {dup_all.shape[0]}"
+    infos.append(info)
 
     if dup_all.shape[0]!=0:
         if drop_duplicated_rows:
@@ -188,10 +199,9 @@ def check_duplicated_rows(df, drop_duplicated_rows=False, target_exist=None, spe
         dup_no_feat_target = df_no_feat_target[
             df_no_feat_target.duplicated(keep=False, subset=dup_columns)
         ]
-        st.write(
-            "Duplicated Rows for Dataframe Without Specific Features and Target:",
-            dup_no_feat_target.shape[0]
-        )
+        info = f"Duplicated Rows for Dataframe Without Specific Features and Target: \
+            {dup_no_feat_target.shape[0]}"
+        infos.append(info)
 
         if dup_no_feat_target.shape[0]!=0:
             if drop_duplicated_rows:
@@ -214,7 +224,7 @@ def check_duplicated_rows(df, drop_duplicated_rows=False, target_exist=None, spe
                 st.write(f"Shape: {dup_no_feat_target.shape}")
                 st.dataframe(dup_no_feat_target)
 
-    return df
+    return df, infos
 
 @st.cache_data
 def transform_dtypes(df, split="Train", num2bin_cols=None, num2cat_cols=None):

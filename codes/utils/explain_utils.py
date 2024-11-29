@@ -34,7 +34,7 @@ def explain_model(config, split="Train"):
         fe_sets = json.load(file)
 
     fe_pipeline_filepath = os.path.join(fold_path, f"fe_pipeline_fold_{fold}.pkl")
-    with open(fe_pipeline_filepath, 'rb', encoding="utf-8") as file:
+    with open(fe_pipeline_filepath, 'rb') as file:
         fe_pipeline = pickle.load(file)
 
     # Cross Validation and Feature Engineering
@@ -55,7 +55,7 @@ def explain_model(config, split="Train"):
     # Model Choice
     model_path = os.path.join(fold_path, "models")
     model_filepath = os.path.join(model_path, f"{config['tree_model']}_fold_{fold}.model")
-    with open(model_filepath, 'rb', encoding="utf-8") as file:
+    with open(model_filepath, 'rb') as file:
         ex_model = pickle.load(file)
 
     # SHAP Explainer

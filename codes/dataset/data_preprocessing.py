@@ -92,7 +92,6 @@ def submit_dataset_input():
 # ==================================================================================================
 # SHOW RAW DATASET
 # ==================================================================================================
-@st.cache_data
 def show_raw_dataset(raw_df):
     st.header("Raw Dataset", divider="orange")
 
@@ -106,21 +105,32 @@ def show_raw_dataset(raw_df):
     # Data Quality
     st.subheader("Data Quality")
 
-    # Unique, Missing, Infinite, Zero, and Negative Values
-    for value in ["Unique", "Missing", "Infinite", "Zero", "Negative"]:
-        if value=="Unique":
-            drop_features = [st.session_state["id"], st.session_state["target"]]
-            value_df = dq.check_other_values(
-                raw_df, value, drop_features=drop_features, max_unique=len(raw_df)
-            )
-        else:
-            value_df = dq.check_other_values(raw_df, value)
-        dq.show_other_values([value_df], ["Raw Dataset"])
+    st.toggle("Using Data Quality", value=True, key="bool_data_quality")
+    if st.session_state["bool_data_quality"]:
+        # Unique, Missing, Infinite, Zero, and Negative Values
+        resps = []
+        for value in ["Unique", "Missing", "Infinite", "Zero", "Negative"]:
+            if value=="Unique":
+                drop_features = [st.session_state["id"], st.session_state["target"]]
+                value_df = dq.check_other_values(
+                    raw_df, value, drop_features=drop_features, max_unique=len(raw_df)
+                )
+            else:
+                value_df = dq.check_other_values(raw_df, value)
+            info = dq.show_other_values([value_df], ["Raw Dataset"])
+            if info != 0 and info is not None:
+                resps.append(info)
 
-    # Duplicated Rows
-    raw_df = dq.check_duplicated_rows(
-        raw_df, target_exist=st.session_state["target"], spec_features=[st.session_state["id"]]
-    )
+        # Duplicated Rows
+        raw_df, dup_infos = dq.check_duplicated_rows(
+            raw_df, target_exist=st.session_state["target"], spec_features=[st.session_state["id"]]
+        )
+        resps.extend(dup_infos)
+
+        with st.container(border=True):
+            st.write("**Information:**")
+            for resp in resps:
+                st.write("➝", resp)
 
 # ==================================================================================================
 # DATA PREPROCESSING
@@ -140,7 +150,7 @@ def preprocess_data():
 
     # Drop Duplicated Rows
     if st.session_state["dp_bool_dup"]:
-        cleaned_df = dq.check_duplicated_rows(
+        cleaned_df, _ = dq.check_duplicated_rows(
             cleaned_df, drop_duplicated_rows=True,
             target_exist=st.session_state["target"], spec_features=[st.session_state["id"]]
         )
@@ -165,7 +175,8 @@ def preprocess_data():
     if st.session_state["dp_bool_sample"]:
         cleaned_df = dq.sampling_data(
             cleaned_df, st.session_state["dp_sample_size"],
-            id=st.session_state["id"], group=st.session_state["target"])
+            _id=st.session_state["id"], group=st.session_state["target"]
+        )
 
     st.session_state["cleaned_train_dataset"] = cleaned_df
 

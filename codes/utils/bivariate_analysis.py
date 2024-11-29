@@ -1,6 +1,8 @@
 import random
 import math
 import copy
+import textwrap
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -171,7 +173,7 @@ def show_correlation_heatmap(all_matrices, corr_type):
 
     # Show
     plt.tight_layout()
-    plt.title(f"{corr_type} Correlation")
+    plt.title(f"{corr_type} Correlation", size=15)
     st.pyplot(fig)
 
 @st.cache_data
@@ -252,12 +254,13 @@ def extract_correlation_series(df, feature, corr_type):
 def show_correlation_scatter_plot(df, corr_dfs, corr_titles):
     for i, (corr_df, corr_title) in enumerate(zip(corr_dfs, corr_titles)):
         if corr_df.shape[0]==0:
-            print(f"No {corr_title}")
+            st.warning(f"No {corr_title}")
         else:
             # Create Subplots
             num_columns = corr_df.shape[0]
             nrows, ncols = ((num_columns-1)//4)+1, 4
             fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*4))
+            wrapper = textwrap.TextWrapper(width=40)
 
             # For Each Column
             for j in range(corr_df.shape[0]):
@@ -280,12 +283,16 @@ def show_correlation_scatter_plot(df, corr_dfs, corr_titles):
                     value_1, value_2,
                     c=COLORS[i], s=8, alpha=0.8
                 )
-                ax_temp.set_title(
-                    f"Pearson: {pearson_value:.5f}, Spearman: {spearman_value:.5f}, \
-                    Kendall: {kendall_value:.5f}", size=7
+
+                title = (
+                    f"Pearson: {pearson_value:.3f}, Spearman: {spearman_value:.3f}, "
+                    f"Kendall: {kendall_value:.3f}"
                 )
-                ax_temp.set_xlabel(col_name_1)
-                ax_temp.set_ylabel(col_name_2)
+                title = "\n".join(wrapper.wrap(text=title))
+                ax_temp.set_title(title, size=10)
+
+                ax_temp.set_xlabel(col_name_1, fontsize=11)
+                ax_temp.set_ylabel(col_name_2, fontsize=11)
 
             if j < (nrows*ncols):
                 for k in range(j+1, (nrows*ncols)):
@@ -295,7 +302,7 @@ def show_correlation_scatter_plot(df, corr_dfs, corr_titles):
                         ax_temp = axs[k//ncols, k%ncols]
                     ax_temp.axis("off")
 
-            plt.suptitle(corr_title)
+            plt.suptitle(corr_title, size=15)
             plt.tight_layout()
             st.pyplot(fig)
 
@@ -323,7 +330,7 @@ def test_numerical_categorical(
         value_df = value_df[value_df["count"]>=(sample_size*min_sample_mean)].head(max_unique)
         if len(value_df) < 2:
             continue
-        print(cat_col)
+        # print(cat_col)
 
         # Get Group Dataframe and Indexes
         # -------------------------------
@@ -348,7 +355,7 @@ def test_numerical_categorical(
 
         # For Each Numerical Columns
         for _, num_col in enumerate(numerical_columns):
-            print(f"- {num_col}")
+            # print(f"- {num_col}")
             result_df.loc[bi_idx, "Cat Column"] = cat_col
             result_df.loc[bi_idx, "Num Column"] = num_col
 
@@ -439,7 +446,7 @@ def test_numerical_categorical(
 @st.cache_data
 def show_correlation_num_cat(df_result, all_group_means, num_groups=5, num_plots=5):
     if len(df_result)==0 or "Conclusion" not in df_result.columns:
-        print("No Correlation between Numerical and Categorical")
+        st.warning("No Correlation between Numerical and Categorical")
         return
 
     # Dataframe
@@ -457,17 +464,17 @@ def show_correlation_num_cat(df_result, all_group_means, num_groups=5, num_plots
     for i, (idx, row) in enumerate(rejected_df_result.iterrows()):
         groups = [sample_means[0] for sample_means in all_group_means[idx]]
         list_data = [sample_means[1] for sample_means in all_group_means[idx]]
-        # print(groups)
 
         # Violin Plot
         ax_temp = axs[0] if num_plots==1 else axs[i, 0]
         violin_parts = ax_temp.violinplot(list_data, vert=False)
-        ax_temp.set_title(
-            f"Variance: {row['Homogeneity']}, p-Value: {row['ANOVA p-value']:.4f}, \
-            Partial Eta-squared: {row['Partial Eta-squared']:.4f}", size=8
+        title = (
+            f"Variance: {row['Homogeneity']}, p-Value: {row['ANOVA p-value']:.4f}, "
+            f"Partial Eta-squared: {row['Partial Eta-squared']:.4f}"
         )
-        ax_temp.set(ylabel=row["Cat Column"])
-        ax_temp.set(xlabel=row["Num Column"])
+        ax_temp.set_title(title, size=10)
+        ax_temp.set_xlabel(row["Num Column"], fontsize=11)
+        ax_temp.set_ylabel(row["Cat Column"], fontsize=11)
         ax_temp.set_yticks(np.arange(1, len(groups) + 1))
         ax_temp.set_yticklabels(groups)
         for pc, color in zip(violin_parts['bodies'], COLORS[:len(groups)]):
@@ -477,10 +484,10 @@ def show_correlation_num_cat(df_result, all_group_means, num_groups=5, num_plots
         ax_temp = axs[1] if num_plots==1 else axs[i, 1]
         for j, group_means in enumerate(list_data):
             sns.kdeplot(group_means, color=COLORS[j], fill=True, label=groups[j], ax=ax_temp)
-        ax_temp.set_title(row["Num Column"], size=8)
+        ax_temp.set_title(row["Num Column"], size=12)
         ax_temp.legend(loc="upper right")
 
-    plt.suptitle("The Correlation between Numerical and Categorical Columns", y=1)
+    plt.suptitle("The Correlation between Numerical and Categorical Columns", y=1, size=15)
     plt.tight_layout()
     st.pyplot(fig)
 
@@ -521,7 +528,7 @@ def test_two_categorical(df, max_unique=20, feature=None):
             result_df.loc[bi_idx, "Expected Cell Percentages"] = round(expected_cell_percentages, 2)
 
             # Expected Cells Must be Greater than or Equal 80% and Not Less Than 1
-            if expected_cell_percentages >= 80 and expected_cell_one is False:
+            if expected_cell_percentages >= 80 and expected_cell_one == 0:
                 result_df.loc[bi_idx, "Assumptions"] = "Success"
 
                 # Effect Size
@@ -549,7 +556,7 @@ def test_two_categorical(df, max_unique=20, feature=None):
 def show_correlation_two_binary(df, df_result, num_two_binary=6):
     # Check Phi Coefficient
     if "Phi Coefficient" not in df_result.columns:
-        print("No Correlation between Two Binary Variables")
+        st.warning("No Correlation between Two Binary Variables")
         return
 
     # Dataframe
@@ -585,17 +592,18 @@ def show_correlation_two_binary(df, df_result, num_two_binary=6):
         )
 
         # Update Axes
-        ax_temp.set_title(
-            f"Chi-squared p-Value: {row['Chi-squared p-value']:.4f}, \
-            Phi Coefficient: {row['Phi Coefficient']:.4f}", size=8
+        title = (
+            f"Chi-squared p-Value: {row['Chi-squared p-value']:.4f}, "
+            f"Phi Coefficient: {row['Phi Coefficient']:.4f}"
         )
+        ax_temp.set_title(title, size=11)
 
     if (len(two_binary_df) - 1) < (nrows*ncols):
         for j in range(len(two_binary_df), (nrows*ncols)):
             ax_temp = axs[j] if nrows==1 else axs[j//3, j%3]
             ax_temp.axis("off")
 
-    plt.suptitle("Correlations between Two Binary")
+    plt.suptitle("Correlations between Two Binary", y=1.00, size=15)
     plt.tight_layout()
     st.pyplot(fig)
 
@@ -603,7 +611,7 @@ def show_correlation_two_binary(df, df_result, num_two_binary=6):
 def show_correlation_least_one_nominal(df, df_result, num_one_nominal=5):
     # Check Cramer's Value
     if "Cramer's Value" not in df_result.columns:
-        print("No Correlation between Two Categorical Variables")
+        st.warning("No Correlation between Two Categorical Variables")
         return
 
     # Dataframe
@@ -640,11 +648,12 @@ def show_correlation_least_one_nominal(df, df_result, num_one_nominal=5):
         )
 
         # Update Axes
-        ax_temp.set_title(
-            f"""Chi-squared p-Value: {row['Chi-squared p-value']:.4f}, \
-            Cramer's Value: {row["Cramer's Value"]:.4f}""", size=8
+        title = (
+            f"Chi-squared p-Value: {row['Chi-squared p-value']:.4f}, "
+            f"""Cramer's Value: {row["Cramer's Value"]:.4f}"""
         )
+        ax_temp.set_title(title, size=11)
 
-    plt.suptitle("Correlations between Two Categorical At Least One Nominal", y=1.00)
+    plt.suptitle("Correlations between Two Categorical At Least One Nominal", y=1.00, size=15)
     plt.tight_layout()
     st.pyplot(fig)

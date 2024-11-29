@@ -2,6 +2,9 @@ import os
 import copy
 import json
 import shutil
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 import pandas as pd
 import streamlit as st
 
@@ -137,12 +140,36 @@ def show_cleaned_dataset(cleaned_df):
 # ==================================================================================================
 # DATA COMPARISON
 # ==================================================================================================
-def data_comparison(test_df):
-    if len(test_df) > 1000:
-        st.header("Data Comparison", divider="orange")
-        st.toggle("Using Data Comparison", value=True, key="bool_data_comparison")
+@st.fragment()
+def value_counts(dfs):
+    with st.container(border=True):
+        col_1, col_2, col_3 = st.columns(3)
+        with col_1:
+            st.toggle("Only Use Categorical", value=False, key="just_category")
+        with col_2:
+            st.slider(
+                "Max Uniques for Numerical",
+                min_value=3, max_value=15, value=8, key="max_num_uniques"
+            )
+        with col_3:
+            st.slider(
+                "Top Uniques for Categorical",
+                min_value=2, max_value=15, value=10, key="max_cat_uniques"
+            )
 
-        if st.session_state["bool_data_comparison"]:
+    all_value_df_list = ua.extract_value_counts(
+        dfs, just_category=st.session_state["just_category"],
+        max_numeric_uniques=st.session_state["max_num_uniques"]
+    )
+    ua.show_value_counts(
+        all_value_df_list, ["Train", "Test"], max_cat_uniques=st.session_state["max_cat_uniques"]
+    )
+
+def data_comparison(test_df):
+    st.header("Data Comparison", divider="orange")
+    st.toggle("Using Data Comparison", value=False, key="bool_data_comparison")
+    if st.session_state["bool_data_comparison"]:
+        if len(test_df) > 1000:
             # Cleaned Train Dataframe
             dp_path = os.path.join("datasets/cleaned_dataset", st.session_state["dp_name"])
             train_df_path = os.path.join(dp_path, "cleaned_train.parquet")
@@ -151,8 +178,7 @@ def data_comparison(test_df):
             # ---------------------------------------------------
             # Value Counts
             st.subheader("Value Counts")
-            all_value_df_list = [ua.calculate_value_counts(df) for df in [train_df, test_df]]
-            ua.show_value_counts(all_value_df_list, ["Train", "Test"])
+            value_counts([train_df, test_df])
 
             # ---------------------------------------------------
             # Box Plot
@@ -163,6 +189,11 @@ def data_comparison(test_df):
             # Distribution
             st.subheader("Distribution")
             ua.show_kde_distribution([train_df, test_df], ["Train", "Test"])
+        else:
+            st.warning(
+                "You need to have at least 1,000 rows from your test dataset \
+                to get comparison results more representative."
+            )
 
 # ==================================================================================================
 # TESTING CONFIGURATION

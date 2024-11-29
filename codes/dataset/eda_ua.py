@@ -6,6 +6,31 @@ from codes.utils import univariate_analysis as ua
 # ==================================================================================================
 # UNIVARIATE ANALYSIS
 # ==================================================================================================
+@st.fragment()
+def value_counts(cleaned_df):
+    with st.container(border=True):
+        col_1, col_2, col_3 = st.columns(3)
+        with col_1:
+            st.toggle("Only Use Categorical", value=False, key="just_category")
+        with col_2:
+            st.slider(
+                "Max Uniques for Numerical",
+                min_value=3, max_value=15, value=8, key="max_num_uniques"
+            )
+        with col_3:
+            st.slider(
+                "Top Uniques for Categorical",
+                min_value=2, max_value=15, value=10, key="max_cat_uniques"
+            )
+
+    all_value_df_list = ua.extract_value_counts(
+        [cleaned_df], just_category=st.session_state["just_category"],
+        max_numeric_uniques=st.session_state["max_num_uniques"]
+    )
+    ua.show_value_counts(
+        all_value_df_list, ["Cleaned Dataset"], max_cat_uniques=st.session_state["max_cat_uniques"]
+    )
+
 def univariate_analysis():
     # ---------------------------------------------------
     # Dataframe
@@ -17,8 +42,7 @@ def univariate_analysis():
     # ---------------------------------------------------
     # Value Counts
     st.header("Value Counts", divider="orange")
-    all_value_df_list = [ua.calculate_value_counts(df) for df in [cleaned_df]]
-    ua.show_value_counts(all_value_df_list, ["Cleaned Dataset"])
+    value_counts(cleaned_df)
 
     # ---------------------------------------------------
     # Statistics

@@ -1,5 +1,7 @@
 import random
 import copy
+import textwrap
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -33,26 +35,48 @@ def show_metrics(config, metric_df, fold="All"):
 
     x_axis = np.arange(len(df))
     model_names = df["Model"].tolist()
+    wrapper = textwrap.TextWrapper(width=25)
+    model_names = [
+        "\n".join(wrapper.wrap(text=model_name)) for model_name in model_names
+    ]
 
     metric_list = config["metrics"]
 
     for metric_name in metric_list:
         # Create Subplots
-        fig, _ = plt.subplots(figsize=(15, 4))
+        fig, ax = plt.subplots(figsize=(15, 5))
 
         # Multiple Vertical Bar Chart
         train_metrics = df[f"Train {metric_name}"].tolist()
         valid_metrics = df[f"Valid {metric_name}"].tolist()
+        full_metrics = train_metrics + valid_metrics
 
         plt.bar(x_axis-0.15, train_metrics, 0.3, label='Train', color=COLORS[0])
         plt.bar(x_axis+0.15, valid_metrics, 0.3, label='Valid', color=COLORS[1])
 
+        # Text
+        max_ratio = 105
+        min_value = min(full_metrics)
+        min_value = min(min_value, 0)
+        max_value = max(full_metrics)
+        add_text_value = (max_value-min_value)*(max_ratio-100)/100
+
+        for k, (train_v, valid_v) in enumerate(zip(train_metrics, valid_metrics)):
+            ax.text(
+                k-0.15, train_v+add_text_value, str(round(train_v, 2)),
+                ha='center', va='center', fontsize=10
+            )
+            ax.text(
+                k+0.15, valid_v+add_text_value, str(round(valid_v, 2)),
+                ha='center', va='center', fontsize=10
+            )
+
         # Update Axis
-        plt.xticks(x_axis, model_names)
+        plt.xticks(x_axis, model_names, fontsize=12)
         sns.despine(top=True, right=True)
 
         # Show
-        plt.title(f"{metric_name} Results for Fold {fold}")
+        plt.title(f"{metric_name} Results for Fold {fold}", size=14, y=1.15)
         plt.legend()
         plt.tight_layout()
         st.pyplot(fig)
@@ -65,10 +89,13 @@ def get_class_metrics(config, metric_df, fold="All"):
     else:
         df = metric_df[metric_df["Fold"]==fold].reset_index(drop=True)
 
-    fig, axs = plt.subplots(nrows=5, ncols=2, figsize=(15, 24))
     metric_list = config["metrics"]
     if "Accuracy" in metric_list:
         metric_list.remove("Accuracy")
+    nrows = len(metric_list)
+
+    fig, axs = plt.subplots(nrows=nrows, ncols=2, figsize=(15, nrows*4))
+    wrapper = textwrap.TextWrapper(width=12)
 
     for j, split in enumerate(["Train", "Valid"]):
         for i, metric in enumerate(metric_list):
@@ -80,18 +107,25 @@ def get_class_metrics(config, metric_df, fold="All"):
             class_metric_df.index.name = None
             class_metric_df.columns = [col.split("-")[-1] for col in class_metric_df.columns]
             class_metric_df = class_metric_df.transpose()
+            class_metric_df.columns = [
+                "\n".join(wrapper.wrap(text=col)) for col in class_metric_df.columns
+            ]
 
             # Heatmap
+            ax_temp = axs[i] if nrows==1 else axs[i, j]
             _ = sns.heatmap(
-                class_metric_df, annot=class_metric_df, fmt=".3f", annot_kws={"fontsize": 8},
-                ax=axs[i, j], cmap='RdYlGn', vmin=0.0, vmax=1.0, linewidths=0.5, linecolor='White',
+                class_metric_df, annot=class_metric_df, fmt=".3f", annot_kws={"fontsize": 9},
+                ax=ax_temp, cmap='RdYlGn', vmin=0.0, vmax=1.0, linewidths=0.5, linecolor='White',
                 square=True, cbar=False
             )
 
             # Update Axes
-            axs[i, j].set_title(f"{split} {metric} for each Classes", size=9)
+            ax_temp.set_title(f"{split} {metric}", size=12)
+            ax_temp.set_xticklabels(ax_temp.get_xticklabels(), rotation=0, fontsize=10)
+            ax_temp.set_yticklabels(ax_temp.get_yticklabels(), rotation=0, fontsize=10)
 
-    plt.suptitle(f"Class-wise Metrics for Fold {fold}", y=0.90)
+    plt.tight_layout()
+    plt.suptitle(f"Class-wise Metrics for Fold {fold}", y=1.02, size=15)
     st.pyplot(fig)
 
 @st.cache_data
@@ -143,7 +177,6 @@ def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, n
 
     cat_df_dict = {}
     for df_col in cleaned_df.columns:
-        print(df_col)
         if config["target"]==df_col:
             continue
 
@@ -161,7 +194,6 @@ def get_category_metrics(config, cleaned_df, oof_df, fold="All", max_unique=4, n
 
         cat_df_dict[df_col] = []
         metric_list = config["metrics"]
-        print(metric_list)
 
         oof_df["group"] = copy.deepcopy(cleaned_df[df_col])
 
@@ -226,23 +258,44 @@ def show_runtime(metric_df, fold="All"):
 
     x_axis = np.arange(len(df))
     model_names = df["Model"].tolist()
+    wrapper = textwrap.TextWrapper(width=25)
+    model_names = [
+        "\n".join(wrapper.wrap(text=model_name)) for model_name in model_names
+    ]
 
     # Create Subplots
-    fig, _ = plt.subplots(figsize=(15, 5))
+    fig, ax = plt.subplots(figsize=(15, 5.5))
 
     # Multiple Vertical Bar Chart
     train_runtime = df["Training Runtime"].tolist()
     pred_runtime = df["Prediction Runtime"].tolist()
+    full_runtime = train_runtime + pred_runtime
 
     plt.bar(x_axis-0.15, train_runtime, 0.3, label='Training', color=COLORS[0])
     plt.bar(x_axis+0.15, pred_runtime, 0.3, label='Prediction', color=COLORS[1])
 
+    # Text
+    max_ratio = 105
+    min_value = min(full_runtime)
+    max_value = max(full_runtime)
+    add_text_value = (max_value-min_value)*(max_ratio-100)/100
+
+    for k, (train_v, valid_v) in enumerate(zip(train_runtime, pred_runtime)):
+        ax.text(
+            k-0.15, train_v+add_text_value, str(round(train_v, 2)),
+            ha='center', va='center', fontsize=10
+        )
+        ax.text(
+            k+0.15, valid_v+add_text_value, str(round(valid_v, 2)),
+            ha='center', va='center', fontsize=10
+        )
+
     # Update Axis
-    plt.xticks(x_axis, model_names)
+    plt.xticks(x_axis, model_names, fontsize=12)
     sns.despine(top=True, right=True)
 
     # Show
-    plt.title(f"Runtime Results for Fold {fold}")
+    plt.title(f"Runtime Results for Fold {fold}", size=14, y=1.15)
     plt.legend()
     plt.tight_layout()
     st.pyplot(fig)
@@ -260,6 +313,7 @@ def show_reg_diagnostics(config, oof_df, fold="All"):
     ncols = 3
     nrows = len(model_names)
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(12, nrows*4))
+    wrapper = textwrap.TextWrapper(width=35)
 
     for i, model_name in enumerate(model_names):
         actual = oof_df[config['target']] # Actual
@@ -270,13 +324,17 @@ def show_reg_diagnostics(config, oof_df, fold="All"):
         # Linearity
         ax_temp = axs[0] if nrows==1 else axs[i, 0]
         ax_temp.scatter(actual, pred, c=COLORS[0], s=8, alpha=0.8)
-        ax_temp.set_title(f"{model_name} Linearity", size=8)
+        title = f"{model_name} - Linearity"
+        title = "\n".join(wrapper.wrap(text=title))
+        ax_temp.set_title(title, size=11)
         ax_temp.set(xlabel="Actual", ylabel="Predicted")
 
         # Residuals vs Predicted
         ax_temp = axs[1] if nrows==1 else axs[i, 1]
         ax_temp.scatter(pred, res, c=COLORS[1], s=8, alpha=0.8)
-        ax_temp.set_title(f"{model_name} Residuals vs Predicted", size=8)
+        title = f"{model_name} - Residuals vs Predicted"
+        title = "\n".join(wrapper.wrap(text=title))
+        ax_temp.set_title(title, size=11)
         ax_temp.set(xlabel="Predicted", ylabel="Residuals")
 
         # Normal Q-Q Plot
@@ -286,10 +344,12 @@ def show_reg_diagnostics(config, oof_df, fold="All"):
             marker='o', markerfacecolor=COLORS[0], markeredgecolor=COLORS[2],
             alpha=0.8, ax=ax_temp
         )
-        ax_temp.set_title(f"{model_name} Normal Q-Q", size=8)
+        title = f"{model_name} - Normal Q-Q"
+        title = "\n".join(wrapper.wrap(text=title))
+        ax_temp.set_title(title, size=11)
 
     # Show
-    plt.suptitle(f"Regression Diagnostics for Fold {fold}", y=1.0)
+    plt.suptitle(f"Regression Diagnostics for Fold {fold}", y=1.0, size=15)
     plt.tight_layout()
     st.pyplot(fig)
 
@@ -306,6 +366,7 @@ def show_regress_predicted_distribution(config, oof_df, fold="All"):
     ncols = 3
     nrows = ((len(model_names)-1)//ncols)+1
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*5))
+    wrapper = textwrap.TextWrapper(width=40)
 
     for i, model_name in enumerate(model_names):
         ax_temp = axs[i] if nrows==1 else axs[i//ncols, i%ncols]
@@ -316,7 +377,8 @@ def show_regress_predicted_distribution(config, oof_df, fold="All"):
         )
         sns.kdeplot(oof_df[pred_name], color=COLORS[1], fill=True, label="Predicted", ax=ax_temp)
 
-        ax_temp.set_title(model_name, size=8)
+        model_name = "\n".join(wrapper.wrap(text=model_name))
+        ax_temp.set_title(model_name, size=11)
         ax_temp.set(xlabel=None, ylabel=None)
     ax_temp = axs[len(model_names)-1] if nrows==1 else axs[0, 2]
     ax_temp.legend()
@@ -326,7 +388,7 @@ def show_regress_predicted_distribution(config, oof_df, fold="All"):
             ax_temp = axs[j] if nrows==1 else axs[j//ncols, j%ncols]
             ax_temp.axis("off")
 
-    plt.suptitle(f"Predicted Distribution Plot for Fold {fold}", y=1.0)
+    plt.suptitle(f"Predicted Distribution Plot for Fold {fold}", y=1.0, size=15)
     plt.tight_layout()
     st.pyplot(fig)
 
@@ -341,9 +403,10 @@ def show_classif_predicted_distribution(config, oof_df, fold="All"):
     target_names = oof_df[config['target']].unique().tolist()
 
     # Create Subplots
-    nrows = len(model_names)
     ncols = len(target_names)
+    nrows = len(model_names)
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=(ncols*3, nrows*3))
+    wrapper = textwrap.TextWrapper(width=35)
 
     for i, model_name in enumerate(model_names):
         for j, target_name in enumerate(target_names):
@@ -353,9 +416,11 @@ def show_classif_predicted_distribution(config, oof_df, fold="All"):
 
             sns.histplot(target_df[pred_name], color=COLORS[j], bins=20, ax=ax_temp)
 
-            ax_temp.set_title(f"{model_name} for {target_name}", size=8)
+            title = f"{model_name} for {target_name}"
+            title = "\n".join(wrapper.wrap(text=title))
+            ax_temp.set_title(title, size=9)
             ax_temp.set(xlabel=None, ylabel=None)
 
-    plt.suptitle(f"Predicted Distribution Plot for Fold {fold}", y=1.0)
+    plt.suptitle(f"Predicted Distribution Plot for Fold {fold}", y=1.0, size=12)
     plt.tight_layout()
     st.pyplot(fig)
