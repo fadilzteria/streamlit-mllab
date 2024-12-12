@@ -19,9 +19,10 @@
 
 ## Exploratory Data Analysis
 
-| Univariate Analysis    | Bivariate Analysis     |
-| :--------------------: | :--------------------: |
-| ![](assets\eda_ua.png) | ![](assets\eda_ba.png) |
+<p align="center">
+  <img src="assets\eda_ua.png" width="49.5%"/>
+  <img src="assets\eda_ba.png" width="49.5%"/>
+</p>
 
 Select the cleaned dataset that will be explored (both for univariate and bivariate analysis) then set configurations based on the visualization.
 
