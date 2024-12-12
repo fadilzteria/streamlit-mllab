@@ -3,13 +3,13 @@ import streamlit as st
 def run_app():
     # Page Config
     st.set_page_config(
-        page_title="Streamlit ML Lab: Accessible Machine Learning",
+        page_title="Streamlit ML Lab: Accessible, Fast, and Explainable Machine Learning",
         page_icon = ":mag:",
         initial_sidebar_state = 'auto'
     )
 
     # Content
-    st.sidebar.title("Streamlit ML Lab: Accessible Machine Learning")
+    st.sidebar.title("Streamlit ML Lab: Accessible, Fast, and Explainable Machine Learning")
 
     # Multipages and Navigation
     pred_page = st.Page("home/prediction.py", title="Prediction")
